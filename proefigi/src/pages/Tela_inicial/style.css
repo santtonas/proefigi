@@ -1,0 +1,130 @@
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #F8FAFC; /* A cor que você quer no fundo todo */
+}
+
+.data-selecionada {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #555;
+}
+
+
+.conteudo-principal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #F8FAFC;
+  font-family: sans-serif;
+}
+
+.container-calendario {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  min-width: 300px;
+  
+}
+
+
+
+
+
+/* 1. O fundo e a borda do calendário inteiro */
+.react-calendar {
+  width: 600px !important;
+  height: 480px !important;
+  max-width: 90vw;
+  border-radius: 15px; 
+  border: none !important; 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+  padding: 20px;
+  background-color: #ffffff; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* 2. O dia que você clica (Dia Selecionado) */
+.react-calendar__tile--active {
+  background-color: #45B9FB !important; 
+  color: white !important;
+  border-radius: 8px;
+}
+
+/* 3. Efeito quando passa o mouse por cima de um dia */
+.react-calendar__tile:hover {
+  background-color: #f0f0f0 !important;
+  border-radius: 8px;
+}
+
+
+.react-calendar__tile--now {
+ background: #E1F3FE !important; 
+  color: #1A7BAE !important; 
+  border-radius: 8px;
+}
+
+
+.react-calendar__month-view__days__day--weekend {
+  color: #333333 !important; 
+}
+
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #b3b3b3 !important; 
+}
+
+
+.react-calendar__tile--active.react-calendar__month-view__days__day--weekend {
+  color: white !important;
+}
+
+
+/* Centraliza a caixa principal no meio da tela */
+.conteudo-principal {
+  display: flex;
+  justify-content: center; 
+  padding-top: 40px; 
+}
+
+/* Organiza o título, calendário e texto bem alinhados */
+.conteiner-calendario {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  text-align: center; 
+}
+
+
+.data-selecionada {
+  margin-top: 20px; 
+  font-size: 16px;
+  font-weight: 500;
+  color: #333333;
+}
+
+
+.react-calendar__tile {
+  height: 60px; 
+  font-size: 16px; 
+  display: flex !important;
+  flex-direction: column !important; 
+  justify-content: flex-start !important;
+  align-items: center !important; 
+  padding-top: 10px !important; 
+  transition: 0.2s; 
+}
+
+/* Deixando o cabeçalho do mês (Ex: Março de 2026) maior também */
+.react-calendar__navigation button {
+  font-size: 18px;
+  font-weight: bold;
+  min-width: 44px;
+}
+
