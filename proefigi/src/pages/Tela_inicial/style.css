@@ -19,6 +19,9 @@ body {
   min-height: 100vh;
   background-color: #F8FAFC;
   font-family: sans-serif;
+
+  flex-direction: column; /* Coloca os itens em coluna (um debaixo do outro) */
+  gap: 30px;
 }
 
 .container-calendario {
@@ -128,3 +131,269 @@ body {
   min-width: 44px;
 }
 
+
+
+
+/*Bolinhas tarefas*/
+.container-bolinhas {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin-top: auto; /* Garante que fique no fundo da caixa */
+  padding-bottom: 8px;
+}
+
+.bolinha {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.bolinha-normal { background-color: #4caf50; }    /* Verde */
+.bolinha-importante { background-color: #ffc107; } /* Amarelo */
+.bolinha-urgente { background-color: #f44336; }    /* Vermelho */
+
+
+/* Botão*/
+.botao-adicionar-tarefa {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #45B9FB;
+  color: white;
+  font-size: 30px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+.botao-adicionar-tarefa:hover {
+  transform: scale(1.1);
+}
+
+/* Janela de adcionar*/
+/* O fundo escuro que cobre o site inteiro */
+.modal-fundo {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; 
+}
+
+/* A caixinha branca onde vai ficar o formulário */
+.modal-caixa {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  width: 400px; 
+  max-width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 15px; 
+}
+
+/* --- ESTILOS DO FORMULÁRIO (MODAL) --- */
+
+.grupo-input {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.grupo-input label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+}
+
+/* Deixa as caixinhas de texto com cantos arredondados e bonitas */
+.grupo-input input,
+.grupo-input select,
+.grupo-input textarea {
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+/* Borda fica azul (cor do Proefigi) quando a pessoa clica para digitar */
+.grupo-input input:focus,
+.grupo-input select:focus,
+.grupo-input textarea:focus {
+  border-color: #45B9FB;
+}
+
+/* Organiza a Hora de Início e Término lado a lado */
+.linha-horarios {
+  display: flex;
+  gap: 15px;
+}
+
+.linha-horarios .grupo-input {
+  flex: 1; /* Faz as duas caixas de hora dividirem o espaço igualmente */
+}
+
+/* Alinha os botões na parte de baixo da janela */
+.botoes-modal {
+  display: flex;
+  justify-content: flex-end; /* Joga os botões para o canto direito */
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.botao-salvar {
+  background-color: #45B9FB;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.botao-salvar:hover {
+  background-color: #38a0dc; /* Azul um pouquinho mais escuro ao passar o mouse */
+}
+
+.botao-cancelar {
+  background-color: #f1f3f5;
+  color: #555555;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.botao-cancelar:hover {
+  background-color: #e2e6ea;
+}
+
+/* Estilo básico para o botão de cancelar provisório */
+.modal-caixa button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background-color: #f1f3f5;
+  cursor: pointer;
+  font-weight: bold;
+  color: #555;
+  margin-top: 10px;
+}
+
+.modal-caixa button:hover {
+  background-color: #e2e6ea;
+}
+
+/* --- ÁREA DA LISTA DE TAREFAS --- */
+.lista-tarefas {
+  width: 600px; /* Mesma largura do calendário */
+  max-width: 90%;
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.lista-tarefas h3 {
+  margin-top: 0;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sem-tarefas {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+}
+
+.cards-tarefas {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 110px; 
+  overflow-y: auto; 
+  padding-right: 5px;
+}
+
+/* Deixando a barra de rolagem bonitinha e fina (estilo Mac/Celular) */
+.cards-tarefas::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cards-tarefas::-webkit-scrollbar-thumb {
+  background-color: #cccccc;
+  border-radius: 10px;
+}
+
+.card-tarefa {
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 15px;
+  border-left: 6px solid #ccc; /* Borda padrão que muda com a importância */
+}
+
+/* Cores da borda dependendo da importância */
+.borda-normal { border-left-color: #4caf50; }
+.borda-importante { border-left-color: #ffc107; }
+.borda-urgente { border-left-color: #f44336; }
+
+.card-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.card-cabecalho strong {
+  font-size: 16px;
+  color: #333;
+}
+
+.card-cabecalho span {
+  font-size: 13px;
+  color: #666;
+  background-color: #e9ecef;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.card-tarefa p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.4;
+  display: -webkit-box;              /* Define a caixa de exibição necessária */
+  -webkit-line-clamp: 1;             /* <--- Altere aqui o número máximo de linhas (ex: 1, 2 ou 3) */
+  -webkit-box-orient: vertical;      /* Define a orientação vertical para o corte */
+  overflow: hidden;                  /* Esconde o resto do texto que passar do limite */
+  
+  /* Mantemos estes para o caso de palavras muito longas sem espaços */
+  overflow-wrap: break-word; 
+  word-wrap: break-word;
+ 
+}
+
+/* numero que indica que tem mais tarefas no dia*/
+.texto-mais-tarefas {
+  font-size: 10px;
+  font-weight: bold;
+  color: #888888;
+  margin-left: 2px;
+}
