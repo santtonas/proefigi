@@ -3,6 +3,7 @@ body {
   padding: 0;
   min-height: 100vh;
   background-color: #F8FAFC; /* A cor que você quer no fundo todo */
+  overflow: hidden;
 }
 
 .data-selecionada {
@@ -195,12 +196,21 @@ body {
   background-color: #ffffff;
   padding: 30px;
   border-radius: 16px;
-  width: 400px; 
+  
+  /* 👇 AS TRÊS LINHAS MÁGICAS 👇 */
+  width: 450px;        /* Mesma largura para tudo */
+  height: 550px;       /* Altura fixa para não "pular" */
+  /* gap: 15px;        <-- APAGUE ESSA LINHA! */
+  
   max-width: 90%;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  gap: 15px; 
+}
+
+.modal-caixa h2, .modal-caixa h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
 }
 
 /* --- ESTILOS DO FORMULÁRIO (MODAL) --- */
@@ -209,6 +219,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  margin-bottom: 15px;
 }
 
 .grupo-input label {
@@ -252,7 +263,24 @@ body {
   display: flex;
   justify-content: flex-end; /* Joga os botões para o canto direito */
   gap: 10px;
-  margin-top: 15px;
+  margin-top: auto;
+ 
+}
+
+.botao-adicionar-rapido {
+  background-color: #45B9FB;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.botao-adicionar-rapido:hover {
+  background-color: #38a0dc;
+  transform: scale(1.05);
 }
 
 .botao-salvar {
@@ -326,10 +354,12 @@ body {
 .cards-tarefas {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  max-height: 110px; 
+  gap: 12px;
+  flex-grow: 1;
+  max-height: 400px; 
   overflow-y: auto; 
-  padding-right: 5px;
+  padding-right: 8px;
+  margin: 10px 0;
 }
 
 /* Deixando a barra de rolagem bonitinha e fina (estilo Mac/Celular) */
@@ -396,4 +426,16 @@ body {
   font-weight: bold;
   color: #888888;
   margin-left: 2px;
+}
+
+.texto-descricao {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+  
+  /* 👇 AS TRÊS LINHAS MÁGICAS PARA NÃO VAZAR 👇 */
+  white-space: pre-wrap;     /* Mantém as quebras de linha digitadas pelo usuário */
+  word-wrap: break-word;     /* Força a quebra de palavras muito longas */
+  overflow-wrap: break-word; /* Garante que palavras gigantescas não quebrem o layout */
 }
