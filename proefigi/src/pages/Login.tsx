@@ -1,13 +1,17 @@
-import "./login.css"
-import ParticlesBackground from "../components/ParticlesBackground.tsx"
-
-
+import "../styles/login.css"
+import logo from "../img/icoproefigi.png"
 
 export default function Login() {
   return (
-    <div className="container">
 
-      <ParticlesBackground />
+<div className="container">
+
+
+<div className="logo">
+  <img src={logo} alt="Logo" />
+</div>
+
+<div className="overlay"></div>
 
       <div className="login-card">
 
