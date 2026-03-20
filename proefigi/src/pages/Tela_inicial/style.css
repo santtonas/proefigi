@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-color: #F8FAFC; /* A cor que você quer no fundo todo */
+  background-color: #F1F5F9; /* A cor que você quer no fundo todo */
   overflow: hidden;
 }
 
@@ -17,24 +17,72 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background-color: #F8FAFC;
+  height: calc(100vh - 60px);
+  margin: 0;
+  padding: 0;
+  min-height: auto !important;
+  background-color: #F1F5F9;
   font-family: sans-serif;
+  flex: 1;
 
   flex-direction: column; /* Coloca os itens em coluna (um debaixo do outro) */
   gap: 30px;
+  width: 100%;
 }
 
 .container-calendario {
   background-color: #ffffff;
   padding: 40px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  
   text-align: center;
   min-width: 300px;
   
 }
 
+/* Container que agrupa contador e bolinhas */
+.container-indicadores {
+  position: absolute;
+  bottom: 6px; /* Cola o conjunto na base da célula */
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column; /* Empilha: contador em cima, bolinhas embaixo */
+  align-items: center;    /* Centraliza os dois horizontalmente */
+  gap: 2px;               /* Espacinho entre o número e as bolinhas */
+  pointer-events: none;
+}
+
+/* O número (+1) */
+.contador-tarefas {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #64748b;
+  line-height: 1;
+  /* Garante que ele não tenha margens sobrando */
+  margin: 0; 
+}
+
+/* O grupo de bolinhas */
+.bolinhas-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+}
+
+.bolinha {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+/* Ajuste para o número do dia (ex: 21) não bater no contador */
+.react-calendar__tile {
+  padding-top: 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important; /* Mantém o dia 21 lá no topo */
+}
 
 
 
@@ -46,7 +94,7 @@ body {
   max-width: 90vw;
   border-radius: 15px; 
   border: none !important; 
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 10px 30px rgba(30, 41, 59, 0.1); 
   padding: 20px;
   background-color: #ffffff; 
   display: flex;
@@ -59,6 +107,12 @@ body {
   background-color: #45B9FB !important; 
   color: white !important;
   border-radius: 8px;
+}
+
+/* Remove os botões de navegação dupla (pular ano) */
+.react-calendar__navigation__prev2-button,
+.react-calendar__navigation__next2-button {
+  display: none !important;
 }
 
 /* 3. Efeito quando passa o mouse por cima de um dia */
@@ -74,6 +128,20 @@ body {
   border-radius: 8px;
 }
 
+.react-calendar__month-view__weekdays {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #94a3b8 !important; /* Um cinza claro para não brigar com os números */
+  text-decoration: none !important;
+}
+
+/* Remove aquele sublinhado chato que aparece em alguns navegadores */
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
 
 .react-calendar__month-view__days__day--weekend {
   color: #333333 !important; 
@@ -87,6 +155,27 @@ body {
 
 .react-calendar__tile--active.react-calendar__month-view__days__day--weekend {
   color: white !important;
+}
+
+
+
+.react-calendar__tile {
+  font-weight: 500;
+  color: #334155; /* Cor suave para os números */
+  padding: 1.5em 0.5em !important; /* Dá um respiro entre os números */
+}
+
+/* Números de outros meses (vizinhos) */
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #cbd5e1 !important; /* Deixa bem clarinho os dias que não são deste mês */
+}
+
+/* O dia de hoje */
+.react-calendar__tile--now {
+  background: #e0f2fe !important; /* Azul clarinho de fundo */
+  color: #0369a1 !important;     /* Azul escuro no número */
+  border-radius: 10px;
+  font-weight: 700;
 }
 
 
@@ -125,14 +214,88 @@ body {
   transition: 0.2s; 
 }
 
-/* Deixando o cabeçalho do mês (Ex: Março de 2026) maior também */
-.react-calendar__navigation button {
-  font-size: 18px;
-  font-weight: bold;
-  min-width: 44px;
+
+
+
+/* Garante que o título do mês fique bem centralizado agora que os botões sumiram */
+.react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
 }
 
+/* Criando a linha centralizada que ocupa apenas 80% da largura */
+.react-calendar__navigation::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 10%; /* Recuo da esquerda */
+  right: 10%; /* Recuo da direita */
+  height: 1px;
+  background-color: #e2e8f0; /* Cinza bem suave */
+}
 
+/* As setas (<<, <, >, >>) */
+.react-calendar__navigation button {
+ background: none !important;
+  border: none !important;
+  min-width: 44px;
+  height: 44px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.react-calendar__navigation__prev-button, 
+.react-calendar__navigation__next-button {
+background: #ffffff !important;
+  border-radius: 12px !important;
+  border: none !important;
+  min-width: 44px;
+  height: 44px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 10px;
+  
+  /* Mantém sem sombra */
+   
+  
+  /* Transição suave para aumentar e dar sombra */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transição mais "premium" */
+  transform: scale(1);
+}
+
+/* Efeito ao passar o mouse apenas nas setas */
+.react-calendar__navigation__prev-button:hover, 
+.react-calendar__navigation__next-button:hover {
+ background-color: #ffffff !important; /* Mantém o fundo branco */
+  
+ transform: scale(1.05);
+  /* 👇 ADICIONE O EFEITO DE AUMENTAR E A SOMBRA 👇 */
+  
+ box-shadow: 0 8px 20px rgba(30, 41, 59, 0.12) !important;
+}
+
+.react-calendar__navigation button:hover {
+  background-color: #f8fafc !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.react-calendar__navigation__label {
+ font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  color: #334155 !important;
+  pointer-events: none; /* Deixa o título "quieto", sem hover ou clique */
+  flex-grow: 1;
+}
 
 
 /*Bolinhas tarefas*/
@@ -160,6 +323,7 @@ body {
   position: fixed;
   bottom: 30px;
   right: 30px;
+  z-index: 99;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -188,7 +352,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; 
+  z-index: 2000; 
 }
 
 /* A caixinha branca onde vai ficar o formulário */

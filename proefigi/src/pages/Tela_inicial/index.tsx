@@ -2,6 +2,7 @@ import './style.css';
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { ChevronLeft, ChevronRight } from 'lucide-react'; // Importe os ícones
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -140,9 +141,12 @@ export function Tela_inicial() {
 
   return (
     <>
-      <main className="conteudo-principal">
+      <main className="conteudo-principal" style={{ marginTop: '-30px' }}>
         <div className="conteiner-calendario">
-          <Calendar onChange={setDate} value={date} tileContent={renderTileContent} showFixedNumberOfWeeks={true} calendarType="iso8601" locale="pt-BR" onClickDay={aoClicarNoDia}/>
+          <Calendar onChange={setDate} value={date} tileContent={renderTileContent} showFixedNumberOfWeeks={true} calendarType="iso8601" locale="pt-BR" onClickDay={aoClicarNoDia} prevLabel={<ChevronLeft size={24} color="#45B9FB" />}
+  nextLabel={<ChevronRight size={24} color="#45B9FB" />} prev2Label={null}
+  next2Label={null}/>
+          
         </div>
       </main>
 

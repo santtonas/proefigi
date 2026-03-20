@@ -1,24 +1,30 @@
 import './style.css';
 import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
 
-function Header(){
-    const [menuAberto, setMenuAberto] = useState(false);
-    return(
-        <header className="cabecalho-principal">
-            <Link className="Nome" to="/Tela_inicial">Proefigi</Link>
-            <button 
-             className={`botao-hamburger ${menuAberto ? 'aberto' : ''}`} 
-             onClick={() => setMenuAberto(!menuAberto)}
-            >
-            <span className="linha"></span>
-            <span className="linha"></span>
-            <span className="linha"></span>
-            </button>
+// 1. Avisamos ao arquivo que ele vai receber essas duas informações do Layout
+interface HeaderProps {
+  menuAberto: boolean;
+  setMenuAberto: (aberto: boolean) => void;
+}
 
-        
-        </header>
-    )
+// 2. Colocamos as propriedades aqui dentro dos parênteses
+function Header({ menuAberto, setMenuAberto }: HeaderProps) {
+  
+  return (
+    <header className="cabecalho-principal">
+      <Link className="Nome" to="/">Proefigi</Link>
+      
+      <button 
+        className={`botao-hamburger ${menuAberto ? 'aberto' : ''}`}
+        onClick={() => setMenuAberto(!menuAberto)}
+      >
+        <span className="linha"></span>
+        <span className="linha"></span>
+        <span className="linha"></span>
+      </button>
+
+    </header>
+  );
 }
 
 export default Header;

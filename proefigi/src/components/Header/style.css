@@ -6,6 +6,7 @@ header {
   height: 60px;
   background-color: #45B9FB;
   position: relative; /* 👇 ISSO É IMPORTANTE: Avisa ao botão que ele deve respeitar este header */
+  z-index: 1000;
 }
 
 .Nome {
