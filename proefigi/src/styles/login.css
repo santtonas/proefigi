@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
 body{
   margin:0;
   height:100vh;
@@ -12,6 +14,7 @@ body{
   justify-content:center;
   align-items:center;
   position:relative;
+  overflow:hidden;
 }
 
 /* FUNDO ANIMADO */
@@ -25,41 +28,173 @@ body{
   top:-100%;
   left:-100%;
 
-  background: radial-gradient(circle at 30% 30%, #0a82aa, transparent 40%),
-              radial-gradient(circle at 70% 60%, #026996, transparent 40%),
-              radial-gradient(circle at 50% 80%, #101157, transparent 40%);
 
-  animation: moveBg 30s ease-in-out infinite;
+  background: 
+    linear-gradient(-45deg, #101157, #026996, #0a82aa),
+    radial-gradient(circle at 30% 30%, rgba(10,130,170,0.6), transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(2,105,150,0.6), transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(16,17,87,0.6), transparent 50%);
+
+  background-size: 400% 400%;
+
+  animation: moveBg 20s ease-in-out infinite;
+
   z-index:0;
-  filter: blur(80px)
-
+  filter: blur(10px);
 }
 
+/* linhas suaves estilo PS2 */
+.container::after{
+  content:"";
+  position:absolute;
+
+  width:200%;
+  height:200%;
+  top:-50%;
+  left:-50%;
+
+  background: repeating-linear-gradient(
+    120deg,
+    rgba(255,255,255,0.03) 0px,
+    rgba(255,255,255,0.03) 2px,
+    transparent 2px,
+    transparent 20px
+  );
+
+  animation: floatLines 25s linear infinite;
+  z-index:0;
+}
+
+/* animação principal */
 @keyframes moveBg{
   0%{
     transform: translate(0,0) rotate(0deg);
+    background-position: 0% 50%;
   }
   50%{
-    transform: translate(-10%, -10%) rotate(170deg);
+    transform: translate(-10%, -10%) rotate(180deg);
+    background-position: 100% 50%;
   }
   100%{
-    transform: translate(1,0) rotate(360deg);
+    transform: translate(0,0) rotate(360deg);
+    background-position: 0% 50%;
+  }
+}
+
+/* animação das linhas */
+@keyframes floatLines{
+  from{
+    transform: translate(0,0);
+  }
+  to{
+    transform: translate(200px,200px);
   }
 }
 
 /* CARD */
-.login-card{
-  position:relative;
-  z-index:1;
 
-  background: rgba(255, 255, 255, 0.486);
-  backdrop-filter: blur(15px);
+.login-card {
+  position: relative;
+  z-index: 5; 
 
-  padding:40px;
-  border-radius:16px;
-  color:rgb(0, 0, 0);
+  background: rgba(255, 255, 255, 0.247); 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  padding: 40px 60px; 
+  width: 450px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  
+  display: flex;
+  flex-direction: column;
 }
 
+.login-card h1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: #000000;
+  
+}
+
+.login-card input {
+  width: 100%;
+  padding: 14px 20px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box; /* Garante que o padding não quebre a largura */
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.login-card input::placeholder {
+  color: #999;
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 50px; 
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.1s linear;
+
+}
+
+/* Botão Acessar - Azul Turquesa */
+.btn-primary {
+  background-color: #00bdf2; 
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0077d8;
+  
+}
+.btn-google:hover {
+  background-color: #0077d8;
+  
+  
+}
+
+.btn-google {
+  background-color: #00bdf2; 
+  color: white;
+}
+
+/* Estilo do link de cadastro lá embaixo */
+.login-card .footer-text {
+  margin-top: 20px;
+  font-size: 12px;
+  text-align: right;
+  color: #333;
+}
+
+.login-card .footer-text a {
+  font-weight: bold;
+  text-decoration: none;
+  color: #000;
+}
+
+/* triangulo */
 .overlay{
   position:absolute;
   bottom:0;
@@ -82,31 +217,17 @@ body{
   display:flex;
   justify-content:space-around;
   align-items:center;
-}
 
-.logo{
-  width:200px;
-  height:200px;
-
-  background:rgb(255, 255, 255);
-  border-radius:50%;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  position:relative;
+  z-index:2;
 }
 
 .logo img{
-  width:70%;
-  height:70%;
+  width:100%;
+  height:100%;
   object-fit:contain;
   position: relative;
   z-index: 3;
-}
-
-.content{
-  position:relative;
-  z-index:2;
+ filter: drop-shadow(0 0 5px #2f3131) ;
+  
 }

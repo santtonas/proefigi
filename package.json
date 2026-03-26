@@ -2,6 +2,7 @@
   "dependencies": {
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/react": "^3.0.0",
+    "react-router-dom": "^7.13.2",
     "react-tsparticles": "^2.12.2",
     "tsparticles": "^3.9.1",
     "tsparticles-engine": "^2.12.0",
