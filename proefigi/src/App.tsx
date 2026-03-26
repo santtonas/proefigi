@@ -1,27 +1,19 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import Cadastro from "./pages/Cadastro"; // O nome deve ser igual ao do arquivo
-import RoutesApp from './routes';
-
+import Cadastro from "./pages/Cadastro";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* O path "/" é a página inicial (Login) */}
+        {/* Rota principal: Login */}
         <Route path="/" element={<Login />} />
         
-        {/* O path "/cadastro" é onde sua nova tela vai morar */}
+        {/* Rota de Cadastro */}
         <Route path="/cadastro" element={<Cadastro />} />
       </Routes>
     </Router>
   );
-  return (
-    <RoutesApp/>
-   
-
-  )
 }
 
-export default App;
 export default App;
