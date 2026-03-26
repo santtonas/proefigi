@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro"; // O nome deve ser igual ao do arquivo
+import RoutesApp from './routes';
+
 
 function App() {
   return (
@@ -14,6 +16,12 @@ function App() {
       </Routes>
     </Router>
   );
+  return (
+    <RoutesApp/>
+   
+
+  )
 }
 
+export default App;
 export default App;

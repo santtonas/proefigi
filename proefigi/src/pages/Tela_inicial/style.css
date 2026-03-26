@@ -1,0 +1,605 @@
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #F1F5F9; /* A cor que você quer no fundo todo */
+  overflow: hidden;
+}
+
+.data-selecionada {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #555;
+}
+
+
+.conteudo-principal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 60px);
+  margin: 0;
+  padding: 0;
+  min-height: auto !important;
+  background-color: #F1F5F9;
+  font-family: sans-serif;
+  flex: 1;
+
+  flex-direction: column; /* Coloca os itens em coluna (um debaixo do outro) */
+  gap: 30px;
+  width: 100%;
+}
+
+.container-calendario {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  
+  text-align: center;
+  min-width: 300px;
+  
+}
+
+/* Container que agrupa contador e bolinhas */
+.container-indicadores {
+  position: absolute;
+  bottom: 6px; /* Cola o conjunto na base da célula */
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column; /* Empilha: contador em cima, bolinhas embaixo */
+  align-items: center;    /* Centraliza os dois horizontalmente */
+  gap: 2px;               /* Espacinho entre o número e as bolinhas */
+  pointer-events: none;
+}
+
+/* O número (+1) */
+.contador-tarefas {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #64748b;
+  line-height: 1;
+  /* Garante que ele não tenha margens sobrando */
+  margin: 0; 
+}
+
+/* O grupo de bolinhas */
+.bolinhas-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+}
+
+.bolinha {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+/* Ajuste para o número do dia (ex: 21) não bater no contador */
+.react-calendar__tile {
+  padding-top: 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important; /* Mantém o dia 21 lá no topo */
+}
+
+
+
+
+/* 1. O fundo e a borda do calendário inteiro */
+.react-calendar {
+  width: 600px !important;
+  height: 480px !important;
+  max-width: 90vw;
+  border-radius: 15px; 
+  border: none !important; 
+  box-shadow: 0 10px 30px rgba(30, 41, 59, 0.1); 
+  padding: 20px;
+  background-color: #ffffff; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* 2. O dia que você clica (Dia Selecionado) */
+.react-calendar__tile--active {
+  background-color: #45B9FB !important; 
+  color: white !important;
+  border-radius: 8px;
+}
+
+/* Remove os botões de navegação dupla (pular ano) */
+.react-calendar__navigation__prev2-button,
+.react-calendar__navigation__next2-button {
+  display: none !important;
+}
+
+/* 3. Efeito quando passa o mouse por cima de um dia */
+.react-calendar__tile:hover {
+  background-color: #f0f0f0 !important;
+  border-radius: 8px;
+}
+
+
+.react-calendar__tile--now {
+ background: #E1F3FE !important; 
+  color: #1A7BAE !important; 
+  border-radius: 8px;
+}
+
+.react-calendar__month-view__weekdays {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #94a3b8 !important; /* Um cinza claro para não brigar com os números */
+  text-decoration: none !important;
+}
+
+/* Remove aquele sublinhado chato que aparece em alguns navegadores */
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+
+.react-calendar__month-view__days__day--weekend {
+  color: #333333 !important; 
+}
+
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #b3b3b3 !important; 
+}
+
+
+.react-calendar__tile--active.react-calendar__month-view__days__day--weekend {
+  color: white !important;
+}
+
+
+
+.react-calendar__tile {
+  font-weight: 500;
+  color: #334155; /* Cor suave para os números */
+  padding: 1.5em 0.5em !important; /* Dá um respiro entre os números */
+}
+
+/* Números de outros meses (vizinhos) */
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #cbd5e1 !important; /* Deixa bem clarinho os dias que não são deste mês */
+}
+
+/* O dia de hoje */
+.react-calendar__tile--now {
+  background: #e0f2fe !important; /* Azul clarinho de fundo */
+  color: #0369a1 !important;     /* Azul escuro no número */
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+
+/* Centraliza a caixa principal no meio da tela */
+.conteudo-principal {
+  display: flex;
+  justify-content: center; 
+  padding-top: 40px; 
+}
+
+/* Organiza o título, calendário e texto bem alinhados */
+.conteiner-calendario {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  text-align: center; 
+}
+
+
+.data-selecionada {
+  margin-top: 20px; 
+  font-size: 16px;
+  font-weight: 500;
+  color: #333333;
+}
+
+
+.react-calendar__tile {
+  height: 60px; 
+  font-size: 16px; 
+  display: flex !important;
+  flex-direction: column !important; 
+  justify-content: flex-start !important;
+  align-items: center !important; 
+  padding-top: 10px !important; 
+  transition: 0.2s; 
+}
+
+
+
+
+/* Garante que o título do mês fique bem centralizado agora que os botões sumiram */
+.react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+}
+
+/* Criando a linha centralizada que ocupa apenas 80% da largura */
+.react-calendar__navigation::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 10%; /* Recuo da esquerda */
+  right: 10%; /* Recuo da direita */
+  height: 1px;
+  background-color: #e2e8f0; /* Cinza bem suave */
+}
+
+/* As setas (<<, <, >, >>) */
+.react-calendar__navigation button {
+ background: none !important;
+  border: none !important;
+  min-width: 44px;
+  height: 44px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.react-calendar__navigation__prev-button, 
+.react-calendar__navigation__next-button {
+background: #ffffff !important;
+  border-radius: 12px !important;
+  border: none !important;
+  min-width: 44px;
+  height: 44px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 10px;
+  
+  /* Mantém sem sombra */
+   
+  
+  /* Transição suave para aumentar e dar sombra */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transição mais "premium" */
+  transform: scale(1);
+}
+
+/* Efeito ao passar o mouse apenas nas setas */
+.react-calendar__navigation__prev-button:hover, 
+.react-calendar__navigation__next-button:hover {
+ background-color: #ffffff !important; /* Mantém o fundo branco */
+  
+ transform: scale(1.05);
+  /* 👇 ADICIONE O EFEITO DE AUMENTAR E A SOMBRA 👇 */
+  
+ box-shadow: 0 8px 20px rgba(30, 41, 59, 0.12) !important;
+}
+
+.react-calendar__navigation button:hover {
+  background-color: #f8fafc !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.react-calendar__navigation__label {
+ font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  color: #334155 !important;
+  pointer-events: none; /* Deixa o título "quieto", sem hover ou clique */
+  flex-grow: 1;
+}
+
+
+/*Bolinhas tarefas*/
+.container-bolinhas {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin-top: auto; /* Garante que fique no fundo da caixa */
+  padding-bottom: 8px;
+}
+
+.bolinha {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.bolinha-normal { background-color: #4caf50; }    /* Verde */
+.bolinha-importante { background-color: #ffc107; } /* Amarelo */
+.bolinha-urgente { background-color: #f44336; }    /* Vermelho */
+
+
+/* Botão*/
+.botao-adicionar-tarefa {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 99;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #45B9FB;
+  color: white;
+  font-size: 30px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+.botao-adicionar-tarefa:hover {
+  transform: scale(1.1);
+}
+
+/* Janela de adcionar*/
+/* O fundo escuro que cobre o site inteiro */
+.modal-fundo {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; 
+}
+
+/* A caixinha branca onde vai ficar o formulário */
+.modal-caixa {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  
+  /* 👇 AS TRÊS LINHAS MÁGICAS 👇 */
+  width: 450px;        /* Mesma largura para tudo */
+  height: 550px;       /* Altura fixa para não "pular" */
+  /* gap: 15px;        <-- APAGUE ESSA LINHA! */
+  
+  max-width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-caixa h2, .modal-caixa h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+/* --- ESTILOS DO FORMULÁRIO (MODAL) --- */
+
+.grupo-input {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.grupo-input label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+}
+
+/* Deixa as caixinhas de texto com cantos arredondados e bonitas */
+.grupo-input input,
+.grupo-input select,
+.grupo-input textarea {
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+/* Borda fica azul (cor do Proefigi) quando a pessoa clica para digitar */
+.grupo-input input:focus,
+.grupo-input select:focus,
+.grupo-input textarea:focus {
+  border-color: #45B9FB;
+}
+
+/* Organiza a Hora de Início e Término lado a lado */
+.linha-horarios {
+  display: flex;
+  gap: 15px;
+}
+
+.linha-horarios .grupo-input {
+  flex: 1; /* Faz as duas caixas de hora dividirem o espaço igualmente */
+}
+
+/* Alinha os botões na parte de baixo da janela */
+.botoes-modal {
+  display: flex;
+  justify-content: flex-end; /* Joga os botões para o canto direito */
+  gap: 10px;
+  margin-top: auto;
+ 
+}
+
+.botao-adicionar-rapido {
+  background-color: #45B9FB;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.botao-adicionar-rapido:hover {
+  background-color: #38a0dc;
+  transform: scale(1.05);
+}
+
+.botao-salvar {
+  background-color: #45B9FB;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.botao-salvar:hover {
+  background-color: #38a0dc; /* Azul um pouquinho mais escuro ao passar o mouse */
+}
+
+.botao-cancelar {
+  background-color: #f1f3f5;
+  color: #555555;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.botao-cancelar:hover {
+  background-color: #e2e6ea;
+}
+
+/* Estilo básico para o botão de cancelar provisório */
+.modal-caixa button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background-color: #f1f3f5;
+  cursor: pointer;
+  font-weight: bold;
+  color: #555;
+  margin-top: 10px;
+}
+
+.modal-caixa button:hover {
+  background-color: #e2e6ea;
+}
+
+/* --- ÁREA DA LISTA DE TAREFAS --- */
+.lista-tarefas {
+  width: 600px; /* Mesma largura do calendário */
+  max-width: 90%;
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.lista-tarefas h3 {
+  margin-top: 0;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sem-tarefas {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+}
+
+.cards-tarefas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-grow: 1;
+  max-height: 400px; 
+  overflow-y: auto; 
+  padding-right: 8px;
+  margin: 10px 0;
+}
+
+/* Deixando a barra de rolagem bonitinha e fina (estilo Mac/Celular) */
+.cards-tarefas::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cards-tarefas::-webkit-scrollbar-thumb {
+  background-color: #cccccc;
+  border-radius: 10px;
+}
+
+.card-tarefa {
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 15px;
+  border-left: 6px solid #ccc; /* Borda padrão que muda com a importância */
+}
+
+/* Cores da borda dependendo da importância */
+.borda-normal { border-left-color: #4caf50; }
+.borda-importante { border-left-color: #ffc107; }
+.borda-urgente { border-left-color: #f44336; }
+
+.card-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.card-cabecalho strong {
+  font-size: 16px;
+  color: #333;
+}
+
+.card-cabecalho span {
+  font-size: 13px;
+  color: #666;
+  background-color: #e9ecef;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.card-tarefa p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.4;
+  display: -webkit-box;              /* Define a caixa de exibição necessária */
+  -webkit-line-clamp: 1;             /* <--- Altere aqui o número máximo de linhas (ex: 1, 2 ou 3) */
+  -webkit-box-orient: vertical;      /* Define a orientação vertical para o corte */
+  overflow: hidden;                  /* Esconde o resto do texto que passar do limite */
+  
+  /* Mantemos estes para o caso de palavras muito longas sem espaços */
+  overflow-wrap: break-word; 
+  word-wrap: break-word;
+ 
+}
+
+/* numero que indica que tem mais tarefas no dia*/
+.texto-mais-tarefas {
+  font-size: 10px;
+  font-weight: bold;
+  color: #888888;
+  margin-left: 2px;
+}
+
+.texto-descricao {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+  
+  /* 👇 AS TRÊS LINHAS MÁGICAS PARA NÃO VAZAR 👇 */
+  white-space: pre-wrap;     /* Mantém as quebras de linha digitadas pelo usuário */
+  word-wrap: break-word;     /* Força a quebra de palavras muito longas */
+  overflow-wrap: break-word; /* Garante que palavras gigantescas não quebrem o layout */
+}

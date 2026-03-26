@@ -1,0 +1,82 @@
+/* Fundo escuro que cobre a tela quando o menu abre */
+
+
+/* O Menu Lateral em si */
+.sidebar {
+ position: fixed;
+  top: 60px; /* 👇 Começa logo abaixo da barra azul */
+  left: -300px; 
+  width: 280px;
+  height: calc(100vh - 60px); /* 👇 Cobre o resto da tela pra baixo */
+  background-color: #45B9FB;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+  z-index: 999; 
+  transition: left 0.3s ease-in-out; 
+  display: flex;
+  flex-direction: column;
+}
+
+/* Quando você clica no botão, essa classe puxa o menu pra tela */
+.sidebar.aberta {
+  left: 0; 
+}
+
+.sidebar h2 {
+  color: white;
+}
+
+/* Estilos internos do menu */
+.sidebar-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.botao-fechar {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.sidebar-links {
+  list-style: none;
+  padding: 20px 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.sidebar-links li a {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 25px;
+  text-decoration: none;
+  color: #334155;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  color: white;
+}
+
+.sidebar-links li a:hover {
+  background-color: #f8fafc;
+  color: #45B9FB;
+}
+
+.sidebar-rodape {
+  padding: 20px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.botao-sair {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 16px;
+}
