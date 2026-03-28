@@ -125,15 +125,21 @@ export function Tela_inicial() {
   const renderTileContent = ({ date, view }: { date: Date, view: string }) => {
     if (view === 'month') {
       const tarefasDoDia = tarefas.filter(t => t.data === date.toDateString());
+      if (tarefasDoDia.length === 0) return null;
+
       const tarefasParaMostrar = tarefasDoDia.slice(0, 3);
       const tarefasEscondidas = tarefasDoDia.length - 3;
 
       return (
-        <div className="container-bolinhas">
-          {tarefasParaMostrar.map(t => (
+        <div className="container-indicadores">
+          <div className="bolinhas-wrapper"> 
+            {tarefasEscondidas > 0 && (
+            <span className="contador-tarefas">+{tarefasEscondidas}</span>)}
+            
+           {tarefasParaMostrar.map(t => (
             <span key={t.id} className={`bolinha bolinha-${t.importancia}`} />
-          ))}
-          {tarefasEscondidas > 0 && <span className="texto-mais-tarefas">+{tarefasEscondidas}</span>}
+           ))}
+          </div>
         </div>
       );
     }
@@ -205,7 +211,7 @@ export function Tela_inicial() {
                 <div 
                   key={tarefa.id} 
                   className={`card-tarefa borda-${tarefa.importancia}`}
-                  onClick={() => setTarefaParaDetalhes(tarefa)} // Abre detalhes ao clicar
+                  onClick={() => {setTarefaParaDetalhes(tarefa); setModalListaAberto(false);}} // Abre detalhes ao clicar
                   style={{ cursor: 'pointer' }}
                 >
                   <strong>{tarefa.titulo}</strong>

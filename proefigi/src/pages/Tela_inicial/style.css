@@ -55,16 +55,30 @@ body {
 
 /* O número (+1) */
 .contador-tarefas {
-  font-size: 0.62rem;
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  font-size: 0.6rem;
   font-weight: 800;
-  color: #64748b;
+  color: #9c9c9c;
   line-height: 1;
   /* Garante que ele não tenha margens sobrando */
   margin: 0; 
 }
 
+/* Quando o dia está selecionado, o +1 fica branco */
+.react-calendar__tile--active .contador-tarefas {
+  color: white;
+}
+
+/* Nos outros dias, cinza escuro */
+.contador-tarefas {
+  color: #475569;
+}
+
 /* O grupo de bolinhas */
 .bolinhas-wrapper {
+  position: relative;
   display: flex;
   justify-content: center;
   gap: 3px;
@@ -82,6 +96,7 @@ body {
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-start !important; /* Mantém o dia 21 lá no topo */
+  position: relative;
 }
 
 
