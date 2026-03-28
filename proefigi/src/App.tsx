@@ -1,19 +1,13 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
-import Cadastro from "./pages/Cadastro";
+{/*import { BrowserRouter as Router, Routes, Route } from "react-router-dom";*/}
+{/*import Login from "./pages/Login";*/}
+{/*import Cadastro from "./pages/Cadastro";*/}
+{/*import { Tela_inicial } from "./pages/Tela_inicial";*/}
+import RoutesApp from './routes';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Rota principal: Login */}
-        <Route path="/" element={<Login />} />
-        
-        {/* Rota de Cadastro */}
-        <Route path="/cadastro" element={<Cadastro />} />
-      </Routes>
-    </Router>
-  );
+    <RoutesApp/>
+  )
 }
 
 export default App;

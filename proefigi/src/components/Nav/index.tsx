@@ -1,37 +1,72 @@
 import './style.css';
-import { X, Home, Calendar, Settings, LogOut } from 'lucide-react'; 
+import { Link } from 'react-router-dom';
+import { Calendar, Target, TrendingUp, Clock4, Users, Timer, Settings, HelpCircle } from 'lucide-react';
 
-// Isso avisa ao TypeScript que o Nav também vai receber as informações
 interface NavProps {
   menuAberto: boolean;
   setMenuAberto: (aberto: boolean) => void;
 }
 
-function Nav({ menuAberto, setMenuAberto }: NavProps) {
+export default function Nav({ menuAberto, setMenuAberto }: NavProps) {
   return (
     <>
+      {/* Fundo escuro ao abrir o menu */}
       {menuAberto && (
-        <div className="overlay-menu" onClick={() => setMenuAberto(false)}></div>
+        <div className="nav-overlay" onClick={() => setMenuAberto(false)} />
       )}
 
-      <nav className={`sidebar ${menuAberto ? 'aberta' : ''}`}>
-        <div className="sidebar-cabecalho">
-          <h2>Menu</h2>
-          
+      <nav className={`nav-lateral ${menuAberto ? 'aberto' : ''}`}>
+        
+        {/* Perfil */}
+        <div className="nav-perfil">
+          <div className="nav-avatar">
+            <span>👤</span>
+          </div>
+          <span className="nav-nome">Olá, Paulo</span>
         </div>
 
-        <ul className="sidebar-links">
-          <li><a href="#"><Home size={20} /> Início</a></li>
-          <li><a href="#"><Calendar size={20} /> Minhas Tarefas</a></li>
-          <li><a href="#"><Settings size={20} /> Configurações</a></li>
-        </ul>
-
-        <div className="sidebar-rodape">
-          <button className="botao-sair"><LogOut size={20} /> Sair</button>
+        {/* Itens do menu */}
+        <div className="nav-itens">
+          <Link to="/inicio" className="nav-item" onClick={() => setMenuAberto(false)}>
+            <Calendar size={20} />
+            <span>Calendário</span>
+          </Link>
+          <Link to="/metas" className="nav-item" onClick={() => setMenuAberto(false)}>
+            <Target size={20}/>
+            <span>Metas</span>
+          </Link>
+          <Link to="/progresso" className="nav-item" onClick={() => setMenuAberto(false)}>
+            <TrendingUp size={20}/>
+            <span>Meu Progresso</span>
+          </Link>
+          <Link to="/rotina" className="nav-item" onClick={() => setMenuAberto(false)}>
+            <Clock4 size={20}/>
+            <span>Rotina Otimizada</span>
+          </Link>
+          <Link to="/controle-pais" className="nav-item" onClick={() => setMenuAberto(false)}>
+            <Users size={20}/>
+            <span>Controle dos Pais</span>
+          </Link>
+          <Link to="/pomodoro" className="nav-item" onClick={() => setMenuAberto(false)}>
+            <Timer size={20}/>
+            <span>Pomodoro</span></Link>
         </div>
+
+        
+
+        {/* Rodapé do menu */}
+        <div className="nav-rodape">
+          <Link to="/configuracoes" className="nav-item" onClick={() => setMenuAberto(false)}>
+            <Settings size={20}/>
+            <span>Configurações</span>
+          </Link>
+          <Link to="/ajuda" className="nav-item" onClick={() => setMenuAberto(false)}>
+            <HelpCircle size={20}/>
+            <span>Central de ajuda</span>
+          </Link>
+        </div>
+
       </nav>
     </>
   );
 }
-
-export default Nav;

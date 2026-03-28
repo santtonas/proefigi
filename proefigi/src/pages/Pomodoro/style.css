@@ -1,0 +1,134 @@
+.pomodoro-pagina {
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  max-height: 100vh;
+  background-color: #F1F5F9;
+  position: relative;
+  overflow: hidden;
+  padding-top: 250px;
+}
+
+.botao-detalhes {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: #45B9FB;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.painel-detalhes {
+  position: absolute;
+  top: 60px;
+  left: 20px;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 220px;
+  z-index: 10;
+}
+
+.painel-detalhes h3 {
+  margin: 0;
+  color: #334155;
+}
+
+.detalhe-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detalhe-grupo label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.detalhe-grupo input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.detalhe-grupo input:focus {
+  border-color: #45B9FB;
+}
+
+.botao-salvar-config {
+  background-color: #45B9FB;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.pomodoro-circulo-wrapper {
+  position: relative;
+  width: 300px;
+  height: 300px;
+}
+
+.pomodoro-info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.pomodoro-titulo {
+  font-size: 18px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.pomodoro-tempo {
+  font-size: 52px;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1;
+}
+
+.pomodoro-fase {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.botao-iniciar {
+  margin-top: 30px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s;
+}
+
+.botao-iniciar:hover {
+  transform: scale(1.05);
+}
