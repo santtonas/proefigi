@@ -30,6 +30,10 @@ export default function Login() {
           </button>
         </div>
 
+<p className="footer-text">
+          Não tem uma conta? <a href="/cadastro">Cdastre-se aqui</a>
+        </p>
+
       </div>
 
     </div>
