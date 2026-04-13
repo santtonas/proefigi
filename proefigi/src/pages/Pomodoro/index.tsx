@@ -19,7 +19,7 @@ export default function Pomodoro() {
   const tempoFormatado = `${minutos}:${segundos.toString().padStart(2, '0')}`;
 
   // Arco SVG
-  const raio = 120;
+  const raio = 160;
   const circunferencia = 2 * Math.PI * raio;
   const offset = circunferencia * (1 - progresso);
 
@@ -63,7 +63,7 @@ export default function Pomodoro() {
 
       {/* Botão Detalhes */}
       <button className="botao-detalhes" onClick={() => setDetalhesAbertos(!detalhesAbertos)}>
-        Detalhes ›
+        Detalhes 
       </button>
 
       {/* Painel de configurações */}
@@ -91,25 +91,26 @@ export default function Pomodoro() {
       )}
 
       {/* Círculo */}
+      <div className='pomodoro-centro'>
       <div className="pomodoro-circulo-wrapper">
-        <svg width="300" height="300" viewBox="0 0 300 300">
+        <svg width="400" height="400" viewBox="0 0 400 400">
           {/* Trilha de fundo */}
           <circle
-            cx="150" cy="150" r={raio}
+            cx="200" cy="200" r={raio}
             fill="none"
             stroke={emFoco ? '#f4a89a' : '#a8d0e6'}
             strokeWidth="20"
           />
           {/* Arco de progresso */}
           <circle
-            cx="150" cy="150" r={raio}
+            cx="200" cy="200" r={raio}
             fill="none"
             stroke={emFoco ? '#a8d0e6' : '#f4a89a'}
             strokeWidth="20"
             strokeDasharray={circunferencia}
             strokeDashoffset={offset}
             strokeLinecap="round"
-            transform="rotate(-90 150 150)"
+            transform="rotate(-90 200 200)"
           />
         </svg>
 
@@ -126,6 +127,7 @@ export default function Pomodoro() {
         {rodando ? '⏸' : '▶'} {rodando ? 'Pausar' : 'Iniciar'}
       </button>
 
+    </div>
     </div>
   );
 }

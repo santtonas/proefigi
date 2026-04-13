@@ -1,0 +1,173 @@
+.progresso-pagina {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 3vh, 30px);
+  padding: clamp(15px, 3vh, 40px) 20px;
+  background-color: #F1F5F9;
+  min-height: calc(100vh - 90px);
+  overflow-y: auto;
+}
+
+/* Cards */
+.progresso-cards {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  max-width: 700px;
+  flex-wrap: wrap;
+}
+
+.progresso-card {
+  flex: 1;
+  min-width: 140px;
+  background-color: white;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.card-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.card-valor {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1e293b;
+  text-align: center;
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+/* Gráfico */
+.progresso-grafico {
+  background-color: white;
+  border-radius: 16px;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+  max-width: 700px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: visible;
+}
+
+.progresso-grafico > * {
+  overflow: visible !important;
+}
+
+.progresso-grafico h3 {
+  margin: 0 0 10px 0;
+  color: #334155;
+  font-size: 16px;
+}
+
+/* Streak */
+.progresso-streak {
+  background-color: white;
+  border-radius: 16px;
+  padding: 20px 30px;
+  width: 100%;
+  max-width: 700px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.streak-numero {
+  font-size: 24px;
+  font-weight: 700;
+  color: #525252;
+}
+
+.streak-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #334155;
+}
+
+/* Anel de progresso */
+.card-meta {
+  min-width: 150px;
+}
+
+.anel-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.anel-texto {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.anel-porcentagem {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.card-sublabel {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .progresso-pagina {
+    padding: 20px 10px;
+    gap: 16px;
+  }
+
+  .progresso-cards {
+    gap: 10px;
+  }
+
+  .card-valor {
+    font-size: 26px;
+  }
+
+  .card-label {
+    font-size: 11px;
+  }
+
+  .progresso-grafico {
+    padding: 20px 10px 40px 10px;
+  }
+
+  .progresso-grafico h3 {
+    font-size: 14px;
+  }
+
+  .streak-label {
+    font-size: 14px;
+  }
+
+  .streak-numero {
+    font-size: 20px;
+  }
+}

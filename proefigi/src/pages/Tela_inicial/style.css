@@ -278,23 +278,15 @@ background: #ffffff !important;
   justify-content: center;
   cursor: pointer;
   margin: 0 10px;
-  
-  /* Mantém sem sombra */
-   
-  
-  /* Transição suave para aumentar e dar sombra */
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transição mais "premium" */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
   transform: scale(1);
 }
 
 /* Efeito ao passar o mouse apenas nas setas */
 .react-calendar__navigation__prev-button:hover, 
 .react-calendar__navigation__next-button:hover {
- background-color: #ffffff !important; /* Mantém o fundo branco */
-  
+ background-color: #ffffff !important; 
  transform: scale(1.05);
-  /* 👇 ADICIONE O EFEITO DE AUMENTAR E A SOMBRA 👇 */
-  
  box-shadow: 0 8px 20px rgba(30, 41, 59, 0.12) !important;
 }
 

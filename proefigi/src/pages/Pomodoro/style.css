@@ -3,27 +3,31 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   height: 100vh;
-  max-height: 100vh;
+  height: calc(100vh - 60px);
   background-color: #F1F5F9;
   position: relative;
   overflow: hidden;
-  padding-top: 250px;
 }
 
 .botao-detalhes {
   position: absolute;
   top: 20px;
   left: 20px;
-  background-color: #45B9FB;
-  color: white;
+  background-color: #ffffff;
+  color: #334155;
   border: none;
   padding: 8px 16px;
   border-radius: 20px;
   font-weight: bold;
   cursor: pointer;
   font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.botao-detalhes:hover{
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(30, 41, 59, 0.12) !important;
 }
 
 .painel-detalhes {
@@ -80,10 +84,24 @@
   cursor: pointer;
 }
 
+.botao-salvar-config:hover{
+  background-color: #2EA8E8 ;
+}
+
+.pomodoro-centro{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 .pomodoro-circulo-wrapper {
   position: relative;
-  width: 300px;
-  height: 300px;
+  width: 400px;
+  height: 400px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .pomodoro-info {
@@ -131,4 +149,5 @@
 
 .botao-iniciar:hover {
   transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(30, 41, 59, 0.12) !important;
 }
