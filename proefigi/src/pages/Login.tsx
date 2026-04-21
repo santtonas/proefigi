@@ -31,7 +31,7 @@ export default function Login() {
         </div>
 
 <p className="footer-text">
-          Não tem uma conta? <a href="/cadastro">Cdastre-se aqui</a>
+          Não tem uma conta? <a href="/cadastro">Cadastre-se aqui</a>
         </p>
 
       </div>

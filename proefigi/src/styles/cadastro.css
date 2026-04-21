@@ -10,6 +10,7 @@
   position: relative;
   overflow: hidden;
   font-family: 'Poppins', sans-serif;
+  
 }
 
 /* O fundo animado (copiado do login para manter a identidade) */
@@ -33,7 +34,7 @@
 
 /* CARD DE CADASTRO (Ajustado para mais campos) */
 .register-card {
-  position: relative;
+  position: center;
   z-index: 5; 
   background: rgba(255, 255, 255, 0.25); 
   backdrop-filter: blur(15px);
@@ -109,7 +110,7 @@
 }
 
 .footer-text a {
-  font-size: 13px;
+  font-size: 12px;
   text-decoration: none;
   color: #007bff;
   font-weight: bold;
