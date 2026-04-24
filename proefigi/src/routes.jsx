@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Cadastro from "./pages/Cadastro";
 import Pomodoro from "./pages/Pomodoro";
 import Progresso from "./pages/Progresso";
+import Metas from "./pages/Metas";
 
 function RoutesApp() {
   return (
@@ -18,6 +19,7 @@ function RoutesApp() {
           <Route path="/inicio" element={<Tela_inicial />} />
           <Route path="/pomodoro" element={<Pomodoro/> }/>
           <Route path="/progresso" element={<Progresso/>}/>
+          <Route path="/metas" element={<Metas/>}/>
         </Route>
 
       </Routes>
