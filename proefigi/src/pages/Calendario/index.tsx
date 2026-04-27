@@ -2,7 +2,8 @@ import './style.css';
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { ChevronLeft, ChevronRight } from 'lucide-react'; // Importe os ícones
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTarefas } from '../../context/TarefaContext'; 
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -15,15 +16,16 @@ interface Tarefa {
   termino: string;
   importancia: 'normal' | 'importante' | 'urgente';
   descricao: string;
+  concluida?: boolean;
 }
 
-export function Tela_inicial() {
+export function Calendario() {
+  // Puxando os dados e funções da nossa "nuvem" (Contexto)
+  const { tarefas, adicionarTarefa, excluirTarefa, atualizarTarefa } = useTarefas();
+
   const [date, setDate] = useState<Value>(new Date());
-  const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [modalAberto, setModalAberto] = useState(false);
   const [modalListaAberto, setModalListaAberto] = useState(false);
-  
-  // Estado para controlar a tarefa que está sendo visualizada em detalhes
   const [tarefaParaDetalhes, setTarefaParaDetalhes] = useState<Tarefa | null>(null);
 
   const [titulo, setTitulo] = useState('');
@@ -31,22 +33,19 @@ export function Tela_inicial() {
   const [termino, setTermino] = useState('');
   const [importancia, setImportancia] = useState<'normal' | 'importante' | 'urgente'>('normal');
   const [descricao, setDescricao] = useState('');
-  
-  // Estado para saber qual tarefa estamos editando (se for null, é uma tarefa nova)
   const [tarefaEmEdicao, setTarefaEmEdicao] = useState<string | null>(null);
 
-  // Função que o botão "Editar" vai chamar
   const iniciarEdicao = (tarefa: Tarefa) => {
     setTitulo(tarefa.titulo);
     setInicio(tarefa.inicio);
     setTermino(tarefa.termino);
     setImportancia(tarefa.importancia);
     setDescricao(tarefa.descricao);
-    setTarefaEmEdicao(tarefa.id); // Avisa ao sistema o ID da tarefa
+    setTarefaEmEdicao(tarefa.id);
     
-    setTarefaParaDetalhes(null); // 1. Fecha a janelinha de detalhes
+    setTarefaParaDetalhes(null);
     setModalListaAberto(false);
-    setModalAberto(true);        // 2. Abre a janela do formulário para editar
+    setModalAberto(true);
   };
 
   const tarefasDoDiaSelecionado = date instanceof Date 
@@ -87,17 +86,11 @@ export function Tela_inicial() {
     }
 
     if (tarefaEmEdicao) {
-      // MODO EDIÇÃO: Atualiza a tarefa que já existe
-      const tarefasAtualizadas = tarefas.map(t => {
-        if (t.id === tarefaEmEdicao) {
-          return { ...t, titulo, inicio, termino, importancia, descricao };
-        }
-        return t;
-      });
-      setTarefas(tarefasAtualizadas);
-      setTarefaEmEdicao(null); // Limpa o ID da memória
+      // MODO EDIÇÃO: Atualiza a tarefa no Contexto
+      atualizarTarefa(tarefaEmEdicao, { titulo, inicio, termino, importancia, descricao });
+      setTarefaEmEdicao(null);
     } else {
-      // MODO CRIAÇÃO: Adiciona uma nova tarefa do zero
+      // MODO CRIAÇÃO: Adiciona uma nova tarefa no Contexto
       const novaTarefa: Tarefa = {
         id: Math.random().toString(),
         data: (date as Date).toDateString(),
@@ -107,7 +100,7 @@ export function Tela_inicial() {
         importancia,
         descricao
       };
-      setTarefas([...tarefas, novaTarefa]);
+      adicionarTarefa(novaTarefa);
     }
 
     // Limpa os campos e fecha a janela
@@ -115,18 +108,40 @@ export function Tela_inicial() {
     setModalAberto(false);
   };
 
-  const excluirTarefa = (id: string) => {
+  const lidarComExclusao = (id: string) => {
     if (window.confirm("Tem certeza que deseja excluir esta tarefa?")) {
-      setTarefas(tarefas.filter(t => t.id !== id));
-      setTarefaParaDetalhes(null); // Fecha a janela de detalhes após excluir
+      excluirTarefa(id); 
+      setTarefaParaDetalhes(null);
     }
   };
 
+  const marcarConcluida = (id: string) => {
+    atualizarTarefa(id, { concluida: true });
+    setTarefaParaDetalhes(null); 
+  };
+
+// --- FUNÇÃO NOVA: Define a classe CSS do dia ---
+  const definirClasseDoDia = ({ date, view }: { date: Date, view: string }) => {
+    if (view === 'month') {
+      const tarefasDoDia = tarefas.filter(t => t.data === date.toDateString());
+      const temTarefa = tarefasDoDia.length > 0;
+      // Checa se todas estão concluídas
+      const todasConcluidas = temTarefa && tarefasDoDia.every(t => t.concluida);
+
+      if (todasConcluidas) {
+        return 'dia-concluido-total';
+      }
+    }
+    return null;
+  };
+
+  // --- FUNÇÃO ATUALIZADA: Renderiza as bolinhas ---
   const renderTileContent = ({ date, view }: { date: Date, view: string }) => {
     if (view === 'month') {
       const tarefasDoDia = tarefas.filter(t => t.data === date.toDateString());
       if (tarefasDoDia.length === 0) return null;
 
+      const todasConcluidas = tarefasDoDia.every(t => t.concluida);
       const tarefasParaMostrar = tarefasDoDia.slice(0, 3);
       const tarefasEscondidas = tarefasDoDia.length - 3;
 
@@ -134,11 +149,19 @@ export function Tela_inicial() {
         <div className="container-indicadores">
           <div className="bolinhas-wrapper"> 
             {tarefasEscondidas > 0 && (
-            <span className="contador-tarefas">+{tarefasEscondidas}</span>)}
+              <span className="contador-tarefas" style={{ color: todasConcluidas ? '#cbd5e1' : undefined }}>
+                +{tarefasEscondidas}
+              </span>
+            )}
             
-           {tarefasParaMostrar.map(t => (
-            <span key={t.id} className={`bolinha bolinha-${t.importancia}`} />
-           ))}
+            {tarefasParaMostrar.map(t => (
+              <span 
+                key={t.id} 
+                className={`bolinha bolinha-${t.importancia}`} 
+                
+                style={todasConcluidas ? { backgroundColor: '#cbd5e1' } : {}}
+              />
+            ))}
           </div>
         </div>
       );
@@ -149,9 +172,9 @@ export function Tela_inicial() {
     <>
       <main className="conteudo-principal" style={{ marginTop: '-30px' }}>
         <div className="conteiner-calendario">
-          <Calendar onChange={setDate} value={date} tileContent={renderTileContent} showFixedNumberOfWeeks={true} calendarType="iso8601" locale="pt-BR" onClickDay={aoClicarNoDia} prevLabel={<ChevronLeft size={24} color="#45B9FB" />}
-  nextLabel={<ChevronRight size={24} color="#45B9FB" />} prev2Label={null}
-  next2Label={null}/>
+          <Calendar onChange={setDate} value={date} tileContent={renderTileContent} tileClassName={definirClasseDoDia} showFixedNumberOfWeeks={true} calendarType="iso8601" locale="pt-BR" onClickDay={aoClicarNoDia} prevLabel={<ChevronLeft size={24} color="#45B9FB" />}
+           nextLabel={<ChevronRight size={24} color="#45B9FB" />} prev2Label={null}
+           next2Label={null}/>
           
         </div>
       </main>
@@ -192,7 +215,7 @@ export function Tela_inicial() {
               <button className="botao-salvar" onClick={salvarTarefa}>Salvar</button>
               <button className="botao-cancelar" onClick={() => { 
                 setModalAberto(false); 
-                setTarefaEmEdicao(null); // Limpa a edição se cancelar
+                setTarefaEmEdicao(null);
                 setTitulo(''); setInicio(''); setTermino(''); setImportancia('normal'); setDescricao('');
               }}>Cancelar</button>
             </div>
@@ -211,10 +234,16 @@ export function Tela_inicial() {
                 <div 
                   key={tarefa.id} 
                   className={`card-tarefa borda-${tarefa.importancia}`}
-                  onClick={() => {setTarefaParaDetalhes(tarefa); setModalListaAberto(false);}} // Abre detalhes ao clicar
+                  onClick={() => {setTarefaParaDetalhes(tarefa); setModalListaAberto(false);}}
                   style={{ cursor: 'pointer' }}
                 >
-                  <strong>{tarefa.titulo}</strong>
+                  <strong style={{ 
+                    textDecoration: tarefa.concluida ? 'line-through' : 'none',
+                    opacity: tarefa.concluida ? 0.6 : 1 
+                  }}>
+                    {tarefa.titulo} {tarefa.concluida && "✅"}
+                  </strong>
+
                   <span style={{float: 'right', fontSize: '13px'}}>{tarefa.inicio}</span>
                 </div>
               ))}
@@ -246,6 +275,14 @@ export function Tela_inicial() {
               <button className="botao-cancelar" onClick={() => setTarefaParaDetalhes(null)}>Voltar</button>
               
               <div style={{ display: 'flex', gap: '10px' }}>
+                {!tarefaParaDetalhes.concluida && (
+                  <button 
+                    onClick={() => marcarConcluida(tarefaParaDetalhes.id)} 
+                    style={{ background: '#10b981', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                  >
+                    Concluir
+                  </button>
+                )}
                 <button 
                   onClick={() => iniciarEdicao(tarefaParaDetalhes)}
                   style={{ background: '#45B9FB', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
@@ -254,7 +291,7 @@ export function Tela_inicial() {
                 </button>
 
                 <button 
-                  onClick={() => excluirTarefa(tarefaParaDetalhes.id)}
+                  onClick={() => lidarComExclusao(tarefaParaDetalhes.id)}
                   style={{ background: '#ff4d4d', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
                 >
                   Excluir

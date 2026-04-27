@@ -27,7 +27,7 @@ export default function Nav({ menuAberto, setMenuAberto }: NavProps) {
 
         {/* Itens do menu */}
         <div className="nav-itens">
-          <Link to="/inicio" className="nav-item" onClick={() => setMenuAberto(false)}>
+          <Link to="/calendario" className="nav-item" onClick={() => setMenuAberto(false)}>
             <Calendar size={20} />
             <span>Calendário</span>
           </Link>

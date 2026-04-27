@@ -605,8 +605,21 @@ background: #ffffff !important;
   line-height: 1.5;
   color: #555;
   
-  /* 👇 AS TRÊS LINHAS MÁGICAS PARA NÃO VAZAR 👇 */
-  white-space: pre-wrap;     /* Mantém as quebras de linha digitadas pelo usuário */
-  word-wrap: break-word;     /* Força a quebra de palavras muito longas */
-  overflow-wrap: break-word; /* Garante que palavras gigantescas não quebrem o layout */
+  
+  white-space: pre-wrap;     
+  word-wrap: break-word;     
+  overflow-wrap: break-word; 
+}
+
+/* Estilo para o dia com todas as tarefas concluídas */
+.dia-concluido-total {
+  position: relative;
+  background: linear-gradient(to top right, transparent calc(50% - 1px), #cbd5e1 50%, transparent calc(50% + 1px)) !important;
+  color: #94a3b8 !important; /* Deixa o número do dia mais clarinho */
+}
+
+/* Garante que o número do dia fique por cima do risco para ser legível */
+.dia-concluido-total span {
+  position: relative;
+  z-index: 2;
 }

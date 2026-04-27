@@ -1,0 +1,181 @@
+.home-pagina {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 30px 20px;
+  background-color: #F1F5F9; /* Fundo padrão do Proefigi */
+  align-items: center;
+}
+
+.home-header {
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 25px;
+}
+
+.home-header h2 {
+  font-size: 24px;
+  color: #1e293b;
+  margin: 0 0 5px 0;
+}
+
+.home-header p {
+  color: #64748b;
+  margin: 0;
+  font-size: 15px;
+}
+
+.home-conteudo {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* CARD DE DESTAQUE (TAREFA) */
+.home-card-destaque {
+  background-color: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.destaque-header h3 {
+  margin: 0 0 20px 0;
+  color: #1e293b;
+  font-size: 18px;
+}
+
+/* CARDS DE RESUMO (LADO A LADO) */
+.home-resumos {
+  display: flex;
+  gap: 25px;
+}
+
+.home-card-resumo {
+  flex: 1; /* Faz os dois cards dividirem o espaço igualmente */
+  background-color: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.home-card-resumo h3 {
+  margin: 0 0 20px 0;
+  color: #1e293b;
+  font-size: 16px;
+}
+
+/* LAYOUT INTERNO DO PROGRESSO */
+.progresso-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.progresso-anel-placeholder {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.anel-falso {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 8px solid #e0f2fe;
+  border-top-color: #45B9FB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.divisor-vertical {
+  width: 1px;
+  height: 60px;
+  background-color: #e2e8f0;
+  margin: 0 15px;
+}
+
+.progresso-horas {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.horas-valor {
+  font-size: 20px;
+  font-weight: 800;
+  color: #45B9FB;
+}
+
+.horas-label {
+  font-size: 12px;
+  color: #64748b;
+  text-align: center;
+}
+
+/* LAYOUT INTERNO DAS METAS */
+.resumo-header-metas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.resumo-header-metas h3 {
+  margin: 0;
+}
+
+.botao-ver-tudo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: #45B9FB;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.botao-ver-tudo:hover {
+  text-decoration: underline;
+}
+
+.metas-lista-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.meta-mini-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #334155;
+  background-color: #f8fafc;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.meta-mini-item span {
+  flex: 1;
+}
+
+/* RESPONSIVIDADE PARA CELULAR */
+@media (max-width: 768px) {
+  .home-resumos {
+    flex-direction: column; /* Coloca um card embaixo do outro no celular */
+  }
+}

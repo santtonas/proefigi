@@ -12,7 +12,7 @@ function Header({ menuAberto, setMenuAberto }: HeaderProps) {
   
   return (
     <header className="cabecalho-principal">
-      <Link className="Nome" to="/inicio">Proefigi</Link>
+      <Link className="Nome" to="/home">Proefigi</Link>
       
       <button 
         className={`botao-hamburger ${menuAberto ? 'aberto' : ''}`}
