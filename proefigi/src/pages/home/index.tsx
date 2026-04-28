@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Clock, ArrowRight, Target } from 'lucide-react';
 import { useTarefas } from '../../context/TarefaContext';
 
-// Define o formato da Tarefa para o TypeScript não reclamar
+
 interface Tarefa {
   id: string;
   data: string;
@@ -16,18 +16,29 @@ interface Tarefa {
 }
 
 export function Home() {
-  // 1. Agora puxamos também a exclusão e atualização!
+  
   const { tarefas, adicionarTarefa, excluirTarefa, atualizarTarefa } = useTarefas();
   
   const dataHoje = new Date();
-  const tarefasDeHoje = tarefas.filter(t => t.data === dataHoje.toDateString() && !t.concluida);
 
   const ano = dataHoje.getFullYear();
   const mes = String(dataHoje.getMonth() + 1).padStart(2, '0');
   const dia = String(dataHoje.getDate()).padStart(2, '0');
   const hojeISO = `${ano}-${mes}-${dia}`;
+  const amanha = new Date();
+  amanha.setDate(dataHoje.getDate() + 1);
+  const amanhaISO = amanha.toISOString().split('T')[0];
+  const [modoVisualizacao, setModoVisualizacao] = useState<string>('hoje');
 
-  // --- ESTADOS ---
+  const dataFimSemana = new Date(dataHoje);
+  const diasParaSabado = 6 - dataHoje.getDay(); 
+  dataFimSemana.setDate(dataHoje.getDate() + diasParaSabado);
+  
+  const diaFim = String(dataFimSemana.getDate()).padStart(2, '0');
+  const mesFim = String(dataFimSemana.getMonth() + 1).padStart(2, '0');
+  const anoFim = dataFimSemana.getFullYear();
+
+  
   const [modalAberto, setModalAberto] = useState(false);
   const [tarefaParaDetalhes, setTarefaParaDetalhes] = useState<Tarefa | null>(null); 
   const [tarefaEmEdicao, setTarefaEmEdicao] = useState<string | null>(null);         
@@ -39,6 +50,31 @@ export function Home() {
   const [importancia, setImportancia] = useState<'normal' | 'importante' | 'urgente'>('normal');
   const [descricao, setDescricao] = useState('');
 
+  const [dataVisualizacao, setDataVisualizacao] = useState(hojeISO);
+  const [anoV, mesV, diaV] = dataVisualizacao.split('-');
+  const dataFormatadaVisualizacao = new Date(Number(anoV), Number(mesV) - 1, Number(diaV)).toDateString();
+  const tarefasDaTela = tarefas.filter(t => {
+    if (t.concluida) return false;
+
+    if (modoVisualizacao === 'semana') {
+      const dataTarefa = new Date(t.data);
+      const hoje = new Date(ano, Number(mes) - 1, Number(dia)); 
+      const limite = new Date(anoFim, Number(mesFim) - 1, Number(diaFim)); 
+      
+      return dataTarefa >= hoje && dataTarefa <= limite;
+    }
+
+    
+    return t.data === dataFormatadaVisualizacao;
+  });
+
+ 
+  const tarefasOrdenadas = [...tarefasDaTela].sort((a, b) => {
+    const dataA = new Date(`${a.data} ${a.inicio || '00:00'}`);
+    const dataB = new Date(`${b.data} ${b.inicio || '00:00'}`);
+    return dataA.getTime() - dataB.getTime();
+  });
+
   // --- FUNÇÕES DE EDIÇÃO E EXCLUSÃO ---
   const iniciarEdicao = (tarefa: Tarefa) => {
     setTitulo(tarefa.titulo);
@@ -48,7 +84,7 @@ export function Home() {
     setDescricao(tarefa.descricao);
     setTarefaEmEdicao(tarefa.id);
 
-    // Converte a data da tarefa de volta para YYYY-MM-DD para o input
+    
     const dataObj = new Date(tarefa.data);
     const anoT = dataObj.getFullYear();
     const mesT = String(dataObj.getMonth() + 1).padStart(2, '0');
@@ -76,14 +112,14 @@ export function Home() {
     const dataFormatadaParaContexto = new Date(Number(anoSel), Number(mesSel) - 1, Number(diaSel)).toDateString();
 
     if (tarefaEmEdicao) {
-      // SE ESTIVER EDITANDO
+      
       atualizarTarefa(tarefaEmEdicao, {
         data: dataFormatadaParaContexto, 
         titulo, inicio, termino, importancia, descricao
       });
       setTarefaEmEdicao(null);
     } else {
-      // SE FOR NOVA TAREFA
+      
       const novaTarefa: Tarefa = {
         id: Math.random().toString(),
         data: dataFormatadaParaContexto,
@@ -92,9 +128,9 @@ export function Home() {
       adicionarTarefa(novaTarefa); 
     }
 
-    // Limpa os campos
+    
     setTitulo(''); setInicio(''); setTermino(''); setImportancia('normal'); setDescricao('');
-    setDataNovaTarefa(hojeISO); 
+    setDataNovaTarefa(dataVisualizacao); 
     setModalAberto(false);
   };
 
@@ -103,37 +139,103 @@ export function Home() {
     setTarefaParaDetalhes(null); 
   };
 
+  // Função para formatar a data da tarefa (ex: "Seg, 29/04")
+  const formatarDataTarefa = (dataString: string) => {
+    const dataObj = new Date(dataString);
+    const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+    const diaSemana = diasSemana[dataObj.getDay()];
+    const dia = String(dataObj.getDate()).padStart(2, '0');
+    const mes = String(dataObj.getMonth() + 1).padStart(2, '0');
+    return `${diaSemana}, ${dia}/${mes}`;
+  };
+
   return (
     <div className="home-pagina">
       
       <div className="home-header">
-        
-        <p>Aqui penso em colocar opções de ver "Amanhã e está semana" mostra as tarefas.</p>
+        <div className="filtros-lista-container">
+          <button 
+            className={`botao-filtro-tempo ${modoVisualizacao === 'hoje' ? 'ativo' : ''}`}
+            onClick={() => { setModoVisualizacao('hoje'); setDataVisualizacao(hojeISO); }}
+          >
+            Hoje
+          </button>
+          
+          <button 
+            className={`botao-filtro-tempo ${modoVisualizacao === 'amanha' ? 'ativo' : ''}`}
+            onClick={() => { setModoVisualizacao('amanha'); setDataVisualizacao(amanhaISO); }}
+          >
+            Amanhã
+          </button>
+          
+          <button 
+            className={`botao-filtro-tempo ${modoVisualizacao === 'semana' ? 'ativo' : ''}`}
+            onClick={() => setModoVisualizacao('semana')}
+          >
+            Da semana
+          </button>
+        </div>
       </div>
 
       <div className="home-conteudo">
         
         <div className="home-card-destaque">
-          <div className="destaque-header">
-            <h3>Tarefas do dia</h3>
+          <div className="destaque-header-linha">
+            <h3>
+              {modoVisualizacao === 'semana' ? "Tarefas da Semana" : 
+               dataVisualizacao === hojeISO ? "Tarefas de Hoje" : 
+               dataVisualizacao === amanhaISO ? "Tarefas de Amanhã" : "Tarefas do dia"}
+            </h3>
+            
+            
+            {modoVisualizacao === 'semana' ? (
+              <span className="input-data-cabecalho" style={{ cursor: 'default', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                 {dia}/{mes} - {diaFim}/{mesFim}
+              </span>
+            ) : (
+              <input 
+                type="date" 
+                value={dataVisualizacao} 
+                onChange={(e) => {
+                  setDataVisualizacao(e.target.value);
+                  setModoVisualizacao('custom'); 
+                }} 
+                className="input-data-cabecalho"
+              />
+            )}
           </div>
           
           <div className="area-da-tarefa">
             <div className="cards-tarefas" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {tarefasDeHoje.length > 0 ? (
-                tarefasDeHoje.map(t => (
-                  <div 
-                    key={t.id} 
-                    className={`card-tarefa borda-${t.importancia}`} 
-                    onClick={() => setTarefaParaDetalhes(t)} 
-                    style={{ padding: '15px', backgroundColor: '#f8fafc', borderRadius: '8px', borderLeft: `6px solid ${t.importancia === 'urgente' ? 'red' : t.importancia === 'importante' ? 'orange' : 'green'}`, cursor: 'pointer' }}
-                  >
-                    <strong>{t.titulo}</strong>
-                    <span style={{float: 'right', fontSize: '13px', color: '#64748b'}}>{t.inicio}</span>
-                  </div>
-                ))
+              {tarefasOrdenadas.length > 0 ? (
+                tarefasOrdenadas.map((t, index) => {
+                  
+                 
+                  const mostrarCabecalhoData = modoVisualizacao === 'semana' && (index === 0 || tarefasOrdenadas[index - 1].data !== t.data);
+
+                  return (
+                    <React.Fragment key={t.id}>
+                      
+                      {mostrarCabecalhoData && (
+                        <div className="separador-data">
+                           {formatarDataTarefa(t.data)}
+                        </div>
+                      )}
+                      
+                      
+                      <div 
+                        className={`card-tarefa borda-${t.importancia}`} 
+                        onClick={() => setTarefaParaDetalhes(t)} 
+                        style={{ padding: '15px', backgroundColor: '#f8fafc', borderRadius: '8px', borderLeft: `6px solid ${t.importancia === 'urgente' ? 'red' : t.importancia === 'importante' ? 'orange' : 'green'}`, cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                      >
+                        <strong style={{ color: '#1e293b' }}>{t.titulo}</strong>
+                        <span style={{ fontSize: '13px', color: '#64748b', fontWeight: 'bold' }}>{t.inicio}</span>
+                      </div>
+                    </React.Fragment>
+                  );
+                })
               ) : (
-                <p style={{ textAlign: 'center', color: '#64748b', padding: '20px 0' }}>Nenhuma tarefa para hoje! 🎉</p>
+                <p style={{ textAlign: 'center', color: '#64748b', padding: '20px 0' }}>Nenhuma tarefa para este período! 🎉</p>
               )}
             </div>
 
@@ -141,7 +243,7 @@ export function Home() {
               onClick={() => {
                 setTarefaEmEdicao(null); 
                 setTitulo(''); setInicio(''); setTermino(''); setImportancia('normal'); setDescricao('');
-                setDataNovaTarefa(hojeISO);
+                setDataNovaTarefa(dataVisualizacao);
                 setModalAberto(true);
               }}
               style={{ width: '100%', marginTop: '20px', padding: '12px', backgroundColor: '#f1f5f9', border: 'none', borderRadius: '8px', color: '#475569', fontWeight: 'bold', cursor: 'pointer' }}
@@ -154,7 +256,7 @@ export function Home() {
         <p>Não liga pra esses card por enquanto, tou focando em finalizar o card de tarefas do dia logo.</p>
 
 
-        {/* ... (ÁREA DOS RESUMOS MANTIDA IGUAL) ... */}
+        
         <div className="home-resumos">
           <div className="home-card-resumo">
             <h3>Progresso Hoje</h3>
@@ -207,7 +309,7 @@ export function Home() {
         </div>
       )}
 
-      {/* --- NOVO: MODAL DE DETALHES --- */}
+      {/* ---  MODAL DE DETALHES --- */}
       {tarefaParaDetalhes && (
         <div className="modal-fundo" style={{ zIndex: 1000 }}>
           <div className="modal-caixa" style={{ borderTop: '8px solid', borderColor: tarefaParaDetalhes.importancia === 'urgente' ? 'red' : tarefaParaDetalhes.importancia === 'importante' ? 'orange' : 'green' }}>
