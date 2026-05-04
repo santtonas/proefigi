@@ -3,10 +3,13 @@
 {/*import Cadastro from "./pages/Cadastro";*/}
 {/*import { Tela_inicial } from "./pages/Tela_inicial";*/}
 import RoutesApp from './routes';
+import { TarefaProvider } from './context/TarefaContext';
 
 function App() {
   return (
-    <RoutesApp/>
+    <TarefaProvider>
+      <RoutesApp/>
+    </TarefaProvider>
   )
 }
 
