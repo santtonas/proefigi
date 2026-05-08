@@ -7,9 +7,10 @@
   align-items: center;
 }
 
+/* --- CABEÇALHOS E CONTAINERS (Ajustados para 1200px) --- */
 .home-header {
   width: 100%;
-  max-width: 800px;
+  max-width: 1200px; /* Antes era 800px */
   margin-bottom: 25px;
 }
 
@@ -25,34 +26,53 @@
   font-size: 15px;
 }
 
+.filtros-lista-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+  width: 100%;
+  max-width: 1200px; /* Antes era 800px */
+}
+
 .home-conteudo {
   width: 100%;
-  max-width: 800px;
+  max-width: 1200px; /* Antes era 800px */
   display: flex;
   flex-direction: column;
   gap: 25px;
 }
 
-/* CARD DE DESTAQUE (TAREFA) */
-.home-card-destaque {
+/* --- O GRID PRINCIPAL (PAINEL LADO A LADO) --- */
+.home-dashboard-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr; 
+  gap: 20px; 
+  width: 100%;
+  align-items: start; 
+}
+
+/* --- COLUNA ESQUERDA (CARD PRINCIPAL DE TAREFAS) --- */
+.home-card-destaque, .coluna-tarefas {
   background-color: white;
   border-radius: 16px;
   padding: 25px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  
+  /* Trava a altura para forçar a rolagem interna */
+  height: 550px; 
+  max-height: 550px; 
+  
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Nada vaza deste card */
 }
 
-.destaque-header h3 {
-  margin: 0 0 20px 0;
-  color: #1e293b;
-  font-size: 18px;
-}
-
-/* CONTAINER DO CABEÇALHO COM O INPUT */
 .destaque-header-linha {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  flex-shrink: 0; /* Impede que o título amasse */
 }
 
 .destaque-header-linha h3 {
@@ -61,7 +81,6 @@
   font-size: 18px;
 }
 
-/* ESTILO DO INPUT DE DATA */
 .input-data-cabecalho {
   background-color: #E2E8F0;
   color: #475569;
@@ -75,14 +94,56 @@
   font-family: inherit;
 }
 
-/* CARDS DE RESUMO (LADO A LADO) */
-.home-resumos {
+/* --- ÁREA INTERNA E ROLAGEM DAS TAREFAS --- */
+.area-da-tarefa {
   display: flex;
-  gap: 25px;
+  flex-direction: column;
+  flex: 1; 
+  min-height: 0; /* Essencial para o scroll funcionar */
+}
+
+.cards-tarefas {
+  flex: 1; 
+  overflow-y: auto; /* Aqui nasce a barra de rolagem interna */
+  padding-right: 8px; 
+  margin-bottom: 15px; 
+}
+
+.cards-tarefas::-webkit-scrollbar {
+  width: 6px;
+}
+.cards-tarefas::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+.cards-tarefas::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.cards-tarefas::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+
+.coluna-lateral {
+  display: flex;
+  flex-direction: column; 
+  gap: 20px; 
+  height: 550px;
+}
+
+.coluna-lateral .home-card-resumo:first-child {
+  height: 230px; 
+  min-height: 230px;
+  flex-shrink: 0; 
+}
+
+.coluna-lateral .home-card-resumo:last-child {
+  flex: 1; 
+  overflow-y: auto; 
 }
 
 .home-card-resumo {
-  flex: 1; 
   background-color: white;
   border-radius: 16px;
   padding: 20px;
@@ -97,15 +158,7 @@
   font-size: 16px;
 }
 
-/* CONTAINER DOS BOTÕES DE FILTRO RÁPIDO */
-.filtros-lista-container {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 15px;
-  width: 100%;
-  max-width: 800px; 
-}
-
+/* --- BOTÕES DE FILTRO --- */
 .botao-filtro-tempo {
   padding: 8px 22px;
   border-radius: 25px;
@@ -122,7 +175,6 @@
   background-color: #f8fafc;
 }
 
-/* ESTILO QUANDO O BOTÃO ESTÁ SELECIONADO */
 .botao-filtro-tempo.ativo {
   background-color: #45B9FB; 
   color: white;
@@ -130,7 +182,7 @@
   box-shadow: 0 4px 10px rgba(69, 185, 251, 0.2);
 }
 
-/* SEPARADOR DE DATAS (MODO SEMANA) */
+/* --- COMPONENTES VISUAIS (Separador, Progresso, etc) --- */
 .separador-data {
   font-size: 14px;
   color: #64748b;
@@ -144,61 +196,160 @@
   gap: 6px;
 }
 
-/* LAYOUT INTERNO DO PROGRESSO */
 .progresso-layout {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex: 1;
+  flex-direction: row; 
+  align-items: center; 
+  justify-content: center; 
+  width: 100%;
+  margin-top: 15px;
+  min-height: 120px;
 }
 
-.progresso-anel-placeholder {
-  flex: 1;
+.bloco-grafico {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.progresso-anel-container {
+  position: relative; 
+  width: 100px; 
+  height: 100px;
+  display: flex;
+  align-items: center;
   justify-content: center;
 }
 
-.anel-falso {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 8px solid #e0f2fe;
-  border-top-color: #45B9FB;
+.progresso-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.circulo-fundo,
+.circulo-barra {
+  fill: none;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+}
+
+.circulo-fundo {
+  stroke: #e2e8f0;
+}
+
+.circulo-barra {
+  transition: stroke 0.3s ease;
+  animation: carregarProgresso 1s ease-out forwards;
+}
+
+.progresso-texto-central {
+  position: absolute;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  font-family: inherit;
+}
+
+.porcentagem-valor {
+  font-size: 20px;
+  font-weight: 800;
   color: #1e293b;
+  line-height: 1;
+}
+
+.fracao-valor {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.texto-anel {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  white-space: nowrap; 
+}
+
+.icone-concluido {
+  font-size: 32px;
+  animation: crescerTrofeu 0.5s ease-out;
+}
+
+.estado-vazio-progresso {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  text-align: center;
+  color: #64748b;
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.estado-vazio-progresso p {
+  font-size: 30px;
+  margin: 0;
+}
+
+.estado-vazio-progresso span {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+@keyframes carregarProgresso {
+  0% { stroke-dasharray: 0, 100; }
+}
+
+@keyframes crescerTrofeu {
+  0% { transform: scale(0); opacity: 0; }
+  80% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.progresso-horas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.horas-valor {
+  font-size: 23px;
+  font-weight: 800;
+  color: #1e293b; 
+  line-height: 1;
+}
+
+.horas-label {
+  font-size: 13px;
+  color: #64748b;
 }
 
 .divisor-vertical {
   width: 1px;
-  height: 60px;
+  height: 90px;
   background-color: #e2e8f0;
-  margin: 0 15px;
+  margin: 0 25px;
 }
 
-.progresso-horas {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
+.card-clicavel {
+  cursor: pointer; 
+  transition: transform 0.2s ease, box-shadow 0.2s ease; 
 }
 
-.horas-valor {
-  font-size: 20px;
-  font-weight: 800;
-  color: #45B9FB;
+.card-clicavel:hover {
+  transform: translateY(-4px); 
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-.horas-label {
-  font-size: 12px;
-  color: #64748b;
-  text-align: center;
-}
-
-/* LAYOUT INTERNO DAS METAS */
 .resumo-header-metas {
   display: flex;
   justify-content: space-between;
@@ -248,9 +399,46 @@
   flex: 1;
 }
 
-/* RESPONSIVIDADE PARA CELULAR */
-@media (max-width: 768px) {
-  .home-resumos {
-    flex-direction: column; 
+
+/* --- BARRA DE DIAS SEGUIDOS (STREAK) --- */
+.barra-dias-seguidos {
+  background-color: white;
+  border-radius: 16px;
+  padding: 18px 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.icone-estrela {
+  font-size: 22px;
+  /* Se for usar um ícone SVG/Fonte em vez de Emoji, use a cor do seu projeto: */
+  color: #45B9FB; 
+}
+
+.barra-dias-seguidos p {
+  margin: 0;
+  color: #1e293b;
+  font-size: 15px;
+}
+
+.barra-dias-seguidos p strong {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+/* --- RESPONSIVIDADE (Telas menores) --- */
+@media (max-width: 850px) {
+  .home-dashboard-container {
+    grid-template-columns: 1fr; 
+  }
+  
+  .home-card-destaque, .coluna-tarefas {
+    height: auto; 
+    max-height: none; /* Remove a trava de altura no celular */
+    min-height: 300px;
   }
 }

@@ -1,0 +1,78 @@
+/* Container dos botões de ação */
+.meta-card-acoes {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Estilo padrão dos novos botões (igual o da lixeira) */
+.botao-acao-meta {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+  padding: 4px;
+}
+
+.botao-acao-meta:hover {
+  transform: scale(1.1);
+  color: #45B9FB;
+}
+
+/* Cores quando estão ativados */
+.botao-acao-meta.fixado {
+  color: #f59e0b; /* Amarelo pro alfinete */
+}
+
+.botao-acao-meta.concluido {
+  color: #10b981; /* Verde pro check */
+}
+
+/* Efeito visual de quando a meta inteira é concluída */
+.meta-card.meta-concluida {
+  opacity: 0.6; /* Fica mais transparente */
+}
+
+.meta-card.meta-concluida .meta-card-titulo strong {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+.meta-card.meta-concluida .meta-item {
+  cursor: not-allowed; /* Mostra que não dá pra clicar mais nos itens */
+}
+
+
+/* Ajustes finos para o modo compacto */
+.meta-card.compacto {
+  padding: 10px 12px; /* Diminui bem o espaço interno (cima/baixo e laterais) */
+  gap: 6px; /* Reduz o espaço entre o título e a barrinha */
+  box-shadow: none; 
+  border: 1px solid #e2e8f0; 
+  border-radius: 10px; /* Bordas um pouco menos arredondadas para combinar com o tamanho menor */
+}
+
+/* Diminui a etiqueta de cor (ESTUDO, MATÉRIAS) */
+.meta-card.compacto .meta-tipo-badge {
+  font-size: 9px;
+  padding: 2px 6px;
+}
+
+/* Diminui a fonte do título */
+.meta-card.compacto .meta-card-titulo strong {
+  font-size: 13px; 
+}
+
+/* Deixa a barra de progresso mais fininha */
+.meta-card.compacto .meta-progresso-barra {
+  height: 4px; 
+}
+
+/* Ajusta o tamanho da fonte do número (ex: 1/1) */
+.meta-card.compacto .meta-progresso-texto {
+  font-size: 10px;
+}

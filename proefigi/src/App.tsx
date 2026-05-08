@@ -4,11 +4,14 @@
 {/*import { Tela_inicial } from "./pages/Tela_inicial";*/}
 import RoutesApp from './routes';
 import { TarefaProvider } from './context/TarefaContext';
+import { MetaProvider } from './context/MetaContext';
 
 function App() {
   return (
     <TarefaProvider>
-      <RoutesApp/>
+      <MetaProvider>
+        <RoutesApp/>
+      </MetaProvider>
     </TarefaProvider>
   )
 }

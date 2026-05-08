@@ -2,6 +2,7 @@ import './style.css';
 import { BarChart, Bar, XAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Star } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import {BarraDiasSeguidos} from '../../components/BarraDiasSeguidos';
 
 const dadosSemana = [
   { dia: 'Seg', horas: 2.5 },
@@ -130,13 +131,7 @@ export default function Progresso() {
 
       </div>
 
-      <div className="progresso-streak">
-        <Star size={28} color="#45B9FB" fill="#45B9FB" />
-        <div>
-          <span className="streak-numero">7</span>
-          <span className="streak-label"> dias seguidos estudando!</span>
-        </div>
-      </div>
+      <BarraDiasSeguidos />
 
     </div>
   );

@@ -304,3 +304,5 @@ export function Calendario() {
     </>
   );
 }
+
+export default Calendario;

@@ -1,97 +1,87 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
-// 1. O endereço da API ex.
-const API_URL = 'http://localhost:3000/tarefas'; 
-
-// 2. O TypeScript precisa dessa interface para saber o que é uma "Tarefa"
+// Tipagem da Tarefa
 interface Tarefa {
   id: string;
-  data: string;
   titulo: string;
-  inicio: string;
-  termino: string;
-  importancia: 'normal' | 'importante' | 'urgente';
-  descricao: string;
-  concluida?: boolean;
+  data: string;
+  concluida: boolean;
+  inicio?: string;
+  termino?: string;
 }
 
-// 3. E dessa interface para o Contexto
 interface TarefaContextData {
   tarefas: Tarefa[];
-  adicionarTarefa: (t: Tarefa) => void;
-  excluirTarefa: (id: string) => void;
-  atualizarTarefa: (id: string, t: Partial<Tarefa>) => void;
+  adicionarTarefa: (tarefa: Tarefa) => Promise<void>;
+  excluirTarefa: (id: string) => Promise<void>;
+  atualizarTarefa: (id: string, dados: Partial<Tarefa>) => Promise<void>;
 }
 
-// CORREÇÃO 1: Criar o contexto de fato!
 const TarefaContext = createContext<TarefaContextData>({} as TarefaContextData);
+
+// --- FUNÇÃO DE CALCULAR DIAS SEGUIDOS ---
+function registrarEstudoDoDia() {
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+
+  const ultimaDataSalva = localStorage.getItem('@proefigi:ultimaDataEstudada');
+  const diasAtuais = Number(localStorage.getItem('@proefigi:diasSeguidos') || 0);
+
+  let novosDias = diasAtuais;
+
+  if (ultimaDataSalva) {
+    const ultimaData = new Date(ultimaDataSalva);
+    ultimaData.setHours(0, 0, 0, 0);
+
+    const diferencaTempo = hoje.getTime() - ultimaData.getTime();
+    const diferencaDias = diferencaTempo / (1000 * 3600 * 24);
+
+    if (diferencaDias === 1) {
+      novosDias = diasAtuais + 1; // Estudou ontem, aumenta!
+    } else if (diferencaDias > 1) {
+      novosDias = 1; // Pulou dia, reseta.
+    }
+  } else {
+    novosDias = 1; // Primeira vez.
+  }
+
+  localStorage.setItem('@proefigi:diasSeguidos', String(novosDias));
+  localStorage.setItem('@proefigi:ultimaDataEstudada', hoje.toISOString());
+
+  // DISPARA UM AVISO PARA O APLICATIVO QUE O LOCALSTORAGE MUDOU
+  window.dispatchEvent(new Event('atualizouDiasSeguidos'));
+}
+// ----------------------------------------
 
 export const TarefaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  // BUSCAR TAREFAS (GET)
-  useEffect(() => {
-    async function carregarTarefas() {
-      try {
-        const resposta = await fetch(API_URL);
-        const dados = await resposta.json();
-        setTarefas(dados);
-      } catch (error) {
-        console.error("Erro ao carregar tarefas do banco:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    carregarTarefas();
-  }, []);
-
-  // ADICIONAR (POST)
-  const adicionarTarefa = async (nova: Tarefa) => {
-    try {
-      const resposta = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(nova),
-      });
-      // CORREÇÃO 2: Removido o espaço no nome da variável
-      const tarefaSalvaNoBanco = await resposta.json();
-      setTarefas([...tarefas, tarefaSalvaNoBanco]);
-    } catch (error) {
-      console.error("Erro ao salvar tarefa:", error);
-    }
+  // 1. ADICIONAR
+  const adicionarTarefa = async (novaTarefa: Tarefa) => {
+    const tarefaComId = { ...novaTarefa, id: novaTarefa.id || String(Date.now()) };
+    setTarefas(prev => [...prev, tarefaComId]);
   };
 
-  // EXCLUIR (DELETE)
+  // 2. EXCLUIR
   const excluirTarefa = async (id: string) => {
-    try {
-      await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-      setTarefas(tarefas.filter(t => t.id !== id));
-    } catch (error) {
-      console.error("Erro ao excluir:", error);
-    }
+    setTarefas(prev => prev.filter(t => t.id !== id));
   };
 
-  // ATUALIZAR (PATCH/PUT)
+  // 3. ATUALIZAR
   const atualizarTarefa = async (id: string, dados: Partial<Tarefa>) => {
-    try {
-      await fetch(`${API_URL}/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dados),
-      });
-      setTarefas(tarefas.map(t => t.id === id ? { ...t, ...dados } : t));
-    } catch (error) {
-      console.error("Erro ao atualizar:", error);
+    setTarefas(prev => prev.map(t => t.id === id ? { ...t, ...dados } : t));
+
+    // A MÁGICA ACONTECE AQUI: Se a tarefa foi marcada como CONCLUÍDA, roda a função!
+    if (dados.concluida === true) {
+      registrarEstudoDoDia();
     }
   };
 
   return (
     <TarefaContext.Provider value={{ tarefas, adicionarTarefa, excluirTarefa, atualizarTarefa }}>
-      {!loading && children}
+      {children}
     </TarefaContext.Provider>
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useTarefas = () => useContext(TarefaContext);

@@ -2,7 +2,10 @@ import './style.css';
 import React, { useState } from 'react';
 import { Clock, ArrowRight, Target } from 'lucide-react';
 import { useTarefas } from '../../context/TarefaContext';
-
+import { useMetas } from '../../context/MetaContext';
+import MetaCard from '../../components/MetaCard';
+import { useNavigate } from 'react-router-dom';
+import { BarraDiasSeguidos } from '../../components/BarraDiasSeguidos';
 
 interface Tarefa {
   id: string;
@@ -16,18 +19,22 @@ interface Tarefa {
 }
 
 export function Home() {
-  
+  const { metas } = useMetas();
+  const metasFixadas = metas.filter(m => m.fixada);
+  const metasHome = (metasFixadas.length > 0 ? metasFixadas : metas).slice(0, 3);
+  const navigate = useNavigate();
   const { tarefas, adicionarTarefa, excluirTarefa, atualizarTarefa } = useTarefas();
   
   const dataHoje = new Date();
-
   const ano = dataHoje.getFullYear();
   const mes = String(dataHoje.getMonth() + 1).padStart(2, '0');
   const dia = String(dataHoje.getDate()).padStart(2, '0');
   const hojeISO = `${ano}-${mes}-${dia}`;
+  
   const amanha = new Date();
   amanha.setDate(dataHoje.getDate() + 1);
   const amanhaISO = amanha.toISOString().split('T')[0];
+  
   const [modoVisualizacao, setModoVisualizacao] = useState<string>('hoje');
 
   const dataFimSemana = new Date(dataHoje);
@@ -37,7 +44,6 @@ export function Home() {
   const diaFim = String(dataFimSemana.getDate()).padStart(2, '0');
   const mesFim = String(dataFimSemana.getMonth() + 1).padStart(2, '0');
   const anoFim = dataFimSemana.getFullYear();
-
   
   const [modalAberto, setModalAberto] = useState(false);
   const [tarefaParaDetalhes, setTarefaParaDetalhes] = useState<Tarefa | null>(null); 
@@ -53,6 +59,7 @@ export function Home() {
   const [dataVisualizacao, setDataVisualizacao] = useState(hojeISO);
   const [anoV, mesV, diaV] = dataVisualizacao.split('-');
   const dataFormatadaVisualizacao = new Date(Number(anoV), Number(mesV) - 1, Number(diaV)).toDateString();
+  
   const tarefasDaTela = tarefas.filter(t => {
     if (t.concluida) return false;
 
@@ -64,11 +71,9 @@ export function Home() {
       return dataTarefa >= hoje && dataTarefa <= limite;
     }
 
-    
     return t.data === dataFormatadaVisualizacao;
   });
 
- 
   const tarefasOrdenadas = [...tarefasDaTela].sort((a, b) => {
     const dataA = new Date(`${a.data} ${a.inicio || '00:00'}`);
     const dataB = new Date(`${b.data} ${b.inicio || '00:00'}`);
@@ -83,7 +88,6 @@ export function Home() {
     setImportancia(tarefa.importancia);
     setDescricao(tarefa.descricao);
     setTarefaEmEdicao(tarefa.id);
-
     
     const dataObj = new Date(tarefa.data);
     const anoT = dataObj.getFullYear();
@@ -112,14 +116,12 @@ export function Home() {
     const dataFormatadaParaContexto = new Date(Number(anoSel), Number(mesSel) - 1, Number(diaSel)).toDateString();
 
     if (tarefaEmEdicao) {
-      
       atualizarTarefa(tarefaEmEdicao, {
         data: dataFormatadaParaContexto, 
         titulo, inicio, termino, importancia, descricao
       });
       setTarefaEmEdicao(null);
     } else {
-      
       const novaTarefa: Tarefa = {
         id: Math.random().toString(),
         data: dataFormatadaParaContexto,
@@ -127,7 +129,6 @@ export function Home() {
       };
       adicionarTarefa(novaTarefa); 
     }
-
     
     setTitulo(''); setInicio(''); setTermino(''); setImportancia('normal'); setDescricao('');
     setDataNovaTarefa(dataVisualizacao); 
@@ -139,7 +140,6 @@ export function Home() {
     setTarefaParaDetalhes(null); 
   };
 
-  // Função para formatar a data da tarefa (ex: "Seg, 29/04")
   const formatarDataTarefa = (dataString: string) => {
     const dataObj = new Date(dataString);
     const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
@@ -148,6 +148,43 @@ export function Home() {
     const mes = String(dataObj.getMonth() + 1).padStart(2, '0');
     return `${diaSemana}, ${dia}/${mes}`;
   };
+
+  // --- LÓGICA PROGRESSO DE HOJE ---------
+  const dataHojeObj = new Date(ano, Number(mes) - 1, Number(dia));
+  const dataHojeString = dataHojeObj.toDateString();
+
+  const todasAsTarefasDeHoje = tarefas.filter(t => t.data === dataHojeString);
+  const totalTarefasHoje = todasAsTarefasDeHoje.length;
+  const tarefasConcluidasHoje = todasAsTarefasDeHoje.filter(t => t.concluida).length;
+  const temTarefasHoje = totalTarefasHoje > 0;
+
+  const progressoPorcentagem = temTarefasHoje
+    ? Math.round((tarefasConcluidasHoje / totalTarefasHoje) * 100)
+    : 0;
+
+  let corDoProgresso = '#45B9FB'; 
+  if (progressoPorcentagem === 100 && temTarefasHoje) {
+    corDoProgresso = '#10b981'; 
+  } else if (progressoPorcentagem < 30 && temTarefasHoje) {
+    corDoProgresso = '#a2d9ff'; 
+  }
+
+  let minutosEstudados = 0;
+  todasAsTarefasDeHoje.forEach(tarefa => {
+    if (tarefa.concluida && tarefa.inicio && tarefa.termino) {
+      const [horaInicio, minInicio] = tarefa.inicio.split(':').map(Number);
+      const [horaFim, minFim] = tarefa.termino.split(':').map(Number);
+      const tempoInicioMinutos = (horaInicio * 60) + minInicio;
+      const tempoFimMinutos = (horaFim * 60) + minFim;
+      if (tempoFimMinutos >= tempoInicioMinutos) {
+        minutosEstudados += (tempoFimMinutos - tempoInicioMinutos);
+      }
+    }
+  });
+
+  const horasProgresso = Math.floor(minutosEstudados / 60);
+  const minProgresso = minutosEstudados % 60;
+  const tempoFormatado = `${String(horasProgresso).padStart(2, '0')}h ${String(minProgresso).padStart(2, '0')}m`;
 
   return (
     <div className="home-pagina">
@@ -179,104 +216,173 @@ export function Home() {
 
       <div className="home-conteudo">
         
-        <div className="home-card-destaque">
-          <div className="destaque-header-linha">
-            <h3>
-              {modoVisualizacao === 'semana' ? "Tarefas da Semana" : 
-               dataVisualizacao === hojeISO ? "Tarefas de Hoje" : 
-               dataVisualizacao === amanhaISO ? "Tarefas de Amanhã" : "Tarefas do dia"}
-            </h3>
-            
-            
-            {modoVisualizacao === 'semana' ? (
-              <span className="input-data-cabecalho" style={{ cursor: 'default', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                 {dia}/{mes} - {diaFim}/{mesFim}
-              </span>
-            ) : (
-              <input 
-                type="date" 
-                value={dataVisualizacao} 
-                onChange={(e) => {
-                  setDataVisualizacao(e.target.value);
-                  setModoVisualizacao('custom'); 
-                }} 
-                className="input-data-cabecalho"
-              />
-            )}
-          </div>
+        {/* --- INÍCIO DO DASHBOARD (GRID) --- */}
+        <div className="home-dashboard-container">
           
-          <div className="area-da-tarefa">
-            <div className="cards-tarefas" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {tarefasOrdenadas.length > 0 ? (
-                tarefasOrdenadas.map((t, index) => {
-                  
-                 
-                  const mostrarCabecalhoData = modoVisualizacao === 'semana' && (index === 0 || tarefasOrdenadas[index - 1].data !== t.data);
-
-                  return (
-                    <React.Fragment key={t.id}>
-                      
-                      {mostrarCabecalhoData && (
-                        <div className="separador-data">
-                           {formatarDataTarefa(t.data)}
-                        </div>
-                      )}
-                      
-                      
-                      <div 
-                        className={`card-tarefa borda-${t.importancia}`} 
-                        onClick={() => setTarefaParaDetalhes(t)} 
-                        style={{ padding: '15px', backgroundColor: '#f8fafc', borderRadius: '8px', borderLeft: `6px solid ${t.importancia === 'urgente' ? 'red' : t.importancia === 'importante' ? 'orange' : 'green'}`, cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                      >
-                        <strong style={{ color: '#1e293b' }}>{t.titulo}</strong>
-                        <span style={{ fontSize: '13px', color: '#64748b', fontWeight: 'bold' }}>{t.inicio}</span>
-                      </div>
-                    </React.Fragment>
-                  );
-                })
+          {/* --- COLUNA ESQUERDA: TAREFAS --- */}
+          <div className="home-card-destaque coluna-tarefas">
+            <div className="destaque-header-linha">
+              <h3>
+                {modoVisualizacao === 'semana' ? "Tarefas da Semana" : 
+                 dataVisualizacao === hojeISO ? "Tarefas de Hoje" : 
+                 dataVisualizacao === amanhaISO ? "Tarefas de Amanhã" : "Tarefas do dia"}
+              </h3>
+              
+              {modoVisualizacao === 'semana' ? (
+                <span className="input-data-cabecalho" style={{ cursor: 'default', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                   {dia}/{mes} - {diaFim}/{mesFim}
+                </span>
               ) : (
-                <p style={{ textAlign: 'center', color: '#64748b', padding: '20px 0' }}>Nenhuma tarefa para este período! 🎉</p>
+                <input 
+                  type="date" 
+                  value={dataVisualizacao} 
+                  onChange={(e) => {
+                    setDataVisualizacao(e.target.value);
+                    setModoVisualizacao('custom'); 
+                  }} 
+                  className="input-data-cabecalho"
+                />
+              )}
+            </div>
+            
+            <div className="area-da-tarefa">
+              <div className="cards-tarefas" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {tarefasOrdenadas.length > 0 ? (
+                  tarefasOrdenadas.map((t, index) => {
+                    const mostrarCabecalhoData = modoVisualizacao === 'semana' && (index === 0 || tarefasOrdenadas[index - 1].data !== t.data);
+
+                    return (
+                      <React.Fragment key={t.id}>
+                        {mostrarCabecalhoData && (
+                          <div className="separador-data">
+                             {formatarDataTarefa(t.data)}
+                          </div>
+                        )}
+                        
+                        <div 
+                          className={`card-tarefa borda-${t.importancia}`} 
+                          onClick={() => setTarefaParaDetalhes(t)} 
+                          style={{ padding: '15px', backgroundColor: '#f8fafc', borderRadius: '8px', borderLeft: `6px solid ${t.importancia === 'urgente' ? 'red' : t.importancia === 'importante' ? 'orange' : 'green'}`, cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                        >
+                          <strong style={{ color: '#1e293b' }}>{t.titulo}</strong>
+                          <span style={{ fontSize: '13px', color: '#64748b', fontWeight: 'bold' }}>{t.inicio}</span>
+                        </div>
+                      </React.Fragment>
+                    );
+                  })
+                ) : (
+                  <p style={{ textAlign: 'center', color: '#64748b', padding: '20px 0' }}>Nenhuma tarefa para este período! 🎉</p>
+                )}
+              </div>
+
+              <button 
+                onClick={() => {
+                  setTarefaEmEdicao(null); 
+                  setTitulo(''); setInicio(''); setTermino(''); setImportancia('normal'); setDescricao('');
+                  setDataNovaTarefa(dataVisualizacao);
+                  setModalAberto(true);
+                }}
+                style={{ 
+                  width: '100%', 
+                  marginTop: 'auto', /* Empurra o botão pro fundo se sobrar espaço */
+                  padding: '12px', 
+                  backgroundColor: '#f1f5f9', 
+                  border: 'none', 
+                  borderRadius: '8px', 
+                  color: '#475569', 
+                  fontWeight: 'bold', 
+                  cursor: 'pointer',
+                  flexShrink: 0, /* Impede o botão de ser esmagado */
+                  flexGrow: 0,   /* Impede o botão de esticar e ficar gigante */
+                  height: '45px' /* Crava a altura exata dele */
+                }}
+              >
+                + Adicionar Nova Tarefa
+              </button>
+            </div>
+          </div>
+          {/* --- FIM DA COLUNA ESQUERDA --- */}
+          
+          {/* --- COLUNA DIREITA: PROGRESSO E METAS --- */}
+          <div className="home-resumos coluna-lateral">
+            
+            {/* CARD: PROGRESSO */}
+            <div className="home-card-resumo card-clicavel" onClick={() => navigate('/progresso')}>
+              <h3>Progresso Hoje</h3>
+              
+              {!temTarefasHoje ? (
+                <div className="estado-vazio-progresso">
+                  <p>☕</p>
+                  <span>Nenhuma tarefa para hoje.<br />Pronto para começar?</span>
+                </div>
+              ) : (
+                <div className="progresso-layout">
+                  <div className="bloco-grafico">
+                    <div className="progresso-anel-container">
+                      <svg className="progresso-svg" viewBox="0 0 36 36">
+                        <path className="circulo-fundo" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path className="circulo-barra"
+                          style={{ stroke: corDoProgresso, strokeDasharray: `${progressoPorcentagem}, 100` }}
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                      </svg>
+                      
+                      <div className="progresso-texto-central">
+                        {progressoPorcentagem === 100 ? (
+                          <span className="icone-concluido">🏆</span>
+                        ) : (
+                          <>
+                            <span className="porcentagem-valor">{progressoPorcentagem}%</span>
+                            <span className="fracao-valor">{tarefasConcluidasHoje} / {totalTarefasHoje}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <h3 className="texto-anel">Tarefa concluída</h3>
+                  </div>
+
+                  <div className="divisor-vertical"></div>
+
+                  <div className="progresso-horas">
+                    <Clock size={28} color={corDoProgresso} />
+                    <span className="horas-valor">{tempoFormatado}</span>
+                    <span className="horas-label">Estudadas hoje</span>
+                  </div>
+                </div>
               )}
             </div>
 
-            <button 
-              onClick={() => {
-                setTarefaEmEdicao(null); 
-                setTitulo(''); setInicio(''); setTermino(''); setImportancia('normal'); setDescricao('');
-                setDataNovaTarefa(dataVisualizacao);
-                setModalAberto(true);
-              }}
-              style={{ width: '100%', marginTop: '20px', padding: '12px', backgroundColor: '#f1f5f9', border: 'none', borderRadius: '8px', color: '#475569', fontWeight: 'bold', cursor: 'pointer' }}
-            >
-              + Adicionar Nova Tarefa
-            </button>
+            {/* CARD: METAS DA SEMANA */}
+            <div className="home-card-resumo card-clicavel" onClick={() => navigate('/metas')}>
+              <div className="cabecalho-bloco" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                <h3 style={{ margin: 0, fontSize: '16px', color: '#1e293b' }}>Metas da Semana</h3>
+              </div>
+              <div className="metas-semana-lista" style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '15px' }}>
+                {metas.length === 0 ? (
+                  <p style={{ fontSize: '14px', color: '#94a3b8' }}>Nenhuma meta criada.</p>
+                ) : (
+                  metasHome.map(meta => (
+                    <MetaCard 
+                      key={meta.id} 
+                      meta={meta} 
+                      compacto={true} 
+                    />
+                  ))
+                )}
+              </div>
+            </div>
+
           </div>
+          
+
         </div>
-        
-        <p>Não liga pra esses card por enquanto, tou focando em finalizar o card de tarefas do dia logo.</p>
 
 
-        
-        <div className="home-resumos">
-          <div className="home-card-resumo">
-            <h3>Progresso Hoje</h3>
-            <div className="progresso-layout">
-              <div className="progresso-anel-placeholder"><div className="anel-falso"><span>75%</span></div></div>
-              <div className="divisor-vertical"></div>
-              <div className="progresso-horas"><Clock size={28} color="#45B9FB" /><span className="horas-valor">02h 30m</span><span className="horas-label">Estudadas hoje</span></div>
-            </div>
-          </div>
-          <div className="home-card-resumo">
-            <div className="resumo-header-metas">
-              <h3>Metas da Semana</h3>
-              <button className="botao-ver-tudo">Ver tudo <ArrowRight size={14} /></button>
-            </div>
-            <div className="metas-lista-mini">
-              <div className="meta-mini-item"><Target size={16} color="#a855f7" /><span>Estudar para o concurso</span><strong>(1/3)</strong></div>
-              <div className="meta-mini-item"><Target size={16} color="#f97316" /><span>Ler capítulo 5</span><strong>(0/1)</strong></div>
-            </div>
-          </div>
-        </div>
+
+        <BarraDiasSeguidos />
+       
+
+
       </div>
 
       {/* --- MODAL DE FORMULÁRIO (CRIAR/EDITAR) --- */}
@@ -309,7 +415,7 @@ export function Home() {
         </div>
       )}
 
-      {/* ---  MODAL DE DETALHES --- */}
+      {/* --- MODAL DE DETALHES --- */}
       {tarefaParaDetalhes && (
         <div className="modal-fundo" style={{ zIndex: 1000 }}>
           <div className="modal-caixa" style={{ borderTop: '8px solid', borderColor: tarefaParaDetalhes.importancia === 'urgente' ? 'red' : tarefaParaDetalhes.importancia === 'importante' ? 'orange' : 'green' }}>

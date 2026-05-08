@@ -141,12 +141,52 @@
   color: #94a3b8;
 }
 
-/* --- CORREÇÃO PARA TEXTO VAZANDO NAS METAS --- */
+
 .item-texto-checklist, 
 .label-meta-titulo {
   word-break: break-all;
   overflow-wrap: anywhere;
   white-space: normal;
+}
+
+/* --- BARRA DE DIAS SEGUIDOS (STREAK) --- */
+
+.progresso-pagina .barra-dias-seguidos {
+  width: 90%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.barra-dias-seguidos {
+  background-color: white;
+  border-radius: 16px;
+  padding: 18px 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  box-sizing: border-box; /* Impede a barra de vazar para os lados */
+  margin-top: 20px;
+}
+
+.icone-estrela {
+  font-size: 22px;
+  /* Se for usar um ícone SVG/Fonte em vez de Emoji, use a cor do seu projeto: */
+  color: #45B9FB; 
+}
+
+.barra-dias-seguidos p {
+  margin: 0;
+  color: #1e293b;
+  font-size: 15px;
+}
+
+.barra-dias-seguidos p strong {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1e293b;
 }
 
 
