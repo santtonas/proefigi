@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+.container-rotina {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: #F1F5F9;
+  margin: 0;
+  padding: 0;
+}
+
+.rotina-card {
+  position: relative;
+  z-index: 5;
+  background: rgb(247, 246, 246); /* Card sólido para melhor leitura */
+  padding: 40px;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); /* Sombra bem leve */
+  display: flex;
+  flex-direction: column;
+}
+
+.rotina-card h1 {
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.rotina-card input, 
+.rotina-card select {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fdfdfd;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+  transition: border-color 0.2s;
+}
+
+.rotina-card input:focus {
+  border-color: #00bdf2;
+}
+
+/* Organização de colunas */
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+.row .form-group {
+  flex: 1;
+}
+
+/* Seletor de dias */
+.days-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.day-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px; /* Quadrado arredondado fica mais moderno que círculo aqui */
+  border: 1px solid #eee;
+  background: #f8f9fa;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.1s; /* Rápido sem delay */
+  font-weight: 600;
+}
+
+.day-btn:hover {
+  background: #e9ecef;
+}
+
+.day-btn.active {
+  background: #00bdf2;
+  color: white;
+  border-color: #00bdf2;
+}
+
+/* Botões de ação */
+.buttons-rotina {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.btn-save {
+  background: #00bdf2;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.btn-save:hover {
+  background: #008eb6;
+}
+
+.btn-view {
+  background: white;
+  color: #00bdf2;
+  border: 1px solid #00bdf2;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
