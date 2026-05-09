@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/cadastro.css"
 import logo from "../img/icoproefigi.png";
-import { cadastro } from "../services/auth";
+import { cadastro } from "../services/cadastro";
 
 
 const Cadastro: React.FC = () => {

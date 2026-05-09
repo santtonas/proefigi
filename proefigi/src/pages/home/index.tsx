@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Clock, ArrowRight, Target } from 'lucide-react';
 import { useTarefas } from '../../context/TarefaContext';
 import { useMetas } from '../../context/MetaContext';
-import MetaCard from '../../components/MetaCard';
+import MetaCard from '../../components/Metacard/index';
 import { useNavigate } from 'react-router-dom';
 import { BarraDiasSeguidos } from '../../components/BarraDiasSeguidos';
 

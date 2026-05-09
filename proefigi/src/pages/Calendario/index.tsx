@@ -1,5 +1,5 @@
 import './style.css';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -116,7 +116,10 @@ export function Calendario() {
   };
 
   const marcarConcluida = (id: string) => {
-    atualizarTarefa(id, { concluida: true });
+    const tarefa = tarefas.find(t => t.id === id);
+    if(!tarefa) return;
+
+    atualizarTarefa(id, { ...tarefa, concluida: true });
     setTarefaParaDetalhes(null); 
   };
 

@@ -17,5 +17,9 @@ export async function request(path: string, options?: RequestInit) {
         throw new Error(erro.mensagem || `Erro ${res.status}: ${path}`);
     }
 
+    if(res.status === 204 || res.headers.get("content-length") === "0"){
+        return null;
+    }
+
     return res.json();
 }
