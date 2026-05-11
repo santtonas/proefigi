@@ -7,6 +7,7 @@
   background-color: #F1F5F9;
   align-items: center;
   overflow: hidden; 
+  box-sizing: border-box;
 }
 
 /* O Header branco principal (o que aparece no seu print) */
@@ -77,14 +78,17 @@
 
 /* Container que segura as metas (para alinhar com o header) */
 .metas-lista {
-  width: 100%;
+  width: calc(100% - 24px);
   max-width: 800px;
   display: flex;
   flex-direction: column;
   gap: 20px;
   overflow-y: auto; 
   flex-grow: 1; 
-  padding: 10px 5px; 
+  
+  padding: 10px 15px; 
+  
+  padding-bottom: 40px;
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
 }
@@ -135,6 +139,41 @@
   line-height: 1.4;
 }
 
+/* --- SELETOR DE CORES NO MODAL --- */
+.seletor-cores {
+  display: flex;
+  gap: 15px;
+  margin-top: 5px;
+  align-items: center;
+}
+
+.bola-cor {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  max-width: 30px !important; 
+  min-height: 30px !important;
+  max-height: 30px !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important; 
+  aspect-ratio: 1 / 1 !important; 
+  border-radius: 50% !important; 
+  border: none !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0 !important;
+}
+
+.bola-cor:hover {
+  transform: scale(1.1);
+}
+
+.bola-cor.selecionada {
+  transform: scale(1.15);
+  
+  box-shadow: 0 0 0 3px white, 0 0 0 5px #1e293b; 
+}
+
 .item-preview input[type="radio"],
 .item-preview input[type="checkbox"] {
   flex-shrink: 0; 
@@ -155,14 +194,14 @@
 }
 
 .botao-excluir-meta {
-  flex: 0 0 28px !important; /* Trava o tamanho em 28px */
+  flex: 0 0 28px !important; 
   height: 28px !important;
   
   background: transparent !important;
   border: none !important;
   padding: 0;
   cursor: pointer;
-  color: #94a3b8; /* Cor cinza discreta */
+  color: #94a3b8; 
   
   display: flex;
   align-items: center;
@@ -286,11 +325,36 @@
   align-items: center;
 }
 
+/* --- ÁREA DOS ITENS DO CHECKLIST --- */
 .itens-preview {
+  max-height: 100px;  
+  overflow-y: auto;   
+  padding-right: 8px; 
+  margin-top: 12px;
+  margin-bottom: 20px;
+  
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-top: 8px;
+  gap: 8px;
+}
+
+/* --- ESTILIZANDO A BARRA DE ROLAGEM (Mais elegante) --- */
+.itens-preview::-webkit-scrollbar {
+  width: 6px;
+}
+
+.itens-preview::-webkit-scrollbar-track {
+  background: #f1f5f9; 
+  border-radius: 8px;
+}
+
+.itens-preview::-webkit-scrollbar-thumb {
+  background: #cbd5e1; 
+  border-radius: 8px;
+}
+
+.itens-preview::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8; 
 }
 
 .item-preview span {
@@ -356,8 +420,8 @@
   border-radius: 16px;
   width: 450px;
   max-width: 90%;
-  max-height: 80vh;
-  overflow-y: auto;
+  max-height: 90vh;
+  height: auto !important;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;

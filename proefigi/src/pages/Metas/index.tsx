@@ -2,23 +2,20 @@ import { useState } from 'react';
 import './style.css';
 import { Plus, Trash2, Circle } from 'lucide-react';
 import { useMetas } from '../../context/MetaContext';
-import type { TipoMeta, SubItem, Meta } from '../../context/MetaContext';
 import MetaCard from '../../components/Metacard'; 
+import type { SubItem, Meta } from '../../context/MetaContext';
 
 export default function Metas() {
   const { metas, setMetas } = useMetas();
   
   const [modalAberto, setModalAberto] = useState(false);
   const [titulo, setTitulo] = useState('');
-  const [tipo, setTipo] = useState<TipoMeta>('estudo');
+  const [tipo, setTipo] = useState(''); // Agora é texto livre
+  const [corSelecionada, setCorSelecionada] = useState('#45B9FB'); // Cor padrão
+  const opcoesCores = ['#45B9FB', '#f97316', '#a855f7']; // As 3 cores disponíveis
+  
   const [novoItem, setNovoItem] = useState('');
   const [itens, setItens] = useState<SubItem[]>([]);
-
-  const tipoLabel = (tipo: TipoMeta) => {
-    if (tipo === 'estudo') return { label: 'Estudo', cor: '#45B9FB' };
-    if (tipo === 'tarefas') return { label: 'Tarefas', cor: '#f97316' };
-    return { label: 'Matérias', cor: '#a855f7' };
-  };
 
   const adicionarItem = () => {
     if (!novoItem.trim()) return;
@@ -31,14 +28,20 @@ export default function Metas() {
   };
 
   const salvarMeta = () => {
-    if (!titulo.trim()) return;
-    const { cor } = tipoLabel(tipo);
+    if (!titulo.trim() || !tipo.trim()) return; 
+    
     const novaMeta: Meta = {
-      id: Math.random().toString(), titulo, tipo, itens, concluidas: 0, total: itens.length, cor: cor
+      id: Math.random().toString(), 
+      titulo, 
+      tipo, 
+      itens, 
+      concluidas: 0, 
+      total: itens.length, 
+      cor: corSelecionada 
     };
     
     setMetas([...metas, novaMeta]);
-    setTitulo(''); setTipo('estudo'); setItens([]); setModalAberto(false);
+    setTitulo(''); setTipo(''); setCorSelecionada('#45B9FB'); setItens([]); setModalAberto(false);
   };
 
   const toggleItem = (metaId: string, itemId: string) => {
@@ -120,11 +123,26 @@ export default function Metas() {
             
             <div className="grupo-input">
               <label>Tipo</label>
-              <select value={tipo} onChange={e => setTipo(e.target.value as TipoMeta)}>
-                <option value="estudo">Estudo</option>
-                <option value="tarefas">Tarefas</option>
-                <option value="materias">Matérias</option>
-              </select>
+              <input 
+                type="text" 
+                placeholder="Ex: Trabalho, Pessoal, Faculdade..." 
+                value={tipo} 
+                onChange={e => setTipo(e.target.value)} 
+              />
+            </div>
+            <div className="grupo-input">
+              <label>Cor da Tag</label>
+              <div className="seletor-cores">
+                {opcoesCores.map(cor => (
+                  <button
+                    key={cor}
+                    className={`bola-cor ${corSelecionada === cor ? 'selecionada' : ''}`}
+                    style={{ backgroundColor: cor }}
+                    onClick={() => setCorSelecionada(cor)}
+                    type="button"
+                  />
+                ))}
+              </div>
             </div>
             
             <div className="grupo-input">

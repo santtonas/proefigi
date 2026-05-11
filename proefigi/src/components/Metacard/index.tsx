@@ -14,20 +14,13 @@ interface MetaCardProps {
 export default function MetaCard({ meta, compacto = false, onExcluir, onToggleItem, onFixar, onConcluir }: MetaCardProps) {
   const porcentagem = meta.total > 0 ? Math.round((meta.concluidas / meta.total) * 100) : 0;
 
-  const tipoLabel = (tipo: string) => {
-    if (tipo === 'estudo') return { label: 'Estudo', cor: '#45B9FB' };
-    if (tipo === 'tarefas') return { label: 'Tarefas', cor: '#f97316' };
-    return { label: 'Matérias', cor: '#a855f7' };
-  };
-
-  const { label } = tipoLabel(meta.tipo);
-
   return (
     <div className={`meta-card ${compacto ? 'compacto' : ''} ${meta.concluida ? 'meta-concluida' : ''}`}>
       <div className="meta-card-header">
         <div className="meta-card-titulo">
+          {/* AQUI ESTÁ A MUDANÇA: Usando meta.tipo direto! */}
           <span className="meta-tipo-badge" style={{ backgroundColor: meta.cor }}>
-            {label}
+            {meta.tipo}
           </span>
           <strong>{meta.titulo}</strong>
         </div>

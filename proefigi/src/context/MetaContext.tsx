@@ -1,7 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
-// Adicionei os "export" aqui para resolver o erro vermelho do console!
-export type TipoMeta = 'estudo' | 'tarefas' | 'materias';
+
 
 export interface SubItem {
   id: string;
@@ -15,7 +14,7 @@ export interface Meta {
   concluidas: number;
   total: number;
   cor: string;
-  tipo: TipoMeta;
+  tipo: string;
   itens: SubItem[];
   fixada?: boolean;    
   concluida?: boolean;
