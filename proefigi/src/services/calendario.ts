@@ -95,7 +95,7 @@ export async function criarTarefa(tarefa: Parameters<typeof converterTarefaParaB
 
 // Atualizar tarefa
 export async function atualizarTarefa(id: string, tarefa: Parameters<typeof converterTarefaParaBackend>[0]) {
-  const body = converterTarefaParaBackend(tarefa); // ✅ body declarado antes do uso
+  const body = converterTarefaParaBackend(tarefa);
   console.log("PUT /tasks/" + id, body);
   return request(`/tasks/${id}`, {
     method: "PUT",
