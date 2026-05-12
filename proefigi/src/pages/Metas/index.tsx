@@ -98,7 +98,7 @@ export default function Metas() {
           </div>
         ) : (
           metas.map(meta => (
-            /* Chamando a peça de Lego aqui! Sem o "compacto", ela fica no tamanho normal */
+            
             <MetaCard 
               key={meta.id} 
               meta={meta} 

@@ -1,6 +1,7 @@
 import './style.css';
 import { Link } from 'react-router-dom';
 import { Calendar, Target, TrendingUp, Clock4, Users, Timer, Settings, HelpCircle } from 'lucide-react';
+import { useRef, useEffect } from 'react';
 
 interface NavProps {
   menuAberto: boolean;
@@ -8,14 +9,35 @@ interface NavProps {
 }
 
 export default function Nav({ menuAberto, setMenuAberto }: NavProps) {
+  // 1. Criamos uma referência para o menu
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // 2. Criamos o "ouvinte" de cliques
+  useEffect(() => {
+    function lidarComCliqueFora(event: MouseEvent) {
+      // Se o menu estiver aberto, e o clique NÃO foi dentro do menuRef...
+      if (menuAberto && menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuAberto(false); // ...nós fechamos o menu!
+      }
+    }
+
+    // Adiciona o ouvinte na tela toda
+    document.addEventListener("mousedown", lidarComCliqueFora);
+
+    // Limpa o ouvinte quando o componente for desmontado (boa prática)
+    return () => {
+      document.removeEventListener("mousedown", lidarComCliqueFora);
+    };
+  }, [menuAberto, setMenuAberto]);
   return (
     <>
+
       {/* Fundo escuro ao abrir o menu */}
       {menuAberto && (
         <div className="nav-overlay" onClick={() => setMenuAberto(false)} />
       )}
 
-      <nav className={`nav-lateral ${menuAberto ? 'aberto' : ''}`}>
+      <nav className={`nav-lateral ${menuAberto ? 'aberto' : ''}`} ref={menuRef}>
         
         {/* Perfil */}
         <div className="nav-perfil">

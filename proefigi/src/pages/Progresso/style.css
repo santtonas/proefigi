@@ -2,20 +2,41 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center; 
   gap: 25px;
-  padding: 40px 20px;
+  padding: 20px; 
   background-color: #F1F5F9;
-  min-height: 100vh;
+  min-height: calc(100vh - 70px); 
+  height: calc(100vh - 70px); 
+  box-sizing: border-box;
 }
 
 .caixa-header {
   width: 90%;
   max-width: 1200px;
+  top: -48px;
+  height: 78px;
   background-color: white;
   border-radius: 16px;
   padding: 20px;
-  text-align: center;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  position: relative; 
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+}
+
+caixa-header h2 {
+  margin: 0;
+}
+
+.caixa-header .barra-dias-seguidos {
+  position: absolute;
+  right: 20px; 
+  background-color: transparent;
+  box-shadow: none;
+  padding: 0;
+  margin-top: 0; 
 }
 
 .progresso-main-layout {
@@ -59,11 +80,27 @@
 
 .progresso-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto 1fr;
+  grid-template-columns: 1fr 1fr; 
   gap: 16px;
- height: 100%;
- min-width: 0;
+  height: 100%;
+  min-width: 0;
+}
+
+
+.progresso-cards .home-card-resumo.card-meta {
+  grid-column: span 2; 
+  width: 100% !important; 
+  max-width: none !important; 
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
+.progresso-cards .home-card-resumo .progresso-layout {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .progresso-card {
@@ -122,6 +159,13 @@
   color: #1e293b;
 }
 
+/* Força o card importado da Home a preencher a largura inteira na coluna do Progresso */
+.progresso-cards .home-card-resumo {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0; /* Remove margens extras caso tenha vindo da Home */
+}
+
 .anel-wrapper {
   position: relative;
   display: flex;
@@ -167,13 +211,12 @@
   align-items: center;
   gap: 12px;
   
-  box-sizing: border-box; /* Impede a barra de vazar para os lados */
+  box-sizing: border-box; 
   margin-top: 20px;
 }
 
 .icone-estrela {
   font-size: 22px;
-  /* Se for usar um ícone SVG/Fonte em vez de Emoji, use a cor do seu projeto: */
   color: #45B9FB; 
 }
 

@@ -1,11 +1,11 @@
 import './style.css';
 import React, { useState } from 'react';
-import { Clock, ArrowRight, Target } from 'lucide-react';
 import { useTarefas } from '../../context/TarefaContext';
 import { useMetas } from '../../context/MetaContext';
 import MetaCard from '../../components/Metacard/index';
 import { useNavigate } from 'react-router-dom';
 import { BarraDiasSeguidos } from '../../components/BarraDiasSeguidos';
+import {CardProgresso} from '../../components/CardProgresso';
 
 interface Tarefa {
   id: string;
@@ -307,50 +307,18 @@ export function Home() {
           <div className="home-resumos coluna-lateral">
             
             {/* CARD: PROGRESSO */}
-            <div className="home-card-resumo card-clicavel" onClick={() => navigate('/progresso')}>
-              <h3>Progresso Hoje</h3>
-              
-              {!temTarefasHoje ? (
-                <div className="estado-vazio-progresso">
-                  <p>☕</p>
-                  <span>Nenhuma tarefa para hoje.<br />Pronto para começar?</span>
-                </div>
-              ) : (
-                <div className="progresso-layout">
-                  <div className="bloco-grafico">
-                    <div className="progresso-anel-container">
-                      <svg className="progresso-svg" viewBox="0 0 36 36">
-                        <path className="circulo-fundo" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        <path className="circulo-barra"
-                          style={{ stroke: corDoProgresso, strokeDasharray: `${progressoPorcentagem}, 100` }}
-                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                        />
-                      </svg>
-                      
-                      <div className="progresso-texto-central">
-                        {progressoPorcentagem === 100 ? (
-                          <span className="icone-concluido">🏆</span>
-                        ) : (
-                          <>
-                            <span className="porcentagem-valor">{progressoPorcentagem}%</span>
-                            <span className="fracao-valor">{tarefasConcluidasHoje} / {totalTarefasHoje}</span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    <h3 className="texto-anel">Tarefa concluída</h3>
-                  </div>
-
-                  <div className="divisor-vertical"></div>
-
-                  <div className="progresso-horas">
-                    <Clock size={28} color={corDoProgresso} />
-                    <span className="horas-valor">{tempoFormatado}</span>
-                    <span className="horas-label">Estudadas hoje</span>
-                  </div>
-                </div>
-              )}
-            </div>
+            
+              <CardProgresso 
+                temTarefasHoje={temTarefasHoje}
+                progressoPorcentagem={progressoPorcentagem}
+                tarefasConcluidasHoje={tarefasConcluidasHoje}
+                totalTarefasHoje={totalTarefasHoje}
+                corDoProgresso={corDoProgresso}
+                tempoFormatado={tempoFormatado}
+                mostrarHoras={true} 
+                onClick={() => navigate('/progresso')} 
+              />
+            
 
             {/* CARD: METAS DA SEMANA */}
             <div className="home-card-resumo card-clicavel" onClick={() => navigate('/metas')}>
