@@ -1,6 +1,10 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-
-
+import React, { createContext, useContext, useEffect, useState } from "react";
+import {
+  buscarMetas,
+  criarMetas,
+  atualizarMetas as atualizarMetaApi,
+  excluirMeta as excluirMetaApi,
+} from "../services/metas";
 
 export interface SubItem {
   id: string;
@@ -11,42 +15,85 @@ export interface SubItem {
 export interface Meta {
   id: string;
   titulo: string;
-  concluidas: number;
-  total: number;
-  cor: string;
   tipo: string;
-  itens: SubItem[];
-  fixada?: boolean;    
+  cor: string;
+  fixada?: boolean;
   concluida?: boolean;
+  itens: SubItem[];
+  total: number;
+  concluidas: number;
 }
 
-interface MetaContextData {
+interface MetaContextType {
   metas: Meta[];
-  setMetas: React.Dispatch<React.SetStateAction<Meta[]>>;
+  carregando: boolean;
+  setMetas: (metas: Meta[]) => void;
+  adicionarMeta: (meta: Omit<Meta, "id" | "total" | "concluidas">) => Promise<void>;
+  atualizarMeta: (id: string, meta: Omit<Meta, "id" | "total" | "concluidas">) => Promise<void>;
+  deletarMeta: (id: string) => Promise<void>;
 }
 
-export const MetaContext = createContext<MetaContextData>({} as MetaContextData);
+const MetaContext = createContext<MetaContextType | null>(null);
 
-export const MetaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Lógica do LocalStorage para não perder os dados no F5
-  const [metas, setMetas] = useState<Meta[]>(() => {
-    try {
-      const metasSalvas = localStorage.getItem('@MinhasMetas');
-      return metasSalvas ? JSON.parse(metasSalvas) : [];
-    } catch (error) {
-      return [];
-    }
-  });
+export function MetaProvider({ children }: { children: React.ReactNode }) {
+  const [metas, setMetas] = useState<Meta[]>([]);
+  const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem('@MinhasMetas', JSON.stringify(metas));
-  }, [metas]);
+  buscarMetas()
+    .then(data => {
+      console.log("Metas do backend:", data);
+      setMetas(data);
+    })
+    .catch(() => setMetas([]))
+    .finally(() => setCarregando(false));
+}, []);
+
+  async function adicionarMeta(meta: Omit<Meta, "id" | "total" | "concluidas">) {
+    await criarMetas({
+      titulo: meta.titulo,
+      tipo: meta.tipo,
+      cor: meta.cor,
+      fixada: meta.fixada,
+      concluida: meta.concluida,
+      itens: meta.itens,
+    });
+    const atualizadas = await buscarMetas();
+    setMetas(atualizadas);
+  }
+
+  async function atualizarMeta(id: string, meta: Omit<Meta, "id" | "total" | "concluidas">) {
+    await atualizarMetaApi(id, {
+      titulo: meta.titulo,
+      tipo: meta.tipo,
+      cor: meta.cor,
+      fixada: meta.fixada,
+      concluida: meta.concluida,
+      itens: meta.itens,
+    });
+    setMetas(prev =>
+      prev.map(m =>
+        m.id === id
+          ? { ...m, ...meta, total: meta.itens.length, concluidas: meta.itens.filter(i => i.concluido).length }
+          : m
+      )
+    );
+  }
+
+  async function deletarMeta(id: string) {
+    await excluirMetaApi(id);
+    setMetas(prev => prev.filter(m => m.id !== id));
+  }
 
   return (
-    <MetaContext.Provider value={{ metas, setMetas }}>
+    <MetaContext.Provider value={{ metas, carregando, setMetas, adicionarMeta, atualizarMeta, deletarMeta }}>
       {children}
     </MetaContext.Provider>
   );
-};
+}
 
-export const useMetas = () => useContext(MetaContext);
+export function useMetas() {
+  const context = useContext(MetaContext);
+  if (!context) throw new Error("useMetas deve ser usado dentro do MetaProvider");
+  return context;
+}

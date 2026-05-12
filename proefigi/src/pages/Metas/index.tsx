@@ -2,18 +2,18 @@ import { useState } from 'react';
 import './style.css';
 import { Plus, Trash2, Circle } from 'lucide-react';
 import { useMetas } from '../../context/MetaContext';
-import MetaCard from '../../components/Metacard'; 
+import MetaCard from '../../components/Metacard';
 import type { SubItem, Meta } from '../../context/MetaContext';
 
 export default function Metas() {
-  const { metas, setMetas } = useMetas();
-  
+  const { metas, adicionarMeta, atualizarMeta, deletarMeta } = useMetas(); // ✅ funções do backend
+
   const [modalAberto, setModalAberto] = useState(false);
   const [titulo, setTitulo] = useState('');
-  const [tipo, setTipo] = useState(''); // Agora é texto livre
-  const [corSelecionada, setCorSelecionada] = useState('#45B9FB'); // Cor padrão
-  const opcoesCores = ['#45B9FB', '#f97316', '#a855f7']; // As 3 cores disponíveis
-  
+  const [tipo, setTipo] = useState('');
+  const [corSelecionada, setCorSelecionada] = useState('#45B9FB');
+  const opcoesCores = ['#45B9FB', '#f97316', '#a855f7'];
+
   const [novoItem, setNovoItem] = useState('');
   const [itens, setItens] = useState<SubItem[]>([]);
 
@@ -27,58 +27,56 @@ export default function Metas() {
     setItens(itens.filter(i => i.id !== id));
   };
 
-  const salvarMeta = () => {
-    if (!titulo.trim() || !tipo.trim()) return; 
-    
-    const novaMeta: Meta = {
-      id: Math.random().toString(), 
-      titulo, 
-      tipo, 
-      itens, 
-      concluidas: 0, 
-      total: itens.length, 
-      cor: corSelecionada 
-    };
-    
-    setMetas([...metas, novaMeta]);
+
+  const salvarMeta = async () => {
+    if (!titulo.trim() || !tipo.trim()) return;
+
+    await adicionarMeta({
+      titulo,
+      tipo,
+      cor: corSelecionada,
+      fixada: false,
+      concluida: false,
+      itens,
+    });
+
     setTitulo(''); setTipo(''); setCorSelecionada('#45B9FB'); setItens([]); setModalAberto(false);
   };
 
-  const toggleItem = (metaId: string, itemId: string) => {
-    setMetas(metas.map(m => {
-      if (m.id !== metaId) return m;
-      const novosItens = m.itens.map(i => i.id === itemId ? { ...i, concluido: !i.concluido } : i);
-      return { ...m, itens: novosItens, concluidas: novosItens.filter(i => i.concluido).length };
-    }));
+
+  const toggleItem = async (metaId: string, itemId: string) => {
+    const meta = metas.find(m => m.id === metaId);
+    if (!meta) return;
+
+    const novosItens = meta.itens.map(i =>
+      i.id === itemId ? { ...i, concluido: !i.concluido } : i
+    );
+
+    await atualizarMeta(metaId, { ...meta, itens: novosItens });
   };
 
-  const excluirMeta = (id: string) => {
-    setMetas(metas.filter(m => m.id !== id));
+  const excluirMeta = async (id: string) => {
+    await deletarMeta(id);
   };
 
-  // Função para fixar/desfixar
-  const fixarMeta = (id: string) => {
-    setMetas(metas.map(m => {
-      if (m.id === id) {
-        // Se está tentando fixar, verifica se já existem 3 fixadas
-        if (!m.fixada && metas.filter(meta => meta.fixada).length >= 3) {
-          alert("Você só pode fixar no máximo 3 metas na Home!");
-          return m;
-        }
-        return { ...m, fixada: !m.fixada };
-      }
-      return m;
-    }));
+
+  const fixarMeta = async (id: string) => {
+    const meta = metas.find(m => m.id === id);
+    if (!meta) return;
+
+    if (!meta.fixada && metas.filter(m => m.fixada).length >= 3) {
+      alert("Você só pode fixar no máximo 3 metas na Home!");
+      return;
+    }
+
+    await atualizarMeta(id, { ...meta, fixada: !meta.fixada });
   };
 
-  // Função para concluir/reabrir a meta inteira
-  const concluirMeta = (id: string) => {
-    setMetas(metas.map(m => {
-      if (m.id === id) {
-        return { ...m, concluida: !m.concluida };
-      }
-      return m;
-    }));
+  const concluirMeta = async (id: string) => {
+    const meta = metas.find(m => m.id === id);
+    if (!meta) return;
+
+    await atualizarMeta(id, { ...meta, concluida: !meta.concluida });
   };
 
   return (
@@ -98,13 +96,12 @@ export default function Metas() {
           </div>
         ) : (
           metas.map(meta => (
-            /* Chamando a peça de Lego aqui! Sem o "compacto", ela fica no tamanho normal */
-            <MetaCard 
-              key={meta.id} 
-              meta={meta} 
-              onExcluir={excluirMeta} 
-              onToggleItem={toggleItem} 
-              onFixar={fixarMeta}      
+            <MetaCard
+              key={meta.id}
+              meta={meta}
+              onExcluir={excluirMeta}
+              onToggleItem={toggleItem}
+              onFixar={fixarMeta}
               onConcluir={concluirMeta}
             />
           ))
@@ -115,21 +112,22 @@ export default function Metas() {
         <div className="modal-fundo" onClick={() => setModalAberto(false)}>
           <div className="modal-caixa" onClick={e => e.stopPropagation()}>
             <h3>Nova Meta</h3>
-            
+
             <div className="grupo-input">
               <label>Título</label>
               <input type="text" placeholder="Ex: Estudar para a prova" value={titulo} onChange={e => setTitulo(e.target.value)} />
             </div>
-            
+
             <div className="grupo-input">
               <label>Tipo</label>
-              <input 
-                type="text" 
-                placeholder="Ex: Trabalho, Pessoal, Faculdade..." 
-                value={tipo} 
-                onChange={e => setTipo(e.target.value)} 
+              <input
+                type="text"
+                placeholder="Ex: Trabalho, Pessoal, Faculdade..."
+                value={tipo}
+                onChange={e => setTipo(e.target.value)}
               />
             </div>
+
             <div className="grupo-input">
               <label>Cor da Tag</label>
               <div className="seletor-cores">
@@ -144,14 +142,20 @@ export default function Metas() {
                 ))}
               </div>
             </div>
-            
+
             <div className="grupo-input">
               <label>Itens do checklist</label>
               <div className="input-adicionar-item">
-                <input type="text" placeholder="Ex: Ler capítulo 1" value={novoItem} onChange={e => setNovoItem(e.target.value)} onKeyDown={e => e.key === 'Enter' && adicionarItem()} />
+                <input
+                  type="text"
+                  placeholder="Ex: Ler capítulo 1"
+                  value={novoItem}
+                  onChange={e => setNovoItem(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && adicionarItem()}
+                />
                 <button onClick={adicionarItem}><Plus size={18} /></button>
               </div>
-              
+
               <div className="itens-preview">
                 {itens.map(item => (
                   <div key={item.id} className="item-preview">
@@ -162,7 +166,7 @@ export default function Metas() {
                 ))}
               </div>
             </div>
-            
+
             <div className="botoes-modal">
               <button className="botao-salvar" onClick={salvarMeta}>Salvar Meta</button>
               <button className="botao-cancelar" onClick={() => setModalAberto(false)}>Cancelar</button>
