@@ -11,12 +11,12 @@ import Rotina from "./pages/Rotina";
 import Restricao from "./pages/Restricao"; 
 
 import { Calendario } from "./pages/Calendario";
-import { TarefaProvider } from './context/TarefaContext';
+{/*import { TarefaProvider } from './context/TarefaContext';*/}
 
 function RoutesApp() {
   return (
     <BrowserRouter>
-      <TarefaProvider>
+      {/*<TarefaProvider>*/}
         <Routes>
           
           <Route path="/" element={<Login/>}/>
@@ -33,7 +33,7 @@ function RoutesApp() {
              <Route path="/restricao" element={<Restricao/>}/> 
           </Route>
         </Routes>
-      </TarefaProvider>
+      {/*</TarefaProvider>*/}
     </BrowserRouter>
   );
 }

@@ -1,160 +1,136 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Play, Pause } from 'lucide-react';
 import './style.css';
+import { useTarefas } from '../../context/TarefaContext';
 
 export default function Pomodoro() {
-  const [tempoFoco, setTempoFoco] = useState(25);
-  const [tempoDescanso, setTempoDescanso] = useState(5);
-  const [segundosRestantes, setSegundosRestantes] = useState(25 * 60);
-  const [rodando, setRodando] = useState(false);
-  const [emFoco, setEmFoco] = useState(true);
-  const [detalhesAbertos, setDetalhesAbertos] = useState(false);
+  // Estados do Cronômetro
+  const [tempo, setTempo] = useState(25 * 60); // Começa em 25 minutos
+  const [ativo, setAtivo] = useState(false);
+  const [fase, setFase] = useState<'Foco' | 'Descanso'>('Foco');
+  const [cicloAtual, setCicloAtual] = useState(1); // Conta os "tomates" (pomodoros)
+
+  // ==========================================
+  // LÓGICA DE IDENTIFICAÇÃO DA TAREFA
+  // ==========================================
   
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const estadoRef = useRef({
-    rodando: false,
-    emFoco: true,
-    tempoFoco: 25,
-    tempoDescanso: 5,
-    segundos: 25 * 60,
+  // Descomente a linha abaixo e apague o array vazio quando o import acima estiver correto
+  const { tarefas } = useTarefas(); 
+ // const tarefas: any[] = []; // Array vazio temporário só para não dar erro na tela
+  
+  const tarefaAtual = tarefas.find(t => {
+    const agora = new Date();
+    const horaAtual = agora.getHours() * 60 + agora.getMinutes();
+
+    if (!t.inicio || !t.termino) return false;
+
+    // Converte os horários da tarefa para minutos totais
+    const [hIni, mIni] = t.inicio.split(':').map(Number);
+    const [hFim, mFim] = t.termino.split(':').map(Number);
+    
+    const tempoInicio = hIni * 60 + mIni;
+    const tempoFim = hFim * 60 + mFim;
+
+    // Retorna a tarefa se ela for automática e estiver no horário exato
+    return t.pomodoroAutomatico && horaAtual >= tempoInicio && horaAtual <= tempoFim;
   });
 
-  const totalSegundos = emFoco ? tempoFoco * 60 : tempoDescanso * 60;
-  const progresso = segundosRestantes / totalSegundos;
-  const minutos = Math.floor(segundosRestantes / 60);
-  const segundos = segundosRestantes % 60;
-  const tempoFormatado = `${minutos}:${segundos.toString().padStart(2, '0')}`;
+  // ==========================================
+  // LÓGICA DO CRONÔMETRO E FASES
+  // ==========================================
+  useEffect(() => {
+    let intervalo: ReturnType<typeof setInterval>;
 
-  const raio = 160;
-  const circunferencia = 2 * Math.PI * raio;
-  const offset = circunferencia * (1 - progresso);
-
-  const iniciarIntervalo = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    
-    intervalRef.current = setInterval(() => {
-      estadoRef.current.segundos -= 1;
-      
-      if (estadoRef.current.segundos <= 0) {
-        estadoRef.current.emFoco = !estadoRef.current.emFoco;
-        estadoRef.current.segundos = estadoRef.current.emFoco
-          ? estadoRef.current.tempoFoco * 60
-          : estadoRef.current.tempoDescanso * 60;
-        
-        setEmFoco(estadoRef.current.emFoco);
+    if (ativo && tempo > 0) {
+      intervalo = setInterval(() => {
+        setTempo((t) => t - 1);
+      }, 1000);
+    } else if (ativo && tempo === 0) {
+      if (fase === 'Foco') {
+        // Se for o 4º ciclo, dá uma pausa longa de 15 minutos! Se não, 5 minutos.
+        if (cicloAtual % 4 === 3) {
+          setTempo(15 * 60); 
+        } else {
+          setTempo(5 * 60); 
+        }
+        setFase('Descanso');
+      } else {
+        setFase('Foco');
+        setTempo(25 * 60);
+        setCicloAtual(c => c + 1); // Aumenta o ciclo
+        setAtivo(false); // Pausa esperando iniciar o próximo foco
       }
-      
-      setSegundosRestantes(estadoRef.current.segundos);
-    }, 1000);
-  };
-
-  const toggleRodando = () => {
-    const novoRodando = !rodando;
-    estadoRef.current.rodando = novoRodando;
-    setRodando(novoRodando);
-    
-    if (novoRodando) {
-      iniciarIntervalo();
-    } else {
-      if (intervalRef.current) clearInterval(intervalRef.current);
     }
-  };
 
-  const salvarConfiguracoes = (novoTempoFoco: number, novoTempoDescanso: number) => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    estadoRef.current = {
-      rodando: false,
-      emFoco: true,
-      tempoFoco: novoTempoFoco,
-      tempoDescanso: novoTempoDescanso,
-      segundos: novoTempoFoco * 60,
-    };
-    setRodando(false);
-    setEmFoco(true);
-    setSegundosRestantes(novoTempoFoco * 60);
-    setDetalhesAbertos(false);
-  };
+    return () => clearInterval(intervalo);
+  }, [ativo, tempo, fase, cicloAtual]);
 
-  useEffect(() => {
-    estadoRef.current.tempoFoco = tempoFoco;
-  }, [tempoFoco]);
+  // Formatação para MM:SS
+  const minutos = Math.floor(tempo / 60);
+  const segundos = tempo % 60;
+  const tempoFormatado = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
 
-  useEffect(() => {
-    estadoRef.current.tempoDescanso = tempoDescanso;
-  }, [tempoDescanso]);
-
-  useEffect(() => {
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
+  // Cálculos da Animação do Círculo
+  const tempoTotalFase = fase === 'Foco' ? 25 * 60 : (cicloAtual % 4 === 0 ? 15 * 60 : 5 * 60);
+  const porcentagem = (tempo / tempoTotalFase) * 100;
+  const raioCirculo = 190;
+  const circunferencia = 2 * Math.PI * raioCirculo;
+  const offsetCirculo = circunferencia - (porcentagem / 100) * circunferencia;
 
   return (
-    <div className={`pomodoro-pagina ${!emFoco ? 'descanso' : ''}`}>
-
-      <button className="botao-detalhes" onClick={() => setDetalhesAbertos(!detalhesAbertos)}>
-        Detalhes
-      </button>
-
-      {detalhesAbertos && (
-        <div className="painel-detalhes">
-          <h3>Configurações</h3>
-          <div className="detalhe-grupo">
-            <label>Tempo de foco (min)</label>
-            <input
-              type="number" min={1} max={60}
-              value={tempoFoco}
-              onChange={e => setTempoFoco(Number(e.target.value))}
-            />
-          </div>
-          <div className="detalhe-grupo">
-            <label>Tempo de descanso (min)</label>
-            <input
-              type="number" min={1} max={30}
-              value={tempoDescanso}
-              onChange={e => setTempoDescanso(Number(e.target.value))}
-            />
-          </div>
-          <button className="botao-salvar-config" onClick={() => salvarConfiguracoes(tempoFoco, tempoDescanso)}>
-            Salvar
-          </button>
+    <div className={`pomodoro-pagina ${fase === 'Descanso' ? 'descanso' : ''}`}>
+      
+      {/* Banner Minimalista no Topo */}
+      {tarefaAtual ? (
+        <div className="status-tarefa-topo">
+          <span className="status-label">Focando em</span>
+          <span className="status-nome-tarefa">{tarefaAtual.titulo}</span>
+        </div>
+      ) : (
+        <div className="status-tarefa-topo" style={{ opacity: 0.6 }}>
+          <span className="status-label">Modo Livre</span>
+          <span className="status-nome-tarefa" style={{ fontSize: '13px', fontWeight: 'normal' }}>
+            Nenhuma tarefa agendada para agora
+          </span>
         </div>
       )}
 
-      <div className='pomodoro-centro'>
+      {/* Centro do Pomodoro */}
+      <div className="pomodoro-centro">
         <div className="pomodoro-circulo-wrapper">
-          <svg width="400" height="400" viewBox="0 0 400 400">
-            {/* Trilha de fundo */}
+          <svg width="400" height="400" style={{ transform: 'rotate(-90deg)' }}>
+            {/* Fundo do círculo */}
             <circle
-              cx="200" cy="200" r={raio}
-              fill="none"
-              stroke={emFoco ? '#f4a89a' : '#a8d0e6'}
-              strokeWidth="20"
+              cx="200" cy="200" r={raioCirculo}
+              stroke="#e2e8f0" strokeWidth="8" fill="none"
             />
-            {/* Arco de progresso */}
+            {/* Círculo que diminui */}
             <circle
-              cx="200" cy="200" r={raio}
-              fill="none"
-              stroke={emFoco ? '#a8d0e6' : '#c8e6c8'}
-              strokeWidth="20"
+              cx="200" cy="200" r={raioCirculo}
+              stroke={fase === 'Foco' ? '#45B9FB' : '#22c55e'} 
+              strokeWidth="8" fill="none"
               strokeDasharray={circunferencia}
-              strokeDashoffset={offset}
-              strokeLinecap="round"
-              transform="rotate(-90 200 200)"
+              strokeDashoffset={offsetCirculo}
+              style={{ transition: 'stroke-dashoffset 1s linear, stroke 0.5s ease' }}
             />
           </svg>
 
           <div className="pomodoro-info">
-            <span className="pomodoro-titulo">Pomodoro</span>
+            <span className="pomodoro-titulo">
+              {fase === 'Foco' ? `Ciclo ${cicloAtual}` : 'Hora de Relaxar'}
+            </span>
             <span className="pomodoro-tempo">{tempoFormatado}</span>
-            <span className="pomodoro-fase">{emFoco ? 'Tempo de foco' : 'Tempo de descanso'}</span>
+            <span className="pomodoro-fase">
+              {ativo ? 'Em andamento...' : 'Pausado'}
+            </span>
           </div>
         </div>
 
-        <button className="botao-iniciar" onClick={toggleRodando}>
-          {rodando ? '⏸' : '▶'} {rodando ? 'Pausar' : 'Iniciar'}
+        <button className="botao-iniciar" onClick={() => setAtivo(!ativo)}>
+          {ativo ? <Pause size={24} /> : <Play size={24} />}
+          {ativo ? 'Pausar' : 'Iniciar'}
         </button>
       </div>
-
     </div>
   );
 }
