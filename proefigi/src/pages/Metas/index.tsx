@@ -6,7 +6,7 @@ import MetaCard from '../../components/Metacard';
 import type { SubItem, Meta } from '../../context/MetaContext';
 
 export default function Metas() {
-  const { metas, adicionarMeta, atualizarMeta, deletarMeta } = useMetas(); // ✅ funções do backend
+  const { metas, adicionarMeta, atualizarMeta, deletarMeta, toggleItem } = useMetas(); // ✅ funções do backend
 
   const [modalAberto, setModalAberto] = useState(false);
   const [titulo, setTitulo] = useState('');
@@ -44,16 +44,6 @@ export default function Metas() {
   };
 
 
-  const toggleItem = async (metaId: string, itemId: string) => {
-    const meta = metas.find(m => m.id === metaId);
-    if (!meta) return;
-
-    const novosItens = meta.itens.map(i =>
-      i.id === itemId ? { ...i, concluido: !i.concluido } : i
-    );
-
-    await atualizarMeta(metaId, { ...meta, itens: novosItens });
-  };
 
   const excluirMeta = async (id: string) => {
     await deletarMeta(id);

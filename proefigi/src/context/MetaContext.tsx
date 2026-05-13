@@ -4,6 +4,7 @@ import {
   criarMetas,
   atualizarMetas as atualizarMetaApi,
   excluirMeta as excluirMetaApi,
+  atualizarItemchecklist
 } from "../services/metas";
 
 export interface SubItem {
@@ -31,6 +32,7 @@ interface MetaContextType {
   adicionarMeta: (meta: Omit<Meta, "id" | "total" | "concluidas">) => Promise<void>;
   atualizarMeta: (id: string, meta: Omit<Meta, "id" | "total" | "concluidas">) => Promise<void>;
   deletarMeta: (id: string) => Promise<void>;
+  toggleItem: (metaId: string, itemId: string) => Promise<void>;
 }
 
 const MetaContext = createContext<MetaContextType | null>(null);
@@ -80,13 +82,44 @@ export function MetaProvider({ children }: { children: React.ReactNode }) {
     );
   }
 
+
+  async function toggleItem(metaId: string, itemId: string) {
+  const meta = metas.find(m => m.id === metaId);
+  if (!meta) return;
+
+  const item = meta.itens.find(i => i.id === itemId);
+  if (!item) return;
+
+  await atualizarItemchecklist(itemId, {
+    texto: item.texto,
+    concluido: !item.concluido,
+  });
+
+  setMetas(prev =>
+    prev.map(m => {
+      if (m.id !== metaId) return m;
+
+      const novosItens = m.itens.map(i =>
+        i.id === itemId ? { ...i, concluido: !i.concluido } : i
+      );
+
+      return {
+        ...m,
+        itens: novosItens,
+        total: novosItens.length,                                   
+        concluidas: novosItens.filter(i => i.concluido).length,  
+      };
+    })
+  );
+}
+
   async function deletarMeta(id: string) {
     await excluirMetaApi(id);
     setMetas(prev => prev.filter(m => m.id !== id));
   }
 
   return (
-    <MetaContext.Provider value={{ metas, carregando, setMetas, adicionarMeta, atualizarMeta, deletarMeta }}>
+    <MetaContext.Provider value={{ metas, carregando, setMetas, adicionarMeta, atualizarMeta, deletarMeta, toggleItem }}>
       {children}
     </MetaContext.Provider>
   );
