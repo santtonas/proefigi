@@ -8,6 +8,7 @@ import { useTarefas } from '../../context/TarefaContext';
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
+// 1. INTERFACE ATUALIZADA
 interface Tarefa {
   id: string;
   data: string;
@@ -17,10 +18,10 @@ interface Tarefa {
   importancia: 'normal' | 'importante' | 'urgente';
   descricao: string;
   concluida?: boolean;
+  pomodoroAutomatico: boolean; // Campo adicionado
 }
 
 export function Calendario() {
-  // Puxando os dados e funções da nossa "nuvem" (Contexto)
   const { tarefas, adicionarTarefa, excluirTarefa, atualizarTarefa } = useTarefas();
 
   const [date, setDate] = useState<Value>(new Date());
@@ -34,13 +35,16 @@ export function Calendario() {
   const [importancia, setImportancia] = useState<'normal' | 'importante' | 'urgente'>('normal');
   const [descricao, setDescricao] = useState('');
   const [tarefaEmEdicao, setTarefaEmEdicao] = useState<string | null>(null);
+  const [pomodoroAutomatico, setPomodoroAutomatico] = useState(false);
 
+  // 2. LÓGICA DE EDIÇÃO CORRIGIDA
   const iniciarEdicao = (tarefa: Tarefa) => {
     setTitulo(tarefa.titulo);
     setInicio(tarefa.inicio);
     setTermino(tarefa.termino);
     setImportancia(tarefa.importancia);
     setDescricao(tarefa.descricao);
+    setPomodoroAutomatico(tarefa.pomodoroAutomatico); // Carrega o estado do switch
     setTarefaEmEdicao(tarefa.id);
     
     setTarefaParaDetalhes(null);
@@ -79,6 +83,7 @@ export function Calendario() {
     }
   };
 
+  // 3. SALVAMENTO CORRIGIDO
   const salvarTarefa = () => {
     if (!titulo) {
       alert("Por favor, dê um título para a tarefa!");
@@ -86,25 +91,26 @@ export function Calendario() {
     }
 
     if (tarefaEmEdicao) {
-      // MODO EDIÇÃO: Atualiza a tarefa no Contexto
-      atualizarTarefa(tarefaEmEdicao, { titulo, inicio, termino, importancia, descricao });
+      atualizarTarefa(tarefaEmEdicao, { 
+        titulo, inicio, termino, importancia, descricao, pomodoroAutomatico 
+      });
       setTarefaEmEdicao(null);
     } else {
-      // MODO CRIAÇÃO: Adiciona uma nova tarefa no Contexto
-      const novaTarefa: Tarefa = {
-        id: Math.random().toString(),
+      const novaTarefa: Omit<Tarefa, "id"> = {
         data: (date as Date).toDateString(),
         titulo,
         inicio,
         termino,
+        pomodoroAutomatico,
         importancia,
         descricao
       };
       adicionarTarefa(novaTarefa);
     }
 
-    // Limpa os campos e fecha a janela
+    // Reset total
     setTitulo(''); setInicio(''); setTermino(''); setImportancia('normal'); setDescricao('');
+    setPomodoroAutomatico(false);
     setModalAberto(false);
   };
 
@@ -118,32 +124,24 @@ export function Calendario() {
   const marcarConcluida = (id: string) => {
     const tarefa = tarefas.find(t => t.id === id);
     if(!tarefa) return;
-
     atualizarTarefa(id, { ...tarefa, concluida: true });
     setTarefaParaDetalhes(null); 
   };
 
-// --- FUNÇÃO NOVA: Define a classe CSS do dia ---
   const definirClasseDoDia = ({ date, view }: { date: Date, view: string }) => {
     if (view === 'month') {
       const tarefasDoDia = tarefas.filter(t => t.data === date.toDateString());
       const temTarefa = tarefasDoDia.length > 0;
-      // Checa se todas estão concluídas
       const todasConcluidas = temTarefa && tarefasDoDia.every(t => t.concluida);
-
-      if (todasConcluidas) {
-        return 'dia-concluido-total';
-      }
+      if (todasConcluidas) return 'dia-concluido-total';
     }
     return null;
   };
 
-  // --- FUNÇÃO ATUALIZADA: Renderiza as bolinhas ---
   const renderTileContent = ({ date, view }: { date: Date, view: string }) => {
     if (view === 'month') {
       const tarefasDoDia = tarefas.filter(t => t.data === date.toDateString());
       if (tarefasDoDia.length === 0) return null;
-
       const todasConcluidas = tarefasDoDia.every(t => t.concluida);
       const tarefasParaMostrar = tarefasDoDia.slice(0, 3);
       const tarefasEscondidas = tarefasDoDia.length - 3;
@@ -156,12 +154,10 @@ export function Calendario() {
                 +{tarefasEscondidas}
               </span>
             )}
-            
             {tarefasParaMostrar.map(t => (
               <span 
                 key={t.id} 
                 className={`bolinha bolinha-${t.importancia}`} 
-                
                 style={todasConcluidas ? { backgroundColor: '#cbd5e1' } : {}}
               />
             ))}
@@ -175,10 +171,7 @@ export function Calendario() {
     <>
       <main className="conteudo-principal" style={{ marginTop: '-30px' }}>
         <div className="conteiner-calendario">
-          <Calendar onChange={setDate} value={date} tileContent={renderTileContent} tileClassName={definirClasseDoDia} showFixedNumberOfWeeks={true} calendarType="iso8601" locale="pt-BR" onClickDay={aoClicarNoDia} prevLabel={<ChevronLeft size={24} color="#45B9FB" />}
-           nextLabel={<ChevronRight size={24} color="#45B9FB" />} prev2Label={null}
-           next2Label={null}/>
-          
+          <Calendar onChange={setDate} value={date} tileContent={renderTileContent} tileClassName={definirClasseDoDia} showFixedNumberOfWeeks={true} calendarType="iso8601" locale="pt-BR" onClickDay={aoClicarNoDia} prevLabel={<ChevronLeft size={24} color="#45B9FB" />} nextLabel={<ChevronRight size={24} color="#45B9FB" />} prev2Label={null} next2Label={null}/>
         </div>
       </main>
 
@@ -188,7 +181,6 @@ export function Calendario() {
       {modalAberto && (
         <div className="modal-fundo">
           <div className="modal-caixa">
-            
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h2 style={{ margin: 0 }}>{tarefaEmEdicao ? "Editar Tarefa" : "Nova Tarefa"}</h2>
               <span style={{ backgroundColor: '#E2E8F0', color: '#475569', padding: '6px 12px', borderRadius: '20px', fontSize: '13px', fontWeight: 'bold' }}>
@@ -200,10 +192,21 @@ export function Calendario() {
               <label>Título</label>
               <input type="text" value={titulo} onChange={(e) => setTitulo(e.target.value)} />
             </div>
+
             <div className="linha-horarios">
               <div className="grupo-input"><label>Início</label><input type="time" value={inicio} onChange={(e) => setInicio(e.target.value)} /></div>
               <div className="grupo-input"><label>Fim</label><input type="time" value={termino} onChange={(e) => setTermino(e.target.value)} /></div>
             </div>
+
+            {/* SWITCH ÚNICO E BEM POSICIONADO */}
+            <div className="switch-container" style={{ margin: '15px 0', padding: '10px', background: '#f1f5f9', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="switch-text" style={{ fontSize: '14px', fontWeight: 'bold', color: '#475569' }}>Ativar Pomodoro Automático</span>
+              <label className="switch">
+                <input type="checkbox" checked={pomodoroAutomatico} onChange={(e) => setPomodoroAutomatico(e.target.checked)} />
+                <span className="slider"></span>
+              </label>
+            </div>
+
             <div className="grupo-input">
               <label>Prioridade</label>
               <select value={importancia} onChange={(e) => setImportancia(e.target.value as any)}>
@@ -231,22 +234,12 @@ export function Calendario() {
         <div className="modal-fundo">
           <div className="modal-caixa">
             <h3>Tarefas de {date.toLocaleDateString('pt-BR')}</h3>
-
             <div className="cards-tarefas">
               {tarefasDoDiaSelecionado.map(tarefa => (
-                <div 
-                  key={tarefa.id} 
-                  className={`card-tarefa borda-${tarefa.importancia}`}
-                  onClick={() => {setTarefaParaDetalhes(tarefa); setModalListaAberto(false);}}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <strong style={{ 
-                    textDecoration: tarefa.concluida ? 'line-through' : 'none',
-                    opacity: tarefa.concluida ? 0.6 : 1 
-                  }}>
+                <div key={tarefa.id} className={`card-tarefa borda-${tarefa.importancia}`} onClick={() => {setTarefaParaDetalhes(tarefa); setModalListaAberto(false);}} style={{ cursor: 'pointer' }}>
+                  <strong style={{ textDecoration: tarefa.concluida ? 'line-through' : 'none', opacity: tarefa.concluida ? 0.6 : 1 }}>
                     {tarefa.titulo} {tarefa.concluida && "✅"}
                   </strong>
-
                   <span style={{float: 'right', fontSize: '13px'}}>{tarefa.inicio}</span>
                 </div>
               ))}
@@ -266,39 +259,21 @@ export function Calendario() {
             <h2 style={{marginTop: 0}}>{tarefaParaDetalhes.titulo}</h2>
             <p>⏰ <strong>Horário:</strong> {tarefaParaDetalhes.inicio} às {tarefaParaDetalhes.termino}</p>
             <p>🚨 <strong>Importância:</strong> {tarefaParaDetalhes.importancia}</p>
+            <p>🍅 <strong>Pomodoro Automático:</strong> {tarefaParaDetalhes.pomodoroAutomatico ? "Sim ✅" : "Não ❌"}</p>
             
             <div style={{ background: '#f5f5f5', padding: '15px', borderRadius: '8px', margin: '15px 0', minHeight: '100px' }}>
              <strong style={{ display: 'block', marginBottom: '8px' }}>Descrição:</strong>
-             <p className="texto-descricao">
-             {tarefaParaDetalhes.descricao || "Sem descrição informada."}
-             </p>
+             <p className="texto-descricao">{tarefaParaDetalhes.descricao || "Sem descrição informada."}</p>
             </div>
 
             <div className="botoes-modal" style={{ justifyContent: 'space-between' }}>
               <button className="botao-cancelar" onClick={() => setTarefaParaDetalhes(null)}>Voltar</button>
-              
               <div style={{ display: 'flex', gap: '10px' }}>
                 {!tarefaParaDetalhes.concluida && (
-                  <button 
-                    onClick={() => marcarConcluida(tarefaParaDetalhes.id)} 
-                    style={{ background: '#10b981', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
-                  >
-                    Concluir
-                  </button>
+                  <button onClick={() => marcarConcluida(tarefaParaDetalhes.id)} style={{ background: '#10b981', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Concluir</button>
                 )}
-                <button 
-                  onClick={() => iniciarEdicao(tarefaParaDetalhes)}
-                  style={{ background: '#45B9FB', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
-                >
-                  Editar
-                </button>
-
-                <button 
-                  onClick={() => lidarComExclusao(tarefaParaDetalhes.id)}
-                  style={{ background: '#ff4d4d', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
-                >
-                  Excluir
-                </button>
+                <button onClick={() => iniciarEdicao(tarefaParaDetalhes)} style={{ background: '#45B9FB', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Editar</button>
+                <button onClick={() => lidarComExclusao(tarefaParaDetalhes.id)} style={{ background: '#ff4d4d', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Excluir</button>
               </div>
             </div>
           </div>

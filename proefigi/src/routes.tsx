@@ -10,12 +10,12 @@ import Metas from "./pages/Metas";
 import Rotina from "./pages/Rotina"; 
 
 import { Calendario } from "./pages/Calendario";
-import { TarefaProvider } from './context/TarefaContext';
+{/*import { TarefaProvider } from './context/TarefaContext';*/}
 
 function RoutesApp() {
   return (
     <BrowserRouter>
-      <TarefaProvider>
+      {/*<TarefaProvider>*/}
         <Routes>
           <Route path="/" element={<Login/>}/>
           <Route path="/cadastro" element={<Cadastro/>}/>
@@ -29,7 +29,7 @@ function RoutesApp() {
             <Route path="/rotina" element={<Rotina/>}/> 
           </Route>
         </Routes>
-      </TarefaProvider>
+      {/*</TarefaProvider>*/}
     </BrowserRouter>
   );
 }

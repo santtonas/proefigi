@@ -15,6 +15,7 @@ interface Tarefa {
   importancia: "normal" | "importante" | "urgente";
   descricao: string;
   concluida?: boolean;
+  pomodoroAutomatico: boolean;
 }
 
 interface TarefaContextType {
@@ -48,6 +49,7 @@ export function TarefaProvider({ children }: { children: React.ReactNode }) {
       termino: tarefa.termino,
       importancia: tarefa.importancia,
       concluida: tarefa.concluida ?? false,
+      pomodoroAutomatico: tarefa.pomodoroAutomatico,
     });
     const atualizadas = await buscarTarefas();
     setTarefas(atualizadas ?? []);
@@ -67,6 +69,7 @@ export function TarefaProvider({ children }: { children: React.ReactNode }) {
       termino: tarefaMerged.termino,
       importancia: tarefaMerged.importancia,
       concluida: tarefaMerged.concluida ?? false,
+      pomodoroAutomatico: tarefaMerged.pomodoroAutomatico,
     });
 
     setTarefas((prev) =>

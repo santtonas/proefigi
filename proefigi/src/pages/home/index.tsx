@@ -16,6 +16,7 @@ interface Tarefa {
   importancia: 'normal' | 'importante' | 'urgente';
   descricao: string;
   concluida?: boolean;
+  pomodoroAutomatico: boolean;
 }
 
 export function Home() {
@@ -24,6 +25,7 @@ export function Home() {
   const metasHome = (metasFixadas.length > 0 ? metasFixadas : metas).slice(0, 3);
   const navigate = useNavigate();
   const { tarefas, adicionarTarefa, excluirTarefa, atualizarTarefa } = useTarefas();
+  const [pomodoroAutomatico, setPomodoroAutomatico] = useState(false);
   
   const dataHoje = new Date();
   const ano = dataHoje.getFullYear();
@@ -88,6 +90,7 @@ export function Home() {
     setImportancia(tarefa.importancia);
     setDescricao(tarefa.descricao);
     setTarefaEmEdicao(tarefa.id);
+    setPomodoroAutomatico(tarefa.pomodoroAutomatico);
     
     const dataObj = new Date(tarefa.data);
     const anoT = dataObj.getFullYear();
@@ -118,14 +121,14 @@ export function Home() {
     if (tarefaEmEdicao) {
       atualizarTarefa(tarefaEmEdicao, {
         data: dataFormatadaParaContexto, 
-        titulo, inicio, termino, importancia, descricao
+        titulo, inicio, termino, importancia, descricao, pomodoroAutomatico
       });
       setTarefaEmEdicao(null);
     } else {
       const novaTarefa: Tarefa = {
         id: Math.random().toString(),
         data: dataFormatadaParaContexto,
-        titulo, inicio, termino, importancia, descricao
+        titulo, inicio, termino, importancia, descricao, pomodoroAutomatico
       };
       adicionarTarefa(novaTarefa); 
     }
@@ -367,6 +370,13 @@ export function Home() {
               <div className="grupo-input"><label>Início</label><input type="time" value={inicio} onChange={(e) => setInicio(e.target.value)} /></div>
               <div className="grupo-input"><label>Fim</label><input type="time" value={termino} onChange={(e) => setTermino(e.target.value)} /></div>
             </div>
+            <div className="switch-container" style={{ margin: '15px 0', padding: '10px', background: '#f1f5f9', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+               <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#475569' }}>Ativar Pomodoro Automático</span>
+               <label className="switch">
+                 <input type="checkbox" checked={pomodoroAutomatico} onChange={(e) => setPomodoroAutomatico(e.target.checked)} />
+                 <span className="slider"></span>
+               </label>
+             </div>
             <div className="grupo-input">
               <label>Prioridade</label>
               <select value={importancia} onChange={(e) => setImportancia(e.target.value as any)}>
@@ -377,7 +387,7 @@ export function Home() {
             
             <div className="botoes-modal">
               <button className="botao-salvar" onClick={salvarNovaTarefa}>Salvar</button>
-              <button className="botao-cancelar" onClick={() => { setModalAberto(false); setTarefaEmEdicao(null); }}>Cancelar</button>
+              <button className="botao-cancelar" onClick={() => { setModalAberto(false); setTarefaEmEdicao(null);setPomodoroAutomatico(false); }}>Cancelar</button>
             </div>
           </div>
         </div>
