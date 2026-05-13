@@ -8,6 +8,7 @@ import Pomodoro from "./pages/Pomodoro";
 import Progresso from "./pages/Progresso";
 import Metas from "./pages/Metas";
 import Rotina from "./pages/Rotina"; 
+import Restricao from "./pages/Restricao"; 
 
 import { Calendario } from "./pages/Calendario";
 import { TarefaProvider } from './context/TarefaContext';
@@ -17,9 +18,11 @@ function RoutesApp() {
     <BrowserRouter>
       <TarefaProvider>
         <Routes>
+          
           <Route path="/" element={<Login/>}/>
           <Route path="/cadastro" element={<Cadastro/>}/>
 
+        
           <Route element={<Layout />}>
             <Route path="/home" element={<Home/>}/>
             <Route path="/calendario" element={<Calendario />} />
@@ -27,6 +30,7 @@ function RoutesApp() {
             <Route path="/progresso" element={<Progresso/>}/>
             <Route path="/metas" element={<Metas/>}/>
             <Route path="/rotina" element={<Rotina/>}/> 
+             <Route path="/restricao" element={<Restricao/>}/> 
           </Route>
         </Routes>
       </TarefaProvider>
