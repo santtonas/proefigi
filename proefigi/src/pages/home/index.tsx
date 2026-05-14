@@ -282,6 +282,7 @@ export function Home() {
                 onClick={() => {
                   setTarefaEmEdicao(null); 
                   setTitulo(''); setInicio(''); setTermino(''); setImportancia('normal'); setDescricao('');
+                  setPomodoroAutomatico(false);
                   setDataNovaTarefa(dataVisualizacao);
                   setModalAberto(true);
                 }}
@@ -400,6 +401,7 @@ export function Home() {
             <h2 style={{marginTop: 0}}>{tarefaParaDetalhes.titulo}</h2>
             <p>⏰ <strong>Horário:</strong> {tarefaParaDetalhes.inicio} às {tarefaParaDetalhes.termino}</p>
             <p>🚨 <strong>Importância:</strong> {tarefaParaDetalhes.importancia}</p>
+            <p>🍅 <strong>Pomodoro Automático:</strong> {tarefaParaDetalhes.pomodoroAutomatico ? "Sim ✅" : "Não ❌"}</p>
             
             <div style={{ background: '#f5f5f5', padding: '15px', borderRadius: '8px', margin: '15px 0', minHeight: '100px' }}>
              <strong style={{ display: 'block', marginBottom: '8px' }}>Descrição:</strong>

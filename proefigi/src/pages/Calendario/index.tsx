@@ -44,7 +44,7 @@ export function Calendario() {
     setTermino(tarefa.termino);
     setImportancia(tarefa.importancia);
     setDescricao(tarefa.descricao);
-    setPomodoroAutomatico(tarefa.pomodoroAutomatico); // Carrega o estado do switch
+    setPomodoroAutomatico(tarefa.pomodoroAutomatico); 
     setTarefaEmEdicao(tarefa.id);
     
     setTarefaParaDetalhes(null);

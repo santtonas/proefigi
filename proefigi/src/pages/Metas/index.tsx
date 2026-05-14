@@ -6,9 +6,12 @@ import MetaCard from '../../components/Metacard';
 import type { SubItem, Meta } from '../../context/MetaContext';
 
 export default function Metas() {
-  const { metas, adicionarMeta, atualizarMeta, deletarMeta, toggleItem } = useMetas(); // ✅ funções do backend
+  const { metas, adicionarMeta, atualizarMeta, deletarMeta, toggleItem } = useMetas();
 
+  // ── Estados do modal ──────────────────────────────────────────────────────
   const [modalAberto, setModalAberto] = useState(false);
+  const [metaEmEdicao, setMetaEmEdicao] = useState<string | null>(null);
+
   const [titulo, setTitulo] = useState('');
   const [tipo, setTipo] = useState('');
   const [corSelecionada, setCorSelecionada] = useState('#45B9FB');
@@ -17,6 +20,7 @@ export default function Metas() {
   const [novoItem, setNovoItem] = useState('');
   const [itens, setItens] = useState<SubItem[]>([]);
 
+  // ── Funções do checklist do modal ─────────────────────────────────────────
   const adicionarItem = () => {
     if (!novoItem.trim()) return;
     setItens([...itens, { id: Math.random().toString(), texto: novoItem, concluido: false }]);
@@ -27,28 +31,71 @@ export default function Metas() {
     setItens(itens.filter(i => i.id !== id));
   };
 
+  // ── Abrir modal para EDIÇÃO ───────────────────────────────────────────────
+  const abrirEdicao = (meta: Meta) => {
+    setMetaEmEdicao(meta.id);
+    setTitulo(meta.titulo);
+    setTipo(meta.tipo);
+    setCorSelecionada(meta.cor);
+    setItens(meta.itens);
+    setModalAberto(true);
+  };
 
+  // ── Abrir modal para CRIAÇÃO ──────────────────────────────────────────────
+  const abrirCriacao = () => {
+    setMetaEmEdicao(null);
+    setTitulo('');
+    setTipo('');
+    setCorSelecionada('#45B9FB');
+    setItens([]);
+    setModalAberto(true);
+  };
+
+  // ── Fechar e resetar modal ────────────────────────────────────────────────
+  const fecharModal = () => {
+    setModalAberto(false);
+    setMetaEmEdicao(null);
+    setTitulo('');
+    setTipo('');
+    setCorSelecionada('#45B9FB');
+    setItens([]);
+    setNovoItem('');
+  };
+
+  // ── Salvar (criar ou editar) ──────────────────────────────────────────────
   const salvarMeta = async () => {
     if (!titulo.trim() || !tipo.trim()) return;
 
-    await adicionarMeta({
-      titulo,
-      tipo,
-      cor: corSelecionada,
-      fixada: false,
-      concluida: false,
-      itens,
-    });
+    if (metaEmEdicao) {
+      const metaAtual = metas.find(m => m.id === metaEmEdicao);
+      if (!metaAtual) return;
 
-    setTitulo(''); setTipo(''); setCorSelecionada('#45B9FB'); setItens([]); setModalAberto(false);
+      await atualizarMeta(metaEmEdicao, {
+        titulo,
+        tipo,
+        cor: corSelecionada,
+        fixada: metaAtual.fixada,
+        concluida: metaAtual.concluida,
+        itens,
+      });
+    } else {
+      await adicionarMeta({
+        titulo,
+        tipo,
+        cor: corSelecionada,
+        fixada: false,
+        concluida: false,
+        itens,
+      });
+    }
+
+    fecharModal();
   };
 
-
-
+  // ── Outras ações ──────────────────────────────────────────────────────────
   const excluirMeta = async (id: string) => {
     await deletarMeta(id);
   };
-
 
   const fixarMeta = async (id: string) => {
     const meta = metas.find(m => m.id === id);
@@ -69,11 +116,12 @@ export default function Metas() {
     await atualizarMeta(id, { ...meta, concluida: !meta.concluida });
   };
 
+  // ── JSX ───────────────────────────────────────────────────────────────────
   return (
     <div className="metas-pagina">
       <div className="metas-header">
         <h2>Minhas Metas</h2>
-        <button className="botao-nova-meta" onClick={() => setModalAberto(true)}>
+        <button className="botao-nova-meta" onClick={abrirCriacao}>
           <Plus size={18} /> Nova Meta
         </button>
       </div>
@@ -93,19 +141,26 @@ export default function Metas() {
               onToggleItem={toggleItem}
               onFixar={fixarMeta}
               onConcluir={concluirMeta}
+              onEditar={abrirEdicao}
             />
           ))
         )}
       </div>
 
+      {/* ── Modal Criar / Editar ── */}
       {modalAberto && (
-        <div className="modal-fundo" onClick={() => setModalAberto(false)}>
+        <div className="modal-fundo" onClick={fecharModal}>
           <div className="modal-caixa" onClick={e => e.stopPropagation()}>
-            <h3>Nova Meta</h3>
+            <h3>{metaEmEdicao ? 'Editar Meta' : 'Nova Meta'}</h3>
 
             <div className="grupo-input">
               <label>Título</label>
-              <input type="text" placeholder="Ex: Estudar para a prova" value={titulo} onChange={e => setTitulo(e.target.value)} />
+              <input
+                type="text"
+                placeholder="Ex: Estudar para a prova"
+                value={titulo}
+                onChange={e => setTitulo(e.target.value)}
+              />
             </div>
 
             <div className="grupo-input">
@@ -158,8 +213,10 @@ export default function Metas() {
             </div>
 
             <div className="botoes-modal">
-              <button className="botao-salvar" onClick={salvarMeta}>Salvar Meta</button>
-              <button className="botao-cancelar" onClick={() => setModalAberto(false)}>Cancelar</button>
+              <button className="botao-salvar" onClick={salvarMeta}>
+                {metaEmEdicao ? 'Salvar Alterações' : 'Salvar Meta'}
+              </button>
+              <button className="botao-cancelar" onClick={fecharModal}>Cancelar</button>
             </div>
           </div>
         </div>

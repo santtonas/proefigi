@@ -73,7 +73,7 @@ export function TarefaProvider({ children }: { children: React.ReactNode }) {
     });
 
     setTarefas((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, ...campos } : t))
+      prev.map((t) => (t.id === id ? { ...t, ...campos } : t)),
     );
   }
 
@@ -84,7 +84,13 @@ export function TarefaProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <TarefaContext.Provider
-      value={{ tarefas, carregando, adicionarTarefa, atualizarTarefa, excluirTarefa }}
+      value={{
+        tarefas,
+        carregando,
+        adicionarTarefa,
+        atualizarTarefa,
+        excluirTarefa,
+      }}
     >
       {children}
     </TarefaContext.Provider>
@@ -93,7 +99,7 @@ export function TarefaProvider({ children }: { children: React.ReactNode }) {
 
 export function useTarefas() {
   const context = useContext(TarefaContext);
-  if (!context) throw new Error("useTarefas deve ser usado dentro do TarefaProvider");
+  if (!context)
+    throw new Error("useTarefas deve ser usado dentro do TarefaProvider");
   return context;
 }
-
