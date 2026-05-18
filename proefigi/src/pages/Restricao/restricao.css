@@ -220,3 +220,98 @@ input:checked + .slider:before { transform: translateX(20px); }
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(15, 23, 42, 0.3);
 }
+
+/* Agrupamento dos botões de ação na direita */
+.actions-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Botões de Ícone (Editar e Excluir) */
+.btn-action-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  opacity: 0.6;
+}
+
+.btn-action-icon:hover {
+  opacity: 1;
+  background: #E2E8F0;
+}
+
+.btn-action-icon.delete:hover {
+  background: #FEE2E2;
+}
+
+/* Container de Edição Inline */
+.edit-inline-container {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+
+.input-edit-inline {
+  flex: 1;
+  padding: 6px 12px;
+  border: 1px solid #0EA5E9;
+  border-radius: 8px;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+}
+
+.btn-save-inline, .btn-cancel-inline {
+  border: none;
+  background: #F1F5F9;
+  border-radius: 8px;
+  padding: 0 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.btn-save-inline {
+  color: #10B981;
+}
+.btn-save-inline:hover { background: #D1FAE5; }
+
+.btn-cancel-inline {
+  color: #EF4444;
+}
+.btn-cancel-inline:hover { background: #FEE2E2; }
+
+/* Customização das cores dos ícones ao passar o mouse */
+.btn-action-icon.edit {
+  color: #64748B; /* Cinza discreto por padrão */
+}
+.btn-action-icon.edit:hover {
+  color: #0EA5E9; /* Azul moderno ao passar o mouse */
+  background: #E0F2FE;
+}
+
+.btn-action-icon.delete {
+  color: #64748B;
+}
+.btn-action-icon.delete:hover {
+  color: #EF4444; /* Vermelho suave ao deletar */
+  background: #FEE2E2;
+}
+
+/* Centralizar os ícones perfeitamente dentro dos mini botões da edição */
+.btn-save-inline, .btn-cancel-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+}
