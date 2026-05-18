@@ -16,7 +16,11 @@ function Header({ menuAberto, setMenuAberto }: HeaderProps) {
       
       <button 
         className={`botao-hamburger ${menuAberto ? 'aberto' : ''}`}
-        onClick={() => setMenuAberto(!menuAberto)}
+        onClick={(e) => {
+            e.stopPropagation();
+            setMenuAberto(!menuAberto);
+          }}
+        
       >
         <span className="linha"></span>
         <span className="linha"></span>

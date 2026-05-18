@@ -11,12 +11,14 @@ import Rotina from "./pages/Rotina";
 import Restricao from "./pages/Restricao"; 
 
 import { Calendario } from "./pages/Calendario";
+import { MonitorDeHorarios } from './components/MonitorDeHorarios';
 {/*import { TarefaProvider } from './context/TarefaContext';*/}
 
 function RoutesApp() {
   return (
     <BrowserRouter>
       {/*<TarefaProvider>*/}
+        <MonitorDeHorarios />
         <Routes>
           
           <Route path="/" element={<Login/>}/>

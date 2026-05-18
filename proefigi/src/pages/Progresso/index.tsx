@@ -5,6 +5,7 @@ import { BarraDiasSeguidos } from '../../components/BarraDiasSeguidos';
 import { CardProgresso } from '../../components/CardProgresso';
 import { useTarefas } from '../../context/TarefaContext'; 
 
+
 function useContador(valorFinal: number, duracao: number = 1000) {
   const [valor, setValor] = useState<number>(0);
   useEffect(() => {

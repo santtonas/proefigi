@@ -1,32 +1,30 @@
 import React, { useState } from 'react';
-import "./restricao.css"; //
+import "./restricao.css"; 
+import {useRestricoes} from '../../context/RestricaoContext';
 
-const Restricao: React.FC = () => { 
+interface RestricaoProps {
+  compacto?: boolean;
+}
+
+const Restricao: React.FC<RestricaoProps> = ({ compacto = false }) => { 
   const [site, setSite] = useState('');
-  const [sitesBloqueados, setSitesBloqueados] = useState([
-    { id: 1, nome: 'facebook.com', ativo: true },
-  ]);
+  
+  // PEGANDO OS DADOS DO CONTEXTO GLOBAL AQUI 👇
+  const { sitesBloqueados, sugestoes, adicionarSite, alternarStatus } = useRestricoes();
 
-  const sugestoes = ['youtube.com', 'tiktok.com', 'x.com', 'netflix.com'];
-
-  const adicionarSite = () => {
+  const handleAdicionar = () => {
     if (site.trim() !== '') {
-      setSitesBloqueados([...sitesBloqueados, { id: Date.now(), nome: site, ativo: true }]);
+      adicionarSite(site);
       setSite('');
     }
   };
 
-  const alternarStatus = (id: number) => {
-    setSitesBloqueados(sitesBloqueados.map(s => 
-      s.id === id ? { ...s, ativo: !s.ativo } : s
-    ));
-  };
-
   return (
-    <div className="container-restricao">
+    <div className={`container-restricao ${compacto ? 'modo-compacto' : ''}`}>
       <div className="restricao-card">
-        <h1> Restrições </h1>
-        <p className="subtitle">Gerencie os sites que tiram sua atenção</p>
+        {!compacto && <h1> Restrições </h1>}
+        {!compacto && <p className="subtitle">Gerencie os sites que tiram sua atenção</p>}
+        {compacto && <h3 style={{ marginBottom: '15px', color: '#0F172A' }}>Restrições</h3>}
 
         <div className="form-group">
           <label>Bloquear novo site</label>
@@ -37,7 +35,8 @@ const Restricao: React.FC = () => {
               value={site}
               onChange={(e) => setSite(e.target.value)}
             />
-            <button className="btn-add" onClick={adicionarSite}>+</button>
+            {/* Atualizado para chamar a função local que limpa o input */}
+            <button className="btn-add" onClick={handleAdicionar}>+</button> 
           </div>
         </div>
 
@@ -61,7 +60,7 @@ const Restricao: React.FC = () => {
                 <input 
                   type="checkbox" 
                   checked={s.ativo} 
-                  onChange={() => alternarStatus(s.id)} 
+                  onChange={() => alternarStatus(s.id)} // Puxando do contexto
                 />
                 <span className="slider round"></span>
               </label>

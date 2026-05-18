@@ -220,3 +220,24 @@ input:checked + .slider:before { transform: translateX(20px); }
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(15, 23, 42, 0.3);
 }
+
+/* ==========================================
+   MODO COMPACTO (Para usar dentro do Pomodoro)
+   ========================================== */
+.container-restricao.modo-compacto {
+  width: 100%;
+  height: auto; 
+  background-color: transparent; 
+  padding: 0;
+}
+
+.container-restricao.modo-compacto .restricao-card {
+  padding: 0;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
+
+.container-restricao.modo-compacto .sites-list {
+  max-height: 150px; 
+}

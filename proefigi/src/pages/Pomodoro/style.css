@@ -10,7 +10,6 @@
   overflow: hidden;
 }
 
-/*banner minimalista que fica no topo da página*/
 
 .status-tarefa-topo {
   position: absolute;
@@ -49,40 +48,7 @@
 
 
 
-.botao-detalhes {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background-color: #ffffff;
-  color: #334155;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s ease;
-}
 
-.botao-detalhes:hover{
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(30, 41, 59, 0.12) !important;
-}
-
-.painel-detalhes {
-  position: absolute;
-  top: 60px;
-  left: 20px;
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-width: 220px;
-  z-index: 10;
-}
 
 .painel-detalhes h3 {
   margin: 0;
@@ -114,17 +80,19 @@
 }
 
 .botao-salvar-config {
-  background-color: #45B9FB;
+  background-color: #0F172A;
   color: white;
   border: none;
   padding: 10px;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .botao-salvar-config:hover{
-  background-color: #2EA8E8 ;
+  background-color: #1E293B ;
+  transform: translateY(-2px);
 }
 
 .pomodoro-centro{
@@ -180,9 +148,74 @@
   color: #64748b;
 }
 
+/* ==========================================
+   ESTILOS DAS ABAS DO MENU (TABS)
+   ========================================== */
+.abas-navegacao {
+  position: relative; 
+  display: flex;
+  background-color: #F1F5F9;
+  border-radius: 10px;
+  padding: 4px;
+  z-index: 1; 
+}
+
+.aba-fundo-deslizante {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); 
+  z-index: -1; 
+}
+
+.abas-navegacao.restricoes .aba-fundo-deslizante {
+  transform: translateX(100%);
+}
+
+.aba-botao {
+  flex: 1;
+  background: transparent !important; 
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748B;
+  cursor: pointer;
+  transition: color 0.5s ease; 
+}
+
+.aba-botao:hover {
+  color: #0F172A;
+}
+
+.aba-botao.ativa {
+  color: #0F172A;
+  box-shadow: none !important; 
+}
+/* ==========================================
+   ANIMAÇÃO SUAVE DE ALTURA (MAX-HEIGHT TRICK)
+   ========================================== */
+.aba-transicao {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease-out, opacity 0.2s ease-out;
+}
+
+.aba-transicao.ativa {
+  max-height: 600px; 
+  opacity: 1;
+  transition: max-height 0.4s ease-in, opacity 0.4s ease-in 0.1s;
+}
+
 .botao-iniciar {
   margin-top: 30px;
-  background: none;
+  background: #ffffff;
   border: none;
   font-size: 18px;
   font-weight: 600;
@@ -199,3 +232,62 @@
   box-shadow: 0 8px 20px rgba(30, 41, 59, 0.12) !important;
 }
 
+.botao-encerrar{
+  position: absolute;
+  top: calc(100% + 15px);
+  background-color: #ffffff;
+  border: none;
+  color: #334155;
+  padding: 8px 16px;
+  border-radius: 15px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.botao-encerrar:hover{
+  color:#ef4444;
+  transform: scale(1.05);
+}
+
+.botao-detalhes {
+  position: absolute;
+  top: 20px;
+  right: 20px; 
+  background-color: #ffffff;
+  color: #334155;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.botao-detalhes:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(30, 41, 59, 0.12) !important;
+}
+
+.painel-detalhes {
+  position: absolute;
+  top: 60px;
+  right: 20px; 
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 320px; 
+  max-height: 80vh;
+  overflow-y: auto;
+  z-index: 10;
+}
