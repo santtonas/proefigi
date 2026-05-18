@@ -14,26 +14,38 @@ const priorityParaImportancia: Record<number, Importancia> = {
   2: 'urgente',
 };
 
-export function converterTarefaDoBackend(t: any) {
-    const starTime = new Date(t.starTime);
-    const endTime = new Date(t.endTime);
+interface TarefaBackend {
+  id: number;
+  title: string;
+  description?: string;
+  starTime: string;
+  endTime: string;
+  priority: number;
+  isDone: boolean;
+  pomodoroAutomatico?: boolean;
+}
+
+export function converterTarefaDoBackend(t: TarefaBackend) {
+  const starTime = new Date(t.starTime);
+  const endTime = new Date(t.endTime);
   return {
     id: String(t.id),
     titulo: t.title,
     descricao: t.description ?? '',
     data: starTime.toDateString(),
-    inicio: starTime.toLocaleTimeString('pt-BR', {  
+    inicio: starTime.toLocaleTimeString('pt-BR', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: false
     }),
-    termino: endTime.toLocaleTimeString('pt-BR', { 
+    termino: endTime.toLocaleTimeString('pt-BR', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: false
     }),
     importancia: priorityParaImportancia[t.priority] ?? 'normal',
     concluida: t.isDone,
+    pomodoroAutomatico: t.pomodoroAutomatico ?? false,
   };
 }
 
@@ -50,6 +62,7 @@ function converterTarefaParaBackend(tarefa: {
   termino: string;
   importancia: Importancia;
   concluida?: boolean;
+  pomodoroAutomatico?: boolean;
 }) {
   const data = new Date(tarefa.data);
   const inicioStr = tarefa.inicio || "00:00";
@@ -81,7 +94,7 @@ function converterTarefaParaBackend(tarefa: {
 // Buscar tarefas
 export async function buscarTarefas() {
   const response = await request("/tasks");
-  return (response.taskJsons ?? []).map((t: any) => converterTarefaDoBackend(t));
+  return (response.taskJsons ?? []).map((t: TarefaBackend) => converterTarefaDoBackend(t));
 }
 
 // Criar nova tarefa

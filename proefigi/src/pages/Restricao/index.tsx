@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Pencil, Check, X, Plus } from 'lucide-react'; 
+import { Trash2, Pencil, Check, X, Plus } from 'lucide-react'; // 🚀 Importando os novos ícones
 import "./restricao.css";
 
 interface Site {
@@ -16,18 +16,18 @@ const Restricao: React.FC = () => {
 
   const sugestoes = ['youtube.com', 'tiktok.com', 'twitter.com', 'netflix.com'];
 
-useEffect(() => {
-  const salvos = localStorage.getItem('@proefigi:sites');
-  if (salvos) {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSitesBloqueados(JSON.parse(salvos) as Site[]); 
-  } else {
-    setSitesBloqueados([
-      { id: 1, nome: 'facebook.com', ativo: true },
-      { id: 2, nome: 'instagram.com', ativo: true }
-    ]);
-  }
-}, []);
+  useEffect(() => {
+    const salvos = localStorage.getItem('@proefigi:sites');
+    if (salvos) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSitesBloqueados(JSON.parse(salvos));
+    } else {
+      setSitesBloqueados([
+        { id: 1, nome: 'facebook.com', ativo: true },
+        { id: 2, nome: 'instagram.com', ativo: true }
+      ]);
+    }
+  }, []);
 
   useEffect(() => {
     if (sitesBloqueados.length > 0) {
@@ -84,7 +84,7 @@ useEffect(() => {
               value={site}
               onChange={(e) => setSite(e.target.value)}
             />
-           
+            {/* 🚀 Trocamos o + pelo ícone Plus */}
             <button className="btn-add" onClick={adicionarSite}>
               <Plus size={20} />
             </button>
@@ -116,7 +116,7 @@ useEffect(() => {
                     value={nomeEditado}
                     onChange={(e) => setNomeEditado(e.target.value)}
                   />
-                 
+                  {/* 🚀 Ícones de Confirmar e Cancelar na edição */}
                   <button className="btn-save-inline" onClick={() => salvarEdicao(s.id)}>
                     <Check size={18} />
                   </button>
@@ -125,7 +125,7 @@ useEffect(() => {
                   </button>
                 </div>
               ) : (
-                
+                /* Modo de Visualização Normal */
                 <>
                   <span className={s.ativo ? 'site-name' : 'site-name disabled'}>{s.nome}</span>
                   

@@ -15,18 +15,18 @@ export default function Nav({ menuAberto, setMenuAberto }: NavProps) {
   // 2. Criamos o "ouvinte" de cliques
   useEffect(() => {
     function lidarComCliqueFora(event: MouseEvent) {
-      // Se o menu estiver aberto, e o clique NÃO foi dentro do menuRef...
+      
       if (menuAberto && menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuAberto(false); // ...nós fechamos o menu!
+        setMenuAberto(false); 
       }
     }
 
-    // Adiciona o ouvinte na tela toda
-    document.addEventListener("mousedown", lidarComCliqueFora);
+  
+    document.addEventListener("click", lidarComCliqueFora);
 
-    // Limpa o ouvinte quando o componente for desmontado (boa prática)
+    
     return () => {
-      document.removeEventListener("mousedown", lidarComCliqueFora);
+      document.removeEventListener("click", lidarComCliqueFora);
     };
   }, [menuAberto, setMenuAberto]);
   return (

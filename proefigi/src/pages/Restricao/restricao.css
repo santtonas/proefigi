@@ -6,7 +6,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #F8FAFC; /* Cinza clarinho moderno */
+  background-color: #F8FAFC; 
   font-family: 'Poppins', sans-serif;
   margin: 0;
 }
@@ -17,13 +17,13 @@
   width: 100%;
   max-width: 480px;
   border-radius: 24px;
-  /* Sombra suave multicamadas */
+  
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
   border: 1px solid #F1F5F9;
 }
 
 .restricao-card h1 {
-  color: #0F172A; /* Azul escuro quase preto */
+  color: #0F172A; 
   margin-bottom: 8px;
   font-size: 1.8rem;
   font-weight: 700;
@@ -37,7 +37,7 @@
   line-height: 1.5;
 }
 
-/* Grupo de Input */
+
 .form-group label {
   display: block;
   color: #475569;
@@ -91,7 +91,7 @@
   transform: translateY(-2px);
 }
 
-/* Sugestões */
+
 .suggestion-tags {
   display: flex;
   flex-wrap: wrap;
@@ -131,7 +131,7 @@
   margin-bottom: 20px;
 }
 
-/* Scrollbar estilizada */
+
 .sites-list::-webkit-scrollbar {
   width: 6px;
 }
@@ -221,14 +221,14 @@ input:checked + .slider:before { transform: translateX(20px); }
   box-shadow: 0 6px 15px rgba(15, 23, 42, 0.3);
 }
 
-/* Agrupamento dos botões de ação na direita */
+
 .actions-right {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-/* Botões de Ícone (Editar e Excluir) */
+
 .btn-action-icon {
   background: none;
   border: none;
@@ -252,7 +252,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   background: #FEE2E2;
 }
 
-/* Container de Edição Inline */
+
 .edit-inline-container {
   display: flex;
   gap: 6px;
@@ -289,12 +289,12 @@ input:checked + .slider:before { transform: translateX(20px); }
 }
 .btn-cancel-inline:hover { background: #FEE2E2; }
 
-/* Customização das cores dos ícones ao passar o mouse */
+
 .btn-action-icon.edit {
-  color: #64748B; /* Cinza discreto por padrão */
+  color: #64748B; 
 }
 .btn-action-icon.edit:hover {
-  color: #0EA5E9; /* Azul moderno ao passar o mouse */
+  color: #0EA5E9;
   background: #E0F2FE;
 }
 
@@ -302,11 +302,11 @@ input:checked + .slider:before { transform: translateX(20px); }
   color: #64748B;
 }
 .btn-action-icon.delete:hover {
-  color: #EF4444; /* Vermelho suave ao deletar */
+  color: #EF4444; 
   background: #FEE2E2;
 }
 
-/* Centralizar os ícones perfeitamente dentro dos mini botões da edição */
+
 .btn-save-inline, .btn-cancel-inline {
   display: flex;
   align-items: center;

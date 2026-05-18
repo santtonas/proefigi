@@ -5,12 +5,15 @@
 import RoutesApp from './routes';
 import { TarefaProvider } from './context/TarefaContext';
 import { MetaProvider } from './context/MetaContext';
+import {RestricaoProvider} from './context/RestricaoContext';
 
 function App() {
   return (
     <TarefaProvider>
       <MetaProvider>
-        <RoutesApp/>
+        <RestricaoProvider>
+          <RoutesApp/>
+        </RestricaoProvider>
       </MetaProvider>
     </TarefaProvider>
   )
