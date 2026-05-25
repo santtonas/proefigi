@@ -315,3 +315,42 @@ input:checked + .slider:before { transform: translateX(20px); }
   height: 32px;
   padding: 0;
 }
+
+/* ==========================================================================
+   🚀 REGRAS PARA O MODO COMPACTO (Ajustes para o painel lateral do Pomodoro)
+   ========================================================================== */
+
+/* Remove o fundo cinza de tela cheia e centralização forçada */
+.container-restricao.modo-compacto {
+  width: 100%;
+  height: auto;
+  display: block;
+  background-color: transparent;
+  padding: 0;
+}
+
+/* Remove a caixa de card fixa com sombra para misturar com o painel lateral */
+.container-restricao.modo-compacto .restricao-card {
+  background: transparent;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  box-shadow: none;
+  border: none;
+}
+
+/* Reduz o espaçamento do campo de adicionar para ficar mais estrito */
+.container-restricao.modo-compacto .input-with-button {
+  margin-bottom: 15px;
+}
+
+/* Ajusta a altura da lista de sites para não esticar o painel lateral */
+.container-restricao.modo-compacto .sites-list {
+  max-height: 200px;
+}
+
+/* Deixa os itens da lista ligeiramente mais compactos */
+.container-restricao.modo-compacto .site-item {
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}

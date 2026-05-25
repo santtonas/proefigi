@@ -1,6 +1,6 @@
 import './style.css';
 import { Link } from 'react-router-dom';
-import { Calendar, Target, TrendingUp, Clock4, Users, Timer, Settings, HelpCircle } from 'lucide-react';
+import { Calendar, Target, Home, TrendingUp, Clock4, Timer, Settings, HelpCircle } from 'lucide-react';
 import { useRef, useEffect } from 'react';
 
 interface NavProps {
@@ -49,6 +49,10 @@ export default function Nav({ menuAberto, setMenuAberto }: NavProps) {
 
         {/* Itens do menu */}
         <div className="nav-itens">
+          <Link to="/home" className="nav-item" onClick={() => setMenuAberto(false)}>
+          <Home size={20}/>
+          <span>Início</span>
+          </Link>
           <Link to="/calendario" className="nav-item" onClick={() => setMenuAberto(false)}>
             <Calendar size={20} />
             <span>Calendário</span>
@@ -64,10 +68,6 @@ export default function Nav({ menuAberto, setMenuAberto }: NavProps) {
           <Link to="/rotina" className="nav-item" onClick={() => setMenuAberto(false)}>
             <Clock4 size={20}/>
             <span>Rotina Otimizada</span>
-          </Link>
-          <Link to="/controle-pais" className="nav-item" onClick={() => setMenuAberto(false)}>
-            <Users size={20}/>
-            <span>Controle dos Pais</span>
           </Link>
           <Link to="/pomodoro" className="nav-item" onClick={() => setMenuAberto(false)}>
             <Timer size={20}/>

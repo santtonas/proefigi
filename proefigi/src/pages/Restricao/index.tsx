@@ -2,13 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Trash2, Pencil, Check, X, Plus } from 'lucide-react'; // 🚀 Importando os novos ícones
 import "./restricao.css";
 
+// 🚀 Adicionado: Interface para o componente aceitar a propriedade 'compacto'
+interface RestricaoProps {
+  compacto?: boolean;
+}
+
 interface Site {
   id: number;
   nome: string;
   ativo: boolean;
 }
 
-const Restricao: React.FC = () => {
+// 🚀 Alterado: Agora o componente recebe 'compacto' (que por padrão é false)
+const Restricao: React.FC<RestricaoProps> = ({ compacto = false }) => {
   const [site, setSite] = useState('');
   const [sitesBloqueados, setSitesBloqueados] = useState<Site[]>([]);
   const [idEditando, setIdEditando] = useState<number | null>(null);
@@ -70,10 +76,17 @@ const Restricao: React.FC = () => {
   };
 
   return (
-    <div className="container-restricao">
+    // 🚀 Alterado: Adiciona a classe 'modo-compacto' se a prop for true
+    <div className={`container-restricao ${compacto ? 'modo-compacto' : ''}`}>
       <div className="restricao-card">
-        <h1>Foco Total</h1>
-        <p className="subtitle">Gerencie os sites que tiram sua atenção</p>
+        
+        {/* 🚀 Oculta o título e subtítulo se for compacto */}
+        {!compacto && (
+          <>
+            <h1>Foco Total</h1>
+            <p className="subtitle">Gerencie os sites que tiram sua atenção</p>
+          </>
+        )}
 
         <div className="form-group">
           <label>Bloquear novo site</label>
@@ -91,16 +104,19 @@ const Restricao: React.FC = () => {
           </div>
         </div>
 
-        <div className="suggestions">
-          <label>Sugestões comuns:</label>
-          <div className="suggestion-tags">
-            {sugestoes.map((sug, i) => (
-              <span key={i} className="tag" onClick={() => setSite(sug)}>{sug}</span>
-            ))}
+        {/* 🚀 Oculta as sugestões comuns se for compacto */}
+        {!compacto && (
+          <div className="suggestions">
+            <label>Sugestões comuns:</label>
+            <div className="suggestion-tags">
+              {sugestoes.map((sug, i) => (
+                <span key={i} className="tag" onClick={() => setSite(sug)}>{sug}</span>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        <hr className="divider" />
+        {!compacto && <hr className="divider" />}
 
         <div className="sites-list">
           <label>Sua lista de restrições:</label>
@@ -154,9 +170,12 @@ const Restricao: React.FC = () => {
           ))}
         </div>
 
-        <button className="btn-save-restricao" onClick={() => alert('Configurações salvas no seu navegador!')}>
-          Confirmar Configurações
-        </button>
+        {/* 🚀 Oculta o botão inferior de confirmação se for compacto */}
+        {!compacto && (
+          <button className="btn-save-restricao" onClick={() => alert('Configurações salvas no seu navegador!')}>
+            Confirmar Configurações
+          </button>
+        )}
       </div>
     </div>
   );
