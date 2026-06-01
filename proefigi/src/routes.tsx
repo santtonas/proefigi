@@ -9,6 +9,7 @@ import Progresso from "./pages/Progresso";
 import Metas from "./pages/Metas";
 import Rotina from "./pages/Rotina"; 
 import Restricao from "./pages/Restricao"; 
+import Configuracoes from "./pages/Configuracoes";
 
 import { Calendario } from "./pages/Calendario";
 import { MonitorDeHorarios } from './components/MonitorDeHorarios';
@@ -32,7 +33,8 @@ function RoutesApp() {
             <Route path="/progresso" element={<Progresso/>}/>
             <Route path="/metas" element={<Metas/>}/>
             <Route path="/rotina" element={<Rotina/>}/> 
-             <Route path="/restricao" element={<Restricao/>}/> 
+            <Route path="/restricao" element={<Restricao/>}/> 
+            <Route path="/configuracoes" element={<Configuracoes/>}/>
           </Route>
         </Routes>
       {/*</TarefaProvider>*/}

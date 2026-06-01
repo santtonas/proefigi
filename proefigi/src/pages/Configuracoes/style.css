@@ -1,0 +1,71 @@
+/* src/pages/Configuracoes/style.css */
+
+/* --- CONTAINER DA TELA GERAL --- */
+.config-container-tela {
+  min-height: 100vh;
+  background-color: #f1f5f9;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.config-box-vertical {
+  width: 100%;
+  max-width: 700px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  padding: 32px;
+}
+
+/* --- TÍTULOS GERAIS --- */
+.config-lista-titulo { font-size: 24px; font-weight: 700; color: #0f172a; margin-bottom: 24px; }
+.painel-titulo { font-size: 24px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+.painel-subtitulo { font-size: 14px; color: #64748b; margin-bottom: 28px; }
+.painel-titulo-secundario { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
+
+/* --- COMPORTAMENTO: ABRIR REALMENTE (Subpágina) --- */
+.btn-voltar {
+  display: flex; align-items: center; gap: 8px; background: transparent;
+  border: none; color: #0284c7; font-weight: 600; font-size: 14px; cursor: pointer;
+  padding: 0; margin-bottom: 24px; transition: color 0.2s;
+}
+.btn-voltar:hover { color: #0369a1; }
+
+/* --- ESTILOS INTERNOS DOS FORMULÁRIOS --- */
+.form-secao { display: flex; flex-direction: column; gap: 16px; }
+.form-grupo { display: flex; flex-direction: column; gap: 6px; }
+.form-grupo label { font-size: 13px; font-weight: 500; color: #475569; }
+
+.input-padrao {
+  padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e1;
+  background-color: #f8fafc; font-size: 14px; color: #1e293b; outline: none; font-family: inherit;
+}
+.input-padrao:focus {
+  border-color: #38bdf8; background-color: #ffffff; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+.divisor { border: none; border-top: 1px solid #e2e8f0; margin: 24px 0; }
+
+.btn-primario {
+  background-color: #0284c7; color: white; border: none; padding: 10px 20px;
+  border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; margin-top: 16px;
+}
+.btn-primario:hover { background-color: #0369a1; }
+
+.btn-perigo {
+  background-color: transparent; color: #ef4444; border: 1px solid #ef4444;
+  padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer;
+}
+.btn-perigo:hover { background-color: #fef2f2; }
+.text-danger { color: #ef4444; }
+
+/* --- ANIMAÇÕES SUTIS --- */
+.animacao-tela-nova { animation: telaNovaEntrada 0.25s ease-out; }
+@keyframes telaNovaEntrada {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}

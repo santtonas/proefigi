@@ -3,6 +3,7 @@ import RoutesApp from './routes';
 import { TarefaProvider } from './context/TarefaContext';
 import { MetaProvider } from './context/MetaContext';
 import { RestricaoProvider } from './context/RestricaoContext';
+import { UserProvider } from './context/UserContext';
 import { Loading } from './components/Loading'; 
 
 function App() {
@@ -27,7 +28,9 @@ function App() {
     <TarefaProvider>
       <MetaProvider>
         <RestricaoProvider>
-          <RoutesApp />
+          <UserProvider>
+            <RoutesApp />
+          </UserProvider>
         </RestricaoProvider>
       </MetaProvider>
     </TarefaProvider>

@@ -1,0 +1,450 @@
+/* src/pages/Configuracoes/Componentes/Usuario.css */
+
+.perfil-foto-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+/* Criamos esse container para segurar a bola do avatar e a camera no mesmo lugar */
+.avatar-container-relativo {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.avatar-container-relativo:hover {
+  transform: scale(1.02); /* Dá um leve zoom elegante ao passar o mouse */
+}
+
+.avatar-wrapper {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  cursor: pointer;
+  overflow: hidden; /* Mantém a imagem cortada perfeitamente em círculo */
+  background-color: #e0f2fe;
+  border: 4px solid #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  font-size: 42px;
+  font-weight: 700;
+  color: #0284c7;
+}
+
+/* Novo Badge Fixo da Câmera no canto inferior direito */
+.camera-badge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 32px;
+  height: 32px;
+  background-color: #0284c7;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  z-index: 2; /* Garante que fica por cima do círculo */
+}
+
+/* Efeito sutil de feedback ao passar o mouse na foto */
+.avatar-container-relativo:hover .camera-badge {
+  transform: scale(1.1);
+  background-color: #0369a1;
+}
+
+/* Alinhamento inteligente para a área de Assinatura + Botão Sair */
+.plano-info-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* Botão de Sair neutro (fora da zona de perigo) */
+.btn-secundario {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secundario:hover {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+
+/* Botão discreto para Alterar Senha */
+.botao-alterar {
+  background: #f1f5f9;
+  border: none;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  width: 170px;
+  gap: 5px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.botao-alterar:hover {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+
+/* --- MENU TRÊS PONTINHOS (DROPDOWN) --- */
+
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.btn-tres-pontinhos {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-tres-pontinhos:hover {
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+/* O Menu Popup flutuante */
+.dropdown-menu-suspenso {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  padding: 6px;
+  width: 160px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: abrirSuave 0.15s ease-out;
+}
+
+.dropdown-item {
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background-color: #f8fafc;
+}
+
+/* Cores específicas das ações */
+.dropdown-item.texto-perigo {
+  color: #ef4444;
+}
+.dropdown-item.texto-perigo:hover {
+  background-color: #fef2f2;
+}
+
+.dropdown-item.texto-cancelar {
+  color: #64748b;
+}
+
+.dropdown-divisor {
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 4px 6px;
+}
+
+/* --- MODAL DE ALTERAR SENHA --- */
+
+/* Fundo escuro com animação suave de entrada */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* A caixinha branca principal */
+.modal-conteudo {
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 16px; 
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Textos do cabeçalho */
+.modal-conteudo h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 20px;
+}
+
+.modal-conteudo p {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* --- ESTILIZANDO OS CAMPOS DE SENHA --- */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+/* CONTAINER NOVO: Necessário para o botão do olho ficar dentro do input */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* Garante que o input guarde um espaço na direita para o texto não ficar embaixo do olho */
+.input-wrapper input {
+  width: 100%;
+  padding: 10px 14px;
+  padding-right: 44px; 
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e293b;
+  background-color: #f8fafc; 
+  outline: none; 
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+/* Efeito quando o usuário clica no input para digitar */
+.input-wrapper input:focus {
+  background-color: #ffffff;
+  border-color: #0284c7; 
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); 
+}
+
+/* Botão do olho */
+.btn-mostrar-senha {
+  position: absolute;
+  right: 14px;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;       
+  align-items: center; 
+  justify-content: center;
+  outline: none;
+  transition: color 0.2s;
+}
+
+.btn-mostrar-senha:hover {
+  color: #0284c7; 
+}
+
+
+/* --- ANIMAÇÕES (KEYFRAMES) --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px) scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+}
+
+/* Texto de ajuda debaixo do input de nova senha */
+.texto-ajuda-senha {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+.texto-ajuda-senha.tem-erro {
+  color: #B00020; /* O vermelho acessível */
+  font-weight: 600; /* Opcional: negrito para destacar */
+}
+
+/* Container que segura os dois botões */
+.modal-botoes {
+  display: flex;
+  gap: 16px;            /* Espaço entre um botão e outro */
+  width: 100%;          /* Ocupa a largura total disponível no modal */
+  margin-top: 24px;     /* Distância da linha de cima */
+}
+
+/* ==========================================
+   ESTILO DO BOTÃO CANCELAR
+   ========================================== */
+.btn-modal-cancelar {
+  flex: 1;              /* Força a ter 50% da largura */
+  padding: 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  
+  /* Cores customizadas do Cancelar */
+  background-color: #f1f5f9; 
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  transition: all 0.2s ease;
+}
+
+.btn-modal-cancelar:hover {
+  background-color: #e2e8f0; /* Efeito de passar o mouse */
+}
+
+/* ==========================================
+   ESTILO DO BOTÃO CONFIRMAR
+   ========================================== */
+.btn-modal-confirmar {
+  flex: 1;              /* Força a ter os mesmos 50% da largura */
+  padding: 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  
+  /* Cores customizadas do Confirmar (Azul) */
+  background-color: #007eb5; 
+  color: #ffffff;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-modal-confirmar:hover {
+  background-color: #006694; /* Efeito de passar o mouse */
+}
+
+/* Estilos para o Modal de Recorte */
+.corte-overlay {
+  z-index: 2000 !important; /* Garante que fique acima de tudo */
+}
+
+.corte-conteudo {
+  width: 500px !important; /* Modal mais largo para a UX do corte */
+  max-width: 90vw;
+  padding: 0 !important; /* Tiramos o padding padrão do modal para o Cropper ocupar tudo */
+  overflow: hidden; /* Garante que o cropper não vaze */
+}
+
+.corte-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.corte-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #1e293b;
+}
+
+/* Área Principal onde a foto fica */
+.corte-container-cropper {
+  position: relative; /* Obrigatório para a biblioteca react-easy-crop */
+  width: 100%;
+  height: 400px; /* Altura fixa confortável para trabalhar o corte */
+  background: #f8fafc; /* Um fundo neutro clara */
+}
+
+/* Estilização da barra de Zoom */
+.corte-controles-zoom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: white;
+  border-top: 1px solid #e2e8f0;
+}
+
+.corte-slider-zoom {
+  flex: 1;
+  max-width: 200px;
+  cursor: pointer;
+  /* Personalize o slider padrão se quiser com -webkit-slider-thumb */
+}
+
+/* Área dos botões */
+.corte-botoes {
+  padding: 16px 20px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
