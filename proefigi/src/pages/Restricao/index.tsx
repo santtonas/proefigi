@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Pencil, Check, X, Plus } from 'lucide-react'; // 🚀 Importando os novos ícones
+import { Trash2, Pencil, Check, X, Plus } from 'lucide-react'; 
 import "./restricao.css";
 
 interface Site {
@@ -84,7 +84,7 @@ const Restricao: React.FC = () => {
               value={site}
               onChange={(e) => setSite(e.target.value)}
             />
-            {/* 🚀 Trocamos o + pelo ícone Plus */}
+            
             <button className="btn-add" onClick={adicionarSite}>
               <Plus size={20} />
             </button>
@@ -116,7 +116,7 @@ const Restricao: React.FC = () => {
                     value={nomeEditado}
                     onChange={(e) => setNomeEditado(e.target.value)}
                   />
-                  {/* 🚀 Ícones de Confirmar e Cancelar na edição */}
+                 
                   <button className="btn-save-inline" onClick={() => salvarEdicao(s.id)}>
                     <Check size={18} />
                   </button>
@@ -125,12 +125,12 @@ const Restricao: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                /* Modo de Visualização Normal */
+               
                 <>
                   <span className={s.ativo ? 'site-name' : 'site-name disabled'}>{s.nome}</span>
                   
                   <div className="actions-right">
-                    {/* 🚀 Ícones de Lápis e Lixeira */}
+                   
                     <button className="btn-action-icon edit" onClick={() => iniciarEdicao(s.id, s.nome)} title="Editar site">
                       <Pencil size={16} />
                     </button>
