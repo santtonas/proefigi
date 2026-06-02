@@ -1,11 +1,12 @@
-import './style.css';
-import React, { useState } from 'react';
-import { useTarefas } from '../../context/TarefaContext';
-import { useMetas } from '../../context/MetaContext';
-import MetaCard from '../../components/Metacard/index';
-import { useNavigate } from 'react-router-dom';
-import { BarraDiasSeguidos } from '../../components/BarraDiasSeguidos';
-import {CardProgresso} from '../../components/CardProgresso';
+import "./style.css";
+import React, { useState } from "react";
+import { useTarefas } from "../../context/TarefaContext";
+import { useMetas } from "../../context/MetaContext";
+import MetaCard from "../../components/Metacard/index";
+import { useNavigate } from "react-router-dom";
+import { BarraDiasSeguidos } from "../../components/BarraDiasSeguidos";
+import { CardProgresso } from "../../components/CardProgresso";
+import { Hourglass, Clock, AlertCircle } from "lucide-react";
 
 interface Tarefa {
   id: string;
@@ -13,7 +14,7 @@ interface Tarefa {
   titulo: string;
   inicio: string;
   termino: string;
-  importancia: 'normal' | 'importante' | 'urgente';
+  importancia: "normal" | "importante" | "urgente";
   descricao: string;
   concluida?: boolean;
   pomodoroAutomatico: boolean;
@@ -21,55 +22,67 @@ interface Tarefa {
 
 export function Home() {
   const { metas } = useMetas();
-  const metasFixadas = metas.filter(m => m.fixada);
-  const metasHome = (metasFixadas.length > 0 ? metasFixadas : metas).slice(0, 3);
+  const metasFixadas = metas.filter((m) => m.fixada);
+  const metasHome = (metasFixadas.length > 0 ? metasFixadas : metas).slice(
+    0,
+    3,
+  );
   const navigate = useNavigate();
-  const { tarefas, adicionarTarefa, excluirTarefa, atualizarTarefa } = useTarefas();
+  const { tarefas, adicionarTarefa, excluirTarefa, atualizarTarefa } =
+    useTarefas();
   const [pomodoroAutomatico, setPomodoroAutomatico] = useState(false);
-  
+
   const dataHoje = new Date();
   const ano = dataHoje.getFullYear();
-  const mes = String(dataHoje.getMonth() + 1).padStart(2, '0');
-  const dia = String(dataHoje.getDate()).padStart(2, '0');
+  const mes = String(dataHoje.getMonth() + 1).padStart(2, "0");
+  const dia = String(dataHoje.getDate()).padStart(2, "0");
   const hojeISO = `${ano}-${mes}-${dia}`;
-  
+
   const amanha = new Date();
   amanha.setDate(dataHoje.getDate() + 1);
-  const amanhaISO = amanha.toISOString().split('T')[0];
-  
-  const [modoVisualizacao, setModoVisualizacao] = useState<string>('hoje');
+  const amanhaISO = amanha.toISOString().split("T")[0];
+
+  const [modoVisualizacao, setModoVisualizacao] = useState<string>("hoje");
 
   const dataFimSemana = new Date(dataHoje);
-  const diasParaSabado = 6 - dataHoje.getDay(); 
+  const diasParaSabado = 6 - dataHoje.getDay();
   dataFimSemana.setDate(dataHoje.getDate() + diasParaSabado);
-  
-  const diaFim = String(dataFimSemana.getDate()).padStart(2, '0');
-  const mesFim = String(dataFimSemana.getMonth() + 1).padStart(2, '0');
+
+  const diaFim = String(dataFimSemana.getDate()).padStart(2, "0");
+  const mesFim = String(dataFimSemana.getMonth() + 1).padStart(2, "0");
   const anoFim = dataFimSemana.getFullYear();
-  
+
   const [modalAberto, setModalAberto] = useState(false);
-  const [tarefaParaDetalhes, setTarefaParaDetalhes] = useState<Tarefa | null>(null); 
-  const [tarefaEmEdicao, setTarefaEmEdicao] = useState<string | null>(null);         
-  
-  const [dataNovaTarefa, setDataNovaTarefa] = useState(hojeISO); 
-  const [titulo, setTitulo] = useState('');
-  const [inicio, setInicio] = useState('');
-  const [termino, setTermino] = useState('');
-  const [importancia, setImportancia] = useState<'normal' | 'importante' | 'urgente'>('normal');
-  const [descricao, setDescricao] = useState('');
+  const [tarefaParaDetalhes, setTarefaParaDetalhes] = useState<Tarefa | null>(
+    null,
+  );
+  const [tarefaEmEdicao, setTarefaEmEdicao] = useState<string | null>(null);
+
+  const [dataNovaTarefa, setDataNovaTarefa] = useState(hojeISO);
+  const [titulo, setTitulo] = useState("");
+  const [inicio, setInicio] = useState("");
+  const [termino, setTermino] = useState("");
+  const [importancia, setImportancia] = useState<
+    "normal" | "importante" | "urgente"
+  >("normal");
+  const [descricao, setDescricao] = useState("");
 
   const [dataVisualizacao, setDataVisualizacao] = useState(hojeISO);
-  const [anoV, mesV, diaV] = dataVisualizacao.split('-');
-  const dataFormatadaVisualizacao = new Date(Number(anoV), Number(mesV) - 1, Number(diaV)).toDateString();
-  
-  const tarefasDaTela = tarefas.filter(t => {
+  const [anoV, mesV, diaV] = dataVisualizacao.split("-");
+  const dataFormatadaVisualizacao = new Date(
+    Number(anoV),
+    Number(mesV) - 1,
+    Number(diaV),
+  ).toDateString();
+
+  const tarefasDaTela = tarefas.filter((t) => {
     if (t.concluida) return false;
 
-    if (modoVisualizacao === 'semana') {
+    if (modoVisualizacao === "semana") {
       const dataTarefa = new Date(t.data);
-      const hoje = new Date(ano, Number(mes) - 1, Number(dia)); 
-      const limite = new Date(anoFim, Number(mesFim) - 1, Number(diaFim)); 
-      
+      const hoje = new Date(ano, Number(mes) - 1, Number(dia));
+      const limite = new Date(anoFim, Number(mesFim) - 1, Number(diaFim));
+
       return dataTarefa >= hoje && dataTarefa <= limite;
     }
 
@@ -77,8 +90,8 @@ export function Home() {
   });
 
   const tarefasOrdenadas = [...tarefasDaTela].sort((a, b) => {
-    const dataA = new Date(`${a.data} ${a.inicio || '00:00'}`);
-    const dataB = new Date(`${b.data} ${b.inicio || '00:00'}`);
+    const dataA = new Date(`${a.data} ${a.inicio || "00:00"}`);
+    const dataB = new Date(`${b.data} ${b.inicio || "00:00"}`);
     return dataA.getTime() - dataB.getTime();
   });
 
@@ -91,15 +104,15 @@ export function Home() {
     setDescricao(tarefa.descricao);
     setTarefaEmEdicao(tarefa.id);
     setPomodoroAutomatico(tarefa.pomodoroAutomatico);
-    
+
     const dataObj = new Date(tarefa.data);
     const anoT = dataObj.getFullYear();
-    const mesT = String(dataObj.getMonth() + 1).padStart(2, '0');
-    const diaT = String(dataObj.getDate()).padStart(2, '0');
+    const mesT = String(dataObj.getMonth() + 1).padStart(2, "0");
+    const diaT = String(dataObj.getDate()).padStart(2, "0");
     setDataNovaTarefa(`${anoT}-${mesT}-${diaT}`);
 
-    setTarefaParaDetalhes(null); 
-    setModalAberto(true);        
+    setTarefaParaDetalhes(null);
+    setModalAberto(true);
   };
 
   const lidarComExclusao = (id: string) => {
@@ -115,40 +128,58 @@ export function Home() {
       return;
     }
 
-    const [anoSel, mesSel, diaSel] = dataNovaTarefa.split('-');
-    const dataFormatadaParaContexto = new Date(Number(anoSel), Number(mesSel) - 1, Number(diaSel)).toDateString();
+    const [anoSel, mesSel, diaSel] = dataNovaTarefa.split("-");
+    const dataFormatadaParaContexto = new Date(
+      Number(anoSel),
+      Number(mesSel) - 1,
+      Number(diaSel),
+    ).toDateString();
 
     if (tarefaEmEdicao) {
       atualizarTarefa(tarefaEmEdicao, {
-        data: dataFormatadaParaContexto, 
-        titulo, inicio, termino, importancia, descricao, pomodoroAutomatico
+        data: dataFormatadaParaContexto,
+        titulo,
+        inicio,
+        termino,
+        importancia,
+        descricao,
+        pomodoroAutomatico,
       });
       setTarefaEmEdicao(null);
     } else {
       const novaTarefa: Tarefa = {
         id: Math.random().toString(),
         data: dataFormatadaParaContexto,
-        titulo, inicio, termino, importancia, descricao, pomodoroAutomatico
+        titulo,
+        inicio,
+        termino,
+        importancia,
+        descricao,
+        pomodoroAutomatico,
       };
-      adicionarTarefa(novaTarefa); 
+      adicionarTarefa(novaTarefa);
     }
-    
-    setTitulo(''); setInicio(''); setTermino(''); setImportancia('normal'); setDescricao('');
-    setDataNovaTarefa(dataVisualizacao); 
+
+    setTitulo("");
+    setInicio("");
+    setTermino("");
+    setImportancia("normal");
+    setDescricao("");
+    setDataNovaTarefa(dataVisualizacao);
     setModalAberto(false);
   };
 
   const marcarConcluida = (id: string) => {
     atualizarTarefa(id, { concluida: true });
-    setTarefaParaDetalhes(null); 
+    setTarefaParaDetalhes(null);
   };
 
   const formatarDataTarefa = (dataString: string) => {
     const dataObj = new Date(dataString);
-    const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+    const diasSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
     const diaSemana = diasSemana[dataObj.getDay()];
-    const dia = String(dataObj.getDate()).padStart(2, '0');
-    const mes = String(dataObj.getMonth() + 1).padStart(2, '0');
+    const dia = String(dataObj.getDate()).padStart(2, "0");
+    const mes = String(dataObj.getMonth() + 1).padStart(2, "0");
     return `${diaSemana}, ${dia}/${mes}`;
   };
 
@@ -156,61 +187,68 @@ export function Home() {
   const dataHojeObj = new Date(ano, Number(mes) - 1, Number(dia));
   const dataHojeString = dataHojeObj.toDateString();
 
-  const todasAsTarefasDeHoje = tarefas.filter(t => t.data === dataHojeString);
+  const todasAsTarefasDeHoje = tarefas.filter((t) => t.data === dataHojeString);
   const totalTarefasHoje = todasAsTarefasDeHoje.length;
-  const tarefasConcluidasHoje = todasAsTarefasDeHoje.filter(t => t.concluida).length;
+  const tarefasConcluidasHoje = todasAsTarefasDeHoje.filter(
+    (t) => t.concluida,
+  ).length;
   const temTarefasHoje = totalTarefasHoje > 0;
 
   const progressoPorcentagem = temTarefasHoje
     ? Math.round((tarefasConcluidasHoje / totalTarefasHoje) * 100)
     : 0;
 
-  let corDoProgresso = '#45B9FB'; 
+  let corDoProgresso = "#45B9FB";
   if (progressoPorcentagem === 100 && temTarefasHoje) {
-    corDoProgresso = '#10b981'; 
+    corDoProgresso = "#10b981";
   } else if (progressoPorcentagem < 30 && temTarefasHoje) {
-    corDoProgresso = '#a2d9ff'; 
+    corDoProgresso = "#a2d9ff";
   }
 
   let minutosEstudados = 0;
-  todasAsTarefasDeHoje.forEach(tarefa => {
+  todasAsTarefasDeHoje.forEach((tarefa) => {
     if (tarefa.concluida && tarefa.inicio && tarefa.termino) {
-      const [horaInicio, minInicio] = tarefa.inicio.split(':').map(Number);
-      const [horaFim, minFim] = tarefa.termino.split(':').map(Number);
-      const tempoInicioMinutos = (horaInicio * 60) + minInicio;
-      const tempoFimMinutos = (horaFim * 60) + minFim;
+      const [horaInicio, minInicio] = tarefa.inicio.split(":").map(Number);
+      const [horaFim, minFim] = tarefa.termino.split(":").map(Number);
+      const tempoInicioMinutos = horaInicio * 60 + minInicio;
+      const tempoFimMinutos = horaFim * 60 + minFim;
       if (tempoFimMinutos >= tempoInicioMinutos) {
-        minutosEstudados += (tempoFimMinutos - tempoInicioMinutos);
+        minutosEstudados += tempoFimMinutos - tempoInicioMinutos;
       }
     }
   });
 
   const horasProgresso = Math.floor(minutosEstudados / 60);
   const minProgresso = minutosEstudados % 60;
-  const tempoFormatado = `${String(horasProgresso).padStart(2, '0')}h ${String(minProgresso).padStart(2, '0')}m`;
+  const tempoFormatado = `${String(horasProgresso).padStart(2, "0")}h ${String(minProgresso).padStart(2, "0")}m`;
 
   return (
     <div className="home-pagina">
-      
       <div className="home-header">
         <div className="filtros-lista-container">
-          <button 
-            className={`botao-filtro-tempo ${modoVisualizacao === 'hoje' ? 'ativo' : ''}`}
-            onClick={() => { setModoVisualizacao('hoje'); setDataVisualizacao(hojeISO); }}
+          <button
+            className={`botao-filtro-tempo ${modoVisualizacao === "hoje" ? "ativo" : ""}`}
+            onClick={() => {
+              setModoVisualizacao("hoje");
+              setDataVisualizacao(hojeISO);
+            }}
           >
             Hoje
           </button>
-          
-          <button 
-            className={`botao-filtro-tempo ${modoVisualizacao === 'amanha' ? 'ativo' : ''}`}
-            onClick={() => { setModoVisualizacao('amanha'); setDataVisualizacao(amanhaISO); }}
+
+          <button
+            className={`botao-filtro-tempo ${modoVisualizacao === "amanha" ? "ativo" : ""}`}
+            onClick={() => {
+              setModoVisualizacao("amanha");
+              setDataVisualizacao(amanhaISO);
+            }}
           >
             Amanhã
           </button>
-          
-          <button 
-            className={`botao-filtro-tempo ${modoVisualizacao === 'semana' ? 'ativo' : ''}`}
-            onClick={() => setModoVisualizacao('semana')}
+
+          <button
+            className={`botao-filtro-tempo ${modoVisualizacao === "semana" ? "ativo" : ""}`}
+            onClick={() => setModoVisualizacao("semana")}
           >
             Da semana
           </button>
@@ -218,87 +256,141 @@ export function Home() {
       </div>
 
       <div className="home-conteudo">
-        
         {/* --- INÍCIO DO DASHBOARD (GRID) --- */}
         <div className="home-dashboard-container">
-          
           {/* --- COLUNA ESQUERDA: TAREFAS --- */}
           <div className="home-card-destaque coluna-tarefas">
             <div className="destaque-header-linha">
               <h3>
-                {modoVisualizacao === 'semana' ? "Tarefas da Semana" : 
-                 dataVisualizacao === hojeISO ? "Tarefas de Hoje" : 
-                 dataVisualizacao === amanhaISO ? "Tarefas de Amanhã" : "Tarefas do dia"}
+                {modoVisualizacao === "semana"
+                  ? "Tarefas da Semana"
+                  : dataVisualizacao === hojeISO
+                    ? "Tarefas de Hoje"
+                    : dataVisualizacao === amanhaISO
+                      ? "Tarefas de Amanhã"
+                      : "Tarefas do dia"}
               </h3>
-              
-              {modoVisualizacao === 'semana' ? (
-                <span className="input-data-cabecalho" style={{ cursor: 'default', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                   {dia}/{mes} - {diaFim}/{mesFim}
+
+              {modoVisualizacao === "semana" ? (
+                <span
+                  className="input-data-cabecalho"
+                  style={{
+                    cursor: "default",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "5px",
+                  }}
+                >
+                  {dia}/{mes} - {diaFim}/{mesFim}
                 </span>
               ) : (
-                <input 
-                  type="date" 
-                  value={dataVisualizacao} 
+                <input
+                  type="date"
+                  value={dataVisualizacao}
                   onChange={(e) => {
                     setDataVisualizacao(e.target.value);
-                    setModoVisualizacao('custom'); 
-                  }} 
+                    setModoVisualizacao("custom");
+                  }}
                   className="input-data-cabecalho"
                 />
               )}
             </div>
-            
+
             <div className="area-da-tarefa">
-              <div className="cards-tarefas" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div
+                className="cards-tarefas"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
                 {tarefasOrdenadas.length > 0 ? (
                   tarefasOrdenadas.map((t, index) => {
-                    const mostrarCabecalhoData = modoVisualizacao === 'semana' && (index === 0 || tarefasOrdenadas[index - 1].data !== t.data);
+                    const mostrarCabecalhoData =
+                      modoVisualizacao === "semana" &&
+                      (index === 0 ||
+                        tarefasOrdenadas[index - 1].data !== t.data);
 
                     return (
                       <React.Fragment key={t.id}>
                         {mostrarCabecalhoData && (
                           <div className="separador-data">
-                             {formatarDataTarefa(t.data)}
+                            {formatarDataTarefa(t.data)}
                           </div>
                         )}
-                        
-                        <div 
-                          className={`card-tarefa borda-${t.importancia}`} 
-                          onClick={() => setTarefaParaDetalhes(t)} 
-                          style={{ padding: '15px', backgroundColor: '#f8fafc', borderRadius: '8px', borderLeft: `6px solid ${t.importancia === 'urgente' ? 'red' : t.importancia === 'importante' ? 'orange' : 'green'}`, cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+
+                        <div
+                          className={`card-tarefa borda-${t.importancia}`}
+                          onClick={() => setTarefaParaDetalhes(t)}
+                          style={{
+                            padding: "15px",
+                            backgroundColor: "#f8fafc",
+                            borderRadius: "8px",
+                            borderLeft: `6px solid ${t.importancia === "urgente" ? "red" : t.importancia === "importante" ? "orange" : "green"}`,
+                            cursor: "pointer",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
                         >
-                          <strong style={{ color: '#1e293b' }}>{t.titulo}</strong>
-                          <span style={{ fontSize: '13px', color: '#64748b', fontWeight: 'bold' }}>{t.inicio}</span>
+                          <strong style={{ color: "#1e293b" }}>
+                            {t.titulo}
+                          </strong>
+                          <span
+                            style={{
+                              fontSize: "13px",
+                              color: "#64748b",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {t.inicio}
+                          </span>
                         </div>
                       </React.Fragment>
                     );
                   })
                 ) : (
-                  <p style={{ textAlign: 'center', color: '#64748b', padding: '20px 0' }}>Nenhuma tarefa para este período! 🎉</p>
+                  <p
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
+                      color: "#64748b",
+                    }}
+                  >
+                    Nenhuma tarefa para este período!
+                  </p>
                 )}
               </div>
 
-              <button 
+              <button
                 onClick={() => {
-                  setTarefaEmEdicao(null); 
-                  setTitulo(''); setInicio(''); setTermino(''); setImportancia('normal'); setDescricao('');
+                  setTarefaEmEdicao(null);
+                  setTitulo("");
+                  setInicio("");
+                  setTermino("");
+                  setImportancia("normal");
+                  setDescricao("");
                   setPomodoroAutomatico(false);
                   setDataNovaTarefa(dataVisualizacao);
                   setModalAberto(true);
                 }}
-                style={{ 
-                  width: '100%', 
-                  marginTop: 'auto', /* Empurra o botão pro fundo se sobrar espaço */
-                  padding: '12px', 
-                  backgroundColor: '#f1f5f9', 
-                  border: 'none', 
-                  borderRadius: '8px', 
-                  color: '#475569', 
-                  fontWeight: 'bold', 
-                  cursor: 'pointer',
-                  flexShrink: 0, /* Impede o botão de ser esmagado */
-                  flexGrow: 0,   /* Impede o botão de esticar e ficar gigante */
-                  height: '45px' /* Crava a altura exata dele */
+                style={{
+                  width: "100%",
+                  marginTop:
+                    "auto" ,
+                  padding: "12px",
+                  backgroundColor: "#f1f5f9",
+                  border: "none",
+                  borderRadius: "8px",
+                  color: "#475569",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  flexShrink: 0 ,
+                  flexGrow: 0 ,
+                  height: "45px" ,
                 }}
               >
                 + Adicionar Nova Tarefa
@@ -306,89 +398,190 @@ export function Home() {
             </div>
           </div>
           {/* --- FIM DA COLUNA ESQUERDA --- */}
-          
+
           {/* --- COLUNA DIREITA: PROGRESSO E METAS --- */}
           <div className="home-resumos coluna-lateral">
-            
             {/* CARD: PROGRESSO */}
-            
-              <CardProgresso 
-                temTarefasHoje={temTarefasHoje}
-                progressoPorcentagem={progressoPorcentagem}
-                tarefasConcluidasHoje={tarefasConcluidasHoje}
-                totalTarefasHoje={totalTarefasHoje}
-                corDoProgresso={corDoProgresso}
-                tempoFormatado={tempoFormatado}
-                mostrarHoras={true} 
-                onClick={() => navigate('/progresso')} 
-              />
-            
+
+            <CardProgresso
+              temTarefasHoje={temTarefasHoje}
+              progressoPorcentagem={progressoPorcentagem}
+              tarefasConcluidasHoje={tarefasConcluidasHoje}
+              totalTarefasHoje={totalTarefasHoje}
+              corDoProgresso={corDoProgresso}
+              tempoFormatado={tempoFormatado}
+              mostrarHoras={true}
+              onClick={() => navigate("/progresso")}
+            />
 
             {/* CARD: METAS DA SEMANA */}
-            <div className="home-card-resumo card-clicavel" onClick={() => navigate('/metas')}>
-              <div className="cabecalho-bloco" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                <h3 style={{ margin: 0, fontSize: '16px', color: '#1e293b' }}>Metas da Semana</h3>
+            <div
+              className="home-card-resumo card-clicavel"
+              onClick={() => navigate("/metas")}
+            >
+              <div
+                className="cabecalho-bloco"
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "15px",
+                }}
+              >
+                <h3 style={{ margin: 0, fontSize: "16px", color: "#1e293b" }}>
+                  Metas da Semana
+                </h3>
               </div>
-              <div className="metas-semana-lista" style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '15px' }}>
+              <div
+                className="metas-semana-lista"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "12px",
+                  marginTop: "15px",
+                }}
+              >
                 {metas.length === 0 ? (
-                  <p style={{ fontSize: '14px', color: '#94a3b8' }}>Nenhuma meta criada.</p>
+                  <p style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", color: "#94a3b8", minHeight: "160px" }}>
+                       Nenhuma meta criada.
+                   </p>
                 ) : (
-                  metasHome.map(meta => (
-                    <MetaCard 
-                      key={meta.id} 
-                      meta={meta} 
-                      compacto={true} 
-                    />
+                  metasHome.map((meta) => (
+                    <MetaCard key={meta.id} meta={meta} compacto={true} />
                   ))
                 )}
               </div>
             </div>
-
           </div>
-          
-
         </div>
 
-
-
         <BarraDiasSeguidos />
-       
-
-
       </div>
 
       {/* --- MODAL DE FORMULÁRIO (CRIAR/EDITAR) --- */}
       {modalAberto && (
         <div className="modal-fundo">
           <div className="modal-caixa">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2 style={{ margin: 0 }}>{tarefaEmEdicao ? "Editar Tarefa" : "Nova Tarefa"}</h2>
-              <input type="date" value={dataNovaTarefa} onChange={(e) => setDataNovaTarefa(e.target.value)} style={{ backgroundColor: '#E2E8F0', color: '#475569', padding: '6px 12px', borderRadius: '20px', fontSize: '13px', fontWeight: 'bold', border: 'none', outline: 'none', cursor: 'pointer', fontFamily: 'inherit' }} />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "20px",
+              }}
+            >
+              <h2 style={{ margin: 0 }}>
+                {tarefaEmEdicao ? "Editar Tarefa" : "Nova Tarefa"}
+              </h2>
+              <input
+                type="date"
+                value={dataNovaTarefa}
+                onChange={(e) => setDataNovaTarefa(e.target.value)}
+                style={{
+                  backgroundColor: "#E2E8F0",
+                  color: "#475569",
+                  padding: "6px 12px",
+                  borderRadius: "20px",
+                  fontSize: "13px",
+                  fontWeight: "bold",
+                  border: "none",
+                  outline: "none",
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                }}
+              />
             </div>
 
-            <div className="grupo-input"><label>Título</label><input type="text" value={titulo} onChange={(e) => setTitulo(e.target.value)} /></div>
-            <div className="linha-horarios">
-              <div className="grupo-input"><label>Início</label><input type="time" value={inicio} onChange={(e) => setInicio(e.target.value)} /></div>
-              <div className="grupo-input"><label>Fim</label><input type="time" value={termino} onChange={(e) => setTermino(e.target.value)} /></div>
+            <div className="grupo-input">
+              <label>Título</label>
+              <input
+                type="text"
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+              />
             </div>
-            <div className="switch-container" style={{ margin: '15px 0', padding: '10px', background: '#f1f5f9', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-               <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#475569' }}>Ativar Pomodoro Automático</span>
-               <label className="switch">
-                 <input type="checkbox" checked={pomodoroAutomatico} onChange={(e) => setPomodoroAutomatico(e.target.checked)} />
-                 <span className="slider"></span>
-               </label>
-             </div>
+            <div className="linha-horarios">
+              <div className="grupo-input">
+                <label>Início</label>
+                <input
+                  type="time"
+                  value={inicio}
+                  onChange={(e) => setInicio(e.target.value)}
+                />
+              </div>
+              <div className="grupo-input">
+                <label>Fim</label>
+                <input
+                  type="time"
+                  value={termino}
+                  onChange={(e) => setTermino(e.target.value)}
+                />
+              </div>
+            </div>
+            <div
+              className="switch-container"
+              style={{
+                margin: "15px 0",
+                padding: "10px",
+                background: "#f1f5f9",
+                borderRadius: "8px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  color: "#475569",
+                }}
+              >
+                Ativar Pomodoro Automático
+              </span>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={pomodoroAutomatico}
+                  onChange={(e) => setPomodoroAutomatico(e.target.checked)}
+                />
+                <span className="slider"></span>
+              </label>
+            </div>
             <div className="grupo-input">
               <label>Prioridade</label>
-              <select value={importancia} onChange={(e) => setImportancia(e.target.value as any)}>
-                <option value="normal">Normal</option><option value="importante">Importante</option><option value="urgente">Urgente</option>
+              <select
+                value={importancia}
+                onChange={(e) => setImportancia(e.target.value as any)}
+              >
+                <option value="normal">Normal</option>
+                <option value="importante">Importante</option>
+                <option value="urgente">Urgente</option>
               </select>
             </div>
-            <div className="grupo-input"><label>Descrição</label><textarea value={descricao} onChange={(e) => setDescricao(e.target.value)} rows={3}></textarea></div>
-            
+            <div className="grupo-input">
+              <label>Descrição</label>
+              <textarea
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
+                rows={3}
+              ></textarea>
+            </div>
+
             <div className="botoes-modal">
-              <button className="botao-salvar" onClick={salvarNovaTarefa}>Salvar</button>
-              <button className="botao-cancelar" onClick={() => { setModalAberto(false); setTarefaEmEdicao(null);setPomodoroAutomatico(false); }}>Cancelar</button>
+              <button className="botao-salvar" onClick={salvarNovaTarefa}>
+                Salvar
+              </button>
+              <button
+                className="botao-cancelar"
+                onClick={() => {
+                  setModalAberto(false);
+                  setTarefaEmEdicao(null);
+                  setPomodoroAutomatico(false);
+                }}
+              >
+                Cancelar
+              </button>
             </div>
           </div>
         </div>
@@ -397,37 +590,110 @@ export function Home() {
       {/* --- MODAL DE DETALHES --- */}
       {tarefaParaDetalhes && (
         <div className="modal-fundo" style={{ zIndex: 1000 }}>
-          <div className="modal-caixa" style={{ borderTop: '8px solid', borderColor: tarefaParaDetalhes.importancia === 'urgente' ? 'red' : tarefaParaDetalhes.importancia === 'importante' ? 'orange' : 'green' }}>
-            <h2 style={{marginTop: 0}}>{tarefaParaDetalhes.titulo}</h2>
-            <p>⏰ <strong>Horário:</strong> {tarefaParaDetalhes.inicio} às {tarefaParaDetalhes.termino}</p>
-            <p>🚨 <strong>Importância:</strong> {tarefaParaDetalhes.importancia}</p>
-            <p>🍅 <strong>Pomodoro Automático:</strong> {tarefaParaDetalhes.pomodoroAutomatico ? "Sim ✅" : "Não ❌"}</p>
-            
-            <div style={{ background: '#f5f5f5', padding: '15px', borderRadius: '8px', margin: '15px 0', minHeight: '100px' }}>
-             <strong style={{ display: 'block', marginBottom: '8px' }}>Descrição:</strong>
-             <p className="texto-descricao">{tarefaParaDetalhes.descricao || "Sem descrição informada."}</p>
+          <div
+            className="modal-caixa"
+            style={{
+              borderTop: "8px solid",
+              borderColor:
+                tarefaParaDetalhes.importancia === "urgente"
+                  ? "red"
+                  : tarefaParaDetalhes.importancia === "importante"
+                    ? "orange"
+                    : "green",
+            }}
+          >
+            <h2 style={{ marginTop: 0 }}>{tarefaParaDetalhes.titulo}</h2>
+            <p>
+              <Clock /> <strong>Horário:</strong> {tarefaParaDetalhes.inicio} às{" "}
+              {tarefaParaDetalhes.termino}
+            </p>
+            <p>
+              <AlertCircle /> <strong>Importância:</strong>{" "}
+              {tarefaParaDetalhes.importancia}
+            </p>
+            <p>
+              <Hourglass /> <strong>Pomodoro Automático:</strong>{" "}
+              {tarefaParaDetalhes.pomodoroAutomatico ? "Ativado" : "Desativado"}
+            </p>
+
+            <div
+              style={{
+                background: "#f5f5f5",
+                padding: "15px",
+                borderRadius: "8px",
+                margin: "15px 0",
+                minHeight: "100px",
+              }}
+            >
+              <strong style={{ display: "block", marginBottom: "8px" }}>
+                Descrição:
+              </strong>
+              <p className="texto-descricao">
+                {tarefaParaDetalhes.descricao || "Sem descrição informada."}
+              </p>
             </div>
 
-            <div className="botoes-modal" style={{ justifyContent: 'space-between' }}>
-              <button className="botao-cancelar" onClick={() => setTarefaParaDetalhes(null)}>Voltar</button>
-              
-              <div style={{ display: 'flex', gap: '10px' }}>
+            <div
+              className="botoes-modal"
+              style={{ justifyContent: "space-between" }}
+            >
+              <button
+                className="botao-cancelar"
+                onClick={() => setTarefaParaDetalhes(null)}
+              >
+                Voltar
+              </button>
+
+              <div style={{ display: "flex", gap: "10px" }}>
                 {!tarefaParaDetalhes.concluida && (
-                  <button 
-                    onClick={() => marcarConcluida(tarefaParaDetalhes.id)} 
-                    style={{ background: '#10b981', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                  <button
+                    onClick={() => marcarConcluida(tarefaParaDetalhes.id)}
+                    style={{
+                      background: "#10b981",
+                      color: "white",
+                      border: "none",
+                      padding: "10px 15px",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                      fontWeight: "bold",
+                    }}
                   >
                     Concluir
                   </button>
                 )}
-                <button onClick={() => iniciarEdicao(tarefaParaDetalhes)} style={{ background: '#45B9FB', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Editar</button>
-                <button onClick={() => lidarComExclusao(tarefaParaDetalhes.id)} style={{ background: '#ff4d4d', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Excluir</button>
+                <button
+                  onClick={() => iniciarEdicao(tarefaParaDetalhes)}
+                  style={{
+                    background: "#45B9FB",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 15px",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => lidarComExclusao(tarefaParaDetalhes.id)}
+                  style={{
+                    background: "#ff4d4d",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 15px",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Excluir
+                </button>
               </div>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 }

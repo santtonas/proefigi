@@ -7,9 +7,9 @@ interface CardProgressoProps {
   tarefasConcluidasHoje: number;
   totalTarefasHoje: number;
   corDoProgresso: string;
-  tempoFormatado?: string; // Opcional, pois na tela de Progresso não vamos usar
-  mostrarHoras: boolean;   // A nossa chave mágica!
-  onClick?: () => void;    // Passamos o clique como prop também
+  tempoFormatado?: string; 
+  mostrarHoras: boolean;   
+  onClick?: () => void;   
 }
 
 export function CardProgresso({
@@ -33,8 +33,8 @@ export function CardProgresso({
       
       {!temTarefasHoje ? (
         <div className="estado-vazio-progresso">
-          <p>☕</p>
-          <span>Nenhuma tarefa para hoje.<br />Pronto para começar?</span>
+          
+          <span>Nenhuma tarefa para hoje</span>
         </div>
       ) : (
         <div className="progresso-layout">
@@ -59,11 +59,11 @@ export function CardProgresso({
                 )}
               </div>
             </div>
-            {/* Opcional: Se quiser esconder o "Tarefa concluída" na tela de Progresso, pode atrelar isso ao mostrarHoras também */}
+          
             <h3 className="texto-anel">Tarefa concluída</h3>
           </div>
 
-          {/* ✨ A MÁGICA ACONTECE AQUI ✨ */}
+          
           {mostrarHoras && (
             <>
               <div className="divisor-vertical"></div>

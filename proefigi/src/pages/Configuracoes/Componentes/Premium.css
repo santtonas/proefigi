@@ -1,0 +1,305 @@
+/* =================================================== */
+/* CONTAINER PRINCIPAL                                 */
+/* =================================================== */
+.premium-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px 20px; 
+  font-family: system-ui, -apple-system, sans-serif;
+  position: relative; /* 🌟 ESSENCIAL: Mantém o botão de voltar ancorado aqui dentro */
+}
+
+/* =================================================== */
+/* BOTÃO DE VOLTAR                                     */
+/* =================================================== */
+.btn-voltar { /* 🌟 Corrigido de bnt para btn */
+  position: absolute;
+  top: 24px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-voltar:hover {
+  color: #1e293b;
+  background: #f1f5f9; 
+}
+
+/* =================================================== */
+/* CABEÇALHO                                           */
+/* =================================================== */
+.premium-header {
+  text-align: center;
+  margin-bottom: 30px; /* Mantido o micro-ajuste */
+}
+
+.badge-novidade {
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.premium-header h2 {
+  font-size: 32px;
+  color: #1e293b;
+  margin: 16px 0 8px 0;
+}
+
+.premium-header p {
+  font-size: 16px;
+  color: #64748b;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* =================================================== */
+/* GRID DE CARDS                                       */
+/* =================================================== */
+.premium-cards-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+/* CARD PADRÃO */
+.plan-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 35px 30px;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* CARD DESTAQUE (PAIS) */
+.plan-card-featured {
+  border: 2px solid #007eb5;
+}
+
+.featured-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #007eb5;
+  color: #ffffff;
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ÍCONES INTERNOS DOS CARDS */
+.plan-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.estudante-icon { background: #e0f2fe; }
+.pais-icon { background: #fef3c7; }
+
+.plan-card h3 {
+  font-size: 22px;
+  color: #1e293b;
+  margin: 0 0 4px 0;
+}
+
+.plan-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 24px 0;
+}
+
+/* PREÇO */
+.plan-price {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 28px;
+}
+
+.plan-price .currency {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-right: 4px;
+}
+
+.plan-price .amount {
+  font-size: 42px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.plan-price .period {
+  font-size: 14px;
+  color: #64748b;
+  margin-left: 4px;
+}
+
+/* LISTA DE BENEFÍCIOS (Unificado com o micro-ajuste) */
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0; 
+  display: flex;
+  flex-direction: column;
+  gap: 12px; 
+  flex: 1; 
+}
+
+.plan-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.4;
+}
+
+.plan-features li svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* BOTÕES DE COMPRA */
+.btn-plan {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s ease;
+}
+
+.btn-estudante {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.btn-estudante:hover {
+  background: #e2e8f0;
+}
+
+.btn-pais {
+  background: #007eb5;
+  color: #ffffff;
+}
+
+.btn-pais:hover {
+  background: #006694;
+}
+
+/* NOTÍCIA DO RODAPÉ (Unificado com o micro-ajuste) */
+.premium-footer-notice {
+  text-align: center;
+  margin-top: 24px; 
+  padding: 16px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  max-width: 790px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.premium-footer-notice p {
+  font-size: 13px;
+  color: #475569;
+  margin: 0;
+}
+
+/* =================================================== */
+/* RESPONSIVIDADE (ADAPTAÇÃO PARA TODAS AS TELAS)      */
+/* =================================================== */
+
+/* 📱 Para Tablets e Telas Médias (Abaixo de 850px) */
+@media (max-width: 850px) {
+  .premium-container {
+    padding: 30px 16px 80px 16px;
+  }
+
+  .premium-header {
+    margin-top: 48px; /* Abre espaço confortável para o botão Voltar no mobile */
+  }
+
+  .premium-header h2 {
+    font-size: 26px; 
+  }
+
+  .premium-cards-grid {
+    gap: 24px; 
+    flex-direction: column; 
+    align-items: center;
+  }
+
+  .plan-card {
+    max-width: 100%; 
+    width: 100%;
+  }
+}
+
+/* 📱 Para Celulares e Telas Pequenas (Abaixo de 480px) */
+@media (max-width: 480px) {
+  .premium-header {
+    margin-bottom: 32px;
+  }
+
+  .premium-header h2 {
+    font-size: 22px;
+  }
+
+  .premium-header p {
+    font-size: 14px;
+  }
+
+  .plan-card {
+    padding: 25px 20px; 
+  }
+
+  .plan-price .amount {
+    font-size: 36px;
+  }
+
+  .plan-features li {
+    font-size: 13px; 
+  }
+
+  .premium-footer-notice p {
+    font-size: 12px;
+    text-align: left; 
+  }
+}

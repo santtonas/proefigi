@@ -16,8 +16,10 @@
     "react": "^19.2.0",
     "react-calendar": "^6.0.0",
     "react-dom": "^19.2.0",
+    "react-easy-crop": "^5.5.7",
     "react-router-dom": "^7.13.1",
-    "recharts": "^2.1.16"
+    "recharts": "^2.1.16",
+    "sweetalert2": "^11.26.25"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

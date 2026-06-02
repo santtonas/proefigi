@@ -1,0 +1,30 @@
+/* Configuração global para TODOS os SweetAlerts do projeto */
+.swal2-html-container, .swal2-title {
+  word-break: normal !important;      /* Impede que o texto seja cortado no meio de uma letra */
+  overflow-wrap: break-word !important; /* Força o texto a ir para a linha de baixo de forma elegante */
+  line-height: 1.5 !important;        /* Dá um espaçamento excelente entre as linhas */
+  letter-spacing: 0.3px !important;   /* Garante que as letras não fiquem coladas */
+}
+
+/* Garante que em telas de celular o alerta não passe do limite físico da tela */
+.ajuste-alerta-global {
+  max-width: 90vw !important; 
+}
+
+/* Força TODOS os botões do SweetAlert dentro do container a dividirem o espaço igualmente */
+.swal2-actions {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 10px !important; /* Deixa o espaçamento idêntico entre os três */
+  width: 100% !important;
+  padding: 0 10px !important;
+}
+
+/* Deixa os botões de Confirmar, Negar e Cancelar com tamanhos idênticos */
+.swal2-actions button {
+  flex: 1 !important;        /* Força todos a esticarem com o mesmo peso */
+  max-width: 120px !important; /* Limita uma largura máxima estética para não virarem blocos gigantes */
+  margin: 0 !important;        /* Reseta margens padrões que desalinhavam */
+  padding: 10px 0 !important;  /* Alinha a altura interna deles */
+  font-size: 14px !important;  /* Garante o mesmo tamanho de fonte para os três textos */
+}

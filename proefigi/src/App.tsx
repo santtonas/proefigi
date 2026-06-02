@@ -1,22 +1,40 @@
-{/*import { BrowserRouter as Router, Routes, Route } from "react-router-dom";*/}
-{/*import Login from "./pages/Login";*/}
-{/*import Cadastro from "./pages/Cadastro";*/}
-{/*import { Tela_inicial } from "./pages/Tela_inicial";*/}
+import { useState, useEffect } from 'react'; 
 import RoutesApp from './routes';
 import { TarefaProvider } from './context/TarefaContext';
 import { MetaProvider } from './context/MetaContext';
-import {RestricaoProvider} from './context/RestricaoContext';
+import { RestricaoProvider } from './context/RestricaoContext';
+import { UserProvider } from './context/UserContext';
+import { Loading } from './components/Loading'; 
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+ 
+  if (loading) {
+    return <Loading />;
+  }
+
+ 
   return (
     <TarefaProvider>
       <MetaProvider>
         <RestricaoProvider>
-          <RoutesApp/>
+          <UserProvider>
+            <RoutesApp />
+          </UserProvider>
         </RestricaoProvider>
       </MetaProvider>
     </TarefaProvider>
-  )
+  );
 }
 
 export default App;

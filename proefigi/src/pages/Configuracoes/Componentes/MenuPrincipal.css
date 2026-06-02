@@ -1,0 +1,46 @@
+/* src/pages/Configuracoes/Componentes/MenuPrincipal.css */
+
+.config-lista-vertical { display: flex; flex-direction: column; gap: 8px; }
+
+.item-lista-clicavel {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;
+  background-color: #ffffff;
+}
+.item-lista-clicavel:hover { background-color: #f8fafc; }
+
+.item-lista-esquerda { display: flex; align-items: center; gap: 16px; }
+.item-lista-esquerda h3 { font-size: 15px; font-weight: 600; color: #1e293b; margin: 0 0 2px 0; }
+.item-lista-esquerda p { font-size: 13px; color: #64748b; margin: 0; }
+
+.icon-wrapper {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 10px;
+}
+
+.seta-ir { color: #cbd5e1; transition: transform 0.2s; }
+.item-lista-clicavel:hover .seta-ir { color: #94a3b8; transform: translateX(2px); }
+
+/* Cores customizadas */
+.cor-conta { background-color: #e0f2fe; color: #0284c7; }
+.cor-premium { background-color: #fef9c3; color: #ca8a04; }
+.cor-pais { background-color: #dcfce7; color: #16a34a; }
+.cor-temas { background-color: #f3e8ff; color: #9333ea; }
+
+/* Mini avatar no menu */
+.mini-avatar-menu {
+  width: 40px; height: 40px; border-radius: 50%;
+  object-fit: cover; border: 2px solid #e2e8f0;
+}
+
+/* Opcional: Mantive caso você use o dropdown depois */
+.item-lista-dropdown { border-radius: 12px; transition: background-color 0.2s; }
+.item-lista-dropdown.expandido { background-color: #f8fafc; }
+.conteudo-inline-expandido {
+  padding: 0px 16px 20px 72px; font-size: 14px; color: #475569;
+  line-height: 1.5; animation: abrirSuave 0.2s ease-out;
+}
+@keyframes abrirSuave {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}

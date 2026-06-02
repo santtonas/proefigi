@@ -2,7 +2,7 @@ import './style.css';
 import { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle, Hourglass, AlertCircle, Clock } from 'lucide-react';
 import { useTarefas } from '../../context/TarefaContext'; 
 
 type ValuePiece = Date | null;
@@ -184,7 +184,7 @@ export function Calendario() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h2 style={{ margin: 0 }}>{tarefaEmEdicao ? "Editar Tarefa" : "Nova Tarefa"}</h2>
               <span style={{ backgroundColor: '#E2E8F0', color: '#475569', padding: '6px 12px', borderRadius: '20px', fontSize: '13px', fontWeight: 'bold' }}>
-                📅 {date instanceof Date ? date.toLocaleDateString('pt-BR') : ''}
+                {date instanceof Date ? date.toLocaleDateString('pt-BR') : ''}
               </span>
             </div>
 
@@ -209,7 +209,7 @@ export function Calendario() {
 
             <div className="grupo-input">
               <label>Prioridade</label>
-              <select value={importancia} onChange={(e) => setImportancia(e.target.value as any)}>
+              <select value={importancia} onChange={(e) => setImportancia(e.target.value as 'normal' | 'importante' | 'urgente')}>
                 <option value="normal">Normal</option>
                 <option value="importante">Importante</option>
                 <option value="urgente">Urgente</option>
@@ -238,7 +238,7 @@ export function Calendario() {
               {tarefasDoDiaSelecionado.map(tarefa => (
                 <div key={tarefa.id} className={`card-tarefa borda-${tarefa.importancia}`} onClick={() => {setTarefaParaDetalhes(tarefa); setModalListaAberto(false);}} style={{ cursor: 'pointer' }}>
                   <strong style={{ textDecoration: tarefa.concluida ? 'line-through' : 'none', opacity: tarefa.concluida ? 0.6 : 1 }}>
-                    {tarefa.titulo} {tarefa.concluida && "✅"}
+                    {tarefa.titulo} {tarefa.concluida && <CheckCircle/>}
                   </strong>
                   <span style={{float: 'right', fontSize: '13px'}}>{tarefa.inicio}</span>
                 </div>
@@ -257,9 +257,9 @@ export function Calendario() {
         <div className="modal-fundo" style={{ zIndex: 1000 }}>
           <div className="modal-caixa" style={{ borderTop: '8px solid', borderColor: tarefaParaDetalhes.importancia === 'urgente' ? 'red' : tarefaParaDetalhes.importancia === 'importante' ? 'orange' : 'green' }}>
             <h2 style={{marginTop: 0}}>{tarefaParaDetalhes.titulo}</h2>
-            <p>⏰ <strong>Horário:</strong> {tarefaParaDetalhes.inicio} às {tarefaParaDetalhes.termino}</p>
-            <p>🚨 <strong>Importância:</strong> {tarefaParaDetalhes.importancia}</p>
-            <p>🍅 <strong>Pomodoro Automático:</strong> {tarefaParaDetalhes.pomodoroAutomatico ? "Sim ✅" : "Não ❌"}</p>
+            <p><Clock/> <strong>Horário:</strong> {tarefaParaDetalhes.inicio} às {tarefaParaDetalhes.termino}</p>
+            <p><AlertCircle/> <strong>Importância:</strong> {tarefaParaDetalhes.importancia}</p>
+            <p><Hourglass/> <strong>Pomodoro Automático:</strong> {tarefaParaDetalhes.pomodoroAutomatico ? "Ativado" : "Desativado"}</p>
             
             <div style={{ background: '#f5f5f5', padding: '15px', borderRadius: '8px', margin: '15px 0', minHeight: '100px' }}>
              <strong style={{ display: 'block', marginBottom: '8px' }}>Descrição:</strong>
