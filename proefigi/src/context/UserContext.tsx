@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { AlertaCustomizado } from "../utils/sweetAlert";
 import { request } from "../services/api";
 
@@ -17,24 +17,54 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  // Carrega os valores iniciais do localStorage (mockando o banco de dados por enquanto)
-  const [nome, setNome] = useState(
-    localStorage.getItem("proefigi_nome") || "Paulo",
-  );
-  const [email, setEmail] = useState(
-    localStorage.getItem("proefigi_email") || "paulo@exemplo.com",
-  );
-  const [foto, setFoto] = useState<string | null>(
-    localStorage.getItem("proefigi_avatar") || null,
-  );
+  // Estados puxando o cache inicial do localStorage para não piscar a tela vazia
+  const [nome, setNome] = useState(localStorage.getItem("proefigi_nome") || "");
+  const [email, setEmail] = useState(localStorage.getItem("proefigi_email") || "");
+  const [foto, setFoto] = useState<string | null>(localStorage.getItem("proefigi_avatar") || null);
+  
+  // Agora plano e membroDesde também são estados dinâmicos!
+  const [plano, setPlano] = useState("Carregando...");
+  const [membroDesde, setMembroDesde] = useState("...");
 
-  // Metadados fixos do Tópico 3
-  const plano = "Ativado";
-  const membroDesde = "Janeiro de 2026";
+  // ==========================================
+  // BUSCA OS DADOS DA API AO INICIAR O APP
+  // ==========================================
+  useEffect(() => {
+    async function carregarPerfil() {
+      try {
+        // Substitua "usuarios/meu-perfil" pela rota de leitura do backend
+        const resposta = await request("usuarios/meu-perfil", { 
+          method: "GET" 
+        });
 
-  // Função simulando a conexão/salvamento no Banco de Dados
+        // Supondo que o backend responda com um objeto JSON contendo esses dados
+        if (resposta) {
+          setNome(resposta.nome);
+          setEmail(resposta.email);
+          setFoto(resposta.foto || null);
+          setPlano(resposta.plano || "Básico"); // Puxa o plano real do banco
+          setMembroDesde(resposta.membroDesde || "Data desconhecida");
+
+          // Atualiza o cache local para o próximo carregamento ser instantâneo
+          localStorage.setItem("proefigi_nome", resposta.nome);
+          localStorage.setItem("proefigi_email", resposta.email);
+          if (resposta.foto) {
+            localStorage.setItem("proefigi_avatar", resposta.foto);
+          }
+        }
+      } catch (erro) {
+        console.error("Erro ao carregar os dados iniciais do usuário:", erro);
+        // Opcional: Se der erro de token inválido (401), você pode forçar o logout aqui
+      }
+    }
+
+    carregarPerfil();
+  }, []); // A array vazia [] garante que isso rode apenas 1x quando o app abre
+
+  // ==========================================
+  // FUNÇÃO PARA SALVAR ALTERAÇÕES
+  // ==========================================
   const salvarNoBanco = async () => {
-    // 1. Validação simples para não enviar dados vazios
     if (!nome || !email) {
       AlertaCustomizado.fire({
         icon: "warning",
@@ -45,15 +75,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    // 2. Integração com o Backend
     try {
-      // Substitua "usuarios/atualizar-perfil" pela rota correta do seu colega
       await request("usuarios/atualizar-perfil", {
-        method: "PUT", // Geralmente usamos PUT ou PATCH para atualizar dados
+        method: "PUT",
         body: JSON.stringify({
           nome: nome,
           email: email,
-          foto: foto, // Como você usou readAsDataURL, a foto já está em Base64 (texto)
+          foto: foto,
         }),
       });
 
@@ -64,7 +92,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       } else {
         localStorage.removeItem("proefigi_avatar");
       }
-      // 3. Sucesso!
+      
       AlertaCustomizado.fire({
         icon: "success",
         title: "Perfil Atualizado",
@@ -73,14 +101,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
       });
     } catch (erro: any) {
       console.error("Erro ao salvar perfil:", erro);
-
-      // 4. Erro!
       AlertaCustomizado.fire({
         icon: "error",
         title: "Erro ao salvar",
-        text:
-          erro.message ||
-          "Não foi possível atualizar suas informações no momento.",
+        text: erro.message || "Não foi possível atualizar suas informações no momento.",
         confirmButtonColor: "#007eb5",
       });
     }
