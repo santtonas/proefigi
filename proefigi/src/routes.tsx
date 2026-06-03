@@ -10,6 +10,7 @@ import Metas from "./pages/Metas";
 import Rotina from "./pages/Rotina"; 
 import Restricao from "./pages/Restricao"; 
 import Configuracoes from "./pages/Configuracoes";
+import Ajuda from './pages/Ajuda';
 
 import { Calendario } from "./pages/Calendario";
 import { MonitorDeHorarios } from './components/MonitorDeHorarios';
@@ -35,6 +36,7 @@ function RoutesApp() {
             <Route path="/rotina" element={<Rotina/>}/> 
             <Route path="/restricao" element={<Restricao/>}/> 
             <Route path="/configuracoes" element={<Configuracoes/>}/>
+            <Route path="/ajuda" element={<Ajuda />} />
           </Route>
         </Routes>
       {/*</TarefaProvider>*/}
