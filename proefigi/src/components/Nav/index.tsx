@@ -9,6 +9,7 @@ import {
   Timer,
   Settings,
   HelpCircle,
+  Lock
 } from "lucide-react";
 import { useRef, useEffect } from "react";
 import { useUser } from "../../context/UserContext"; 
@@ -120,6 +121,14 @@ export default function Nav({ menuAberto, setMenuAberto }: NavProps) {
           >
             <Timer size={20} />
             <span>Pomodoro</span>
+          </Link>
+          <Link
+          to="/restricao"
+          className="nav-item"
+          onClick={() => setMenuAberto(false)}
+          >
+            <Lock size={20}/>
+            <span>Bloqueador</span>
           </Link>
         </div>
 

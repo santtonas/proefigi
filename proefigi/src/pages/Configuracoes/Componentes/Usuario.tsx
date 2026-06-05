@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect } from "react";
 import { useUser } from "../../../context/UserContext";
-import { ArrowLeft, Camera, MoreVertical, Crop, ZoomIn, ZoomOut } from "lucide-react";
-import { useCallback } from "react"; // Adicione o useCallback se ele já não estiver na lista do 'react'
-import Cropper from 'react-easy-crop';
+import {ArrowLeft, Camera, MoreVertical, Crop, ZoomIn ,ZoomOut} from "lucide-react";
+import { useCallback } from "react"; 
+import Cropper from "react-easy-crop";
 import getCroppedImg from "../../../utils/getCroppedImg";
 import { AlertaCustomizado } from "../../../utils/sweetAlert";
 import { request } from "../../../services/api";
@@ -19,10 +19,11 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
     email,
     setEmail,
     foto,
-    setFoto,
     membroDesde,
     salvarNoBanco,
+    salvarFotoNoBanco,
   } = useUser();
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [modalSenhaAberto, setModalSenhaAberto] = useState(false);
   const [senhaAtual, setSenhaAtual] = useState("");
@@ -36,7 +37,6 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
   const [erroSenha, setErroSenha] = useState(false);
   const [senhaEmFoco, setSenhaEmFoco] = useState(false);
 
-
   // ==========================================
   // ESTADOS PARA O RECORTE DE FOTO
   // ==========================================
@@ -44,20 +44,23 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
   const [imagemParaCortar, setImagemParaCortar] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<{ x: number, y: number, width: number, height: number } | null>(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } | null>(null);
 
   const cancelarAlteracao = () => {
-    // Zera os campos de texto
+    
     setSenhaAtual("");
     setNovaSenha("");
     setConfirmarSenha("");
 
-    // Zera a mensagem de erro vermelha, caso estivesse aparecendo
+   
     setErroSenha(false);
 
-    // DICA: Se o seu botão "Cancelar" atualmente também fecha um modal
-    // ou troca de tela, você deve colocar a função que faz isso aqui também!
-    // Exemplo: setModoEdicao(false);
+   
     setMostrarSenhaAtual(false);
     setMostrarNovaSenha(false);
     setMostrarConfirmarSenha(false);
@@ -122,9 +125,7 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
         }),
       });
 
-      // ====================================================================
-      // 5. SUCESSO!
-      // ====================================================================
+    
       AlertaCustomizado.fire({
         icon: "success",
         title: "Tudo Certo!",
@@ -140,26 +141,31 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
 
       // Limpa os campos e fecha o modal automaticamente
       cancelarAlteracao();
-    } catch (erro: any) {
+    } catch (erro) {
       console.error("Erro na requisição:", erro);
+
+      
+      const mensagemErro =
+        erro instanceof Error
+          ? erro.message
+          : "Não foi possível alterar a senha no momento.";
 
       AlertaCustomizado.fire({
         icon: "error",
         title: "Atenção",
-        // Mostra a mensagem exata que o seu colega configurou no backend
-        text: erro.message || "Não foi possível alterar a senha no momento.",
+        text: mensagemErro,
         width: "350px",
         padding: "20px",
         confirmButtonColor: "#007eb5",
         confirmButtonText: "Tentar Novamente",
       });
     }
-  }; // Fechamento corrigido com sucesso!
-  // Estado para controlar a abertura do menu de três pontinhos (Dropdown)
+  }; 
+ 
   const [menuAberto, setMenuAberto] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Fecha o menu de três pontinhos se o usuário clicar em qualquer outro lugar da tela
+  
   useEffect(() => {
     function clicarFora(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -170,12 +176,14 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
     return () => document.removeEventListener("mousedown", clicarFora);
   }, []);
 
-  const lidarComMudancaDeFoto = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const lidarComMudancaDeFoto = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const arquivo = event.target.files?.[0];
     if (arquivo) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        // Em vez de setFoto(), nós guardamos a foto original e abrimos o modal
+        
         setImagemParaCortar(reader.result as string);
         setZoom(1);
         setModalCorteAberto(true);
@@ -184,29 +192,45 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
     }
   };
 
-  // Calcula as coordenadas do corte enquanto o usuário arrasta a foto
-  const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {
-    setCroppedAreaPixels(croppedAreaPixels);
-  }, []);
+  
+  type AreaCorte = {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
 
-  // Confirma o corte, gera a foto nova e salva no perfil
+ 
+  const onCropComplete = useCallback(
+    (_croppedArea: AreaCorte, croppedAreaPixels: AreaCorte) => {
+      setCroppedAreaPixels(croppedAreaPixels);
+    },
+    [],
+  );
+
+  
   const confirmarCorte = async () => {
     if (!imagemParaCortar || !croppedAreaPixels) return;
 
     try {
-      // Chama a função matemática da pasta utils
-      const imagemCortadaBase64 = await getCroppedImg(imagemParaCortar, croppedAreaPixels);
       
-      setFoto(imagemCortadaBase64); // Atualiza a foto oficial do usuário
-      setModalCorteAberto(false); // Fecha o modal
-      setImagemParaCortar(null); // Limpa o cache
+      const imagemCortadaBase64 = await getCroppedImg(
+        imagemParaCortar,
+        croppedAreaPixels,
+      );
+
+    
+      await salvarFotoNoBanco(imagemCortadaBase64);
+
+      setModalCorteAberto(false); 
+      setImagemParaCortar(null); 
     } catch (erro) {
       console.error("Erro ao cortar a imagem:", erro);
       alert("Não foi possível processar o recorte da imagem.");
     }
   };
 
-  // Cancela tudo se o usuário desistir
+  
   const cancelarCorte = () => {
     setModalCorteAberto(false);
     setImagemParaCortar(null);
@@ -216,15 +240,15 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
   // 1. FUNÇÃO PARA EXCLUIR DADOS
   // ==========================================
   const acaoExcluirDados = async () => {
-    setMenuAberto(false); // Fecha o menu
+    setMenuAberto(false); 
 
-    // Alerta bonitão de confirmação
+    
     const resultado = await AlertaCustomizado.fire({
       title: "Tem certeza?",
       text: "Todos os seus dados de progresso serão apagados. Isso não pode ser desfeito!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#ef4444", // Vermelho para dar ideia de perigo
+      confirmButtonColor: "#ef4444", 
       cancelButtonColor: "#64748b",
       confirmButtonText: "Sim",
       cancelButtonText: "Cancelar",
@@ -232,7 +256,7 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
 
     if (resultado.isConfirmed) {
       try {
-        // Substituir pela rota real do backend depois
+       
         await request("usuarios/limpar-dados", { method: "DELETE" });
 
         AlertaCustomizado.fire(
@@ -240,12 +264,14 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
           "Seus dados foram excluídos com sucesso.",
           "success",
         );
-      } catch (erro: any) {
-        AlertaCustomizado.fire(
-          "Erro",
-          erro.message || "Não foi possível excluir os dados.",
-          "error",
-        );
+      } catch (erro) {
+       
+        const mensagemErro =
+          erro instanceof Error
+            ? erro.message
+            : "Não foi possível excluir os dados.";
+
+        AlertaCustomizado.fire("Erro", mensagemErro, "error");
       }
     }
   };
@@ -259,9 +285,9 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
     const resultado = await AlertaCustomizado.fire({
       title: "Excluir conta permanentemente?",
       text: "Você perderá seu acesso e todos os dados. Essa ação é irreversível!",
-      icon: "error", // Ícone de erro vermelho para chamar mais atenção
+      icon: "error", 
       showCancelButton: true,
-      confirmButtonColor: "#dc2626", // Vermelho mais forte
+      confirmButtonColor: "#dc2626", 
       cancelButtonColor: "#64748b",
       confirmButtonText: "Sim",
       cancelButtonText: "Cancelar",
@@ -269,18 +295,20 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
 
     if (resultado.isConfirmed) {
       try {
-        // Substituir pela rota real do backend depois
+       
         await request("usuarios/deletar-conta", { method: "DELETE" });
 
-        // Limpa o token e desloga o usuário após apagar a conta
+       
         localStorage.removeItem("token");
-        window.location.href = "/"; // Redireciona para o login
-      } catch (erro: any) {
-        AlertaCustomizado.fire(
-          "Erro",
-          erro.message || "Não foi possível excluir a conta.",
-          "error",
-        );
+        window.location.href = "/"; 
+      } catch (erro) {
+        
+        const mensagemErro =
+          erro instanceof Error
+            ? erro.message
+            : "Não foi possível excluir a conta.";
+
+        AlertaCustomizado.fire("Erro", mensagemErro, "error");
       }
     }
   };
@@ -289,21 +317,19 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
   // 3. FUNÇÃO PARA SAIR DA CONTA (LOGOUT)
   // ==========================================
   const fazerLogout = () => {
-    localStorage.removeItem("token"); // Apaga a chave de acesso
-    window.location.href = "/"; // Força o redirecionamento
+    localStorage.removeItem("token"); 
+    window.location.href = "/";
   };
-
-  
 
   // Abre o SweetAlert para visualizar grande, alterar ou remover a foto
   const abrirVisualizacaoFoto = () => {
-    // Se o usuário NÃO tem foto instalada, abre direto o seletor de arquivos
+   
     if (!foto) {
       fileInputRef.current?.click();
       return;
     }
 
-    // Se ele JÁ tem foto, abre o SweetAlert customizado
+    
     AlertaCustomizado.fire({
       title: "Foto de Perfil",
       html: `
@@ -318,20 +344,21 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
       denyButtonText: "Remover Foto",
       cancelButtonText: "Fechar",
       confirmButtonColor: "#007eb5",
-      denyButtonColor: "#ef4444", // Vermelho para exclusão
+      denyButtonColor: "#ef4444", 
     }).then((result) => {
       if (result.isConfirmed) {
-        // Se clicou em Alterar, abre o seletor de arquivos do computador
+       
         fileInputRef.current?.click();
       } else if (result.isDenied) {
-        // Se clicou em Remover, esvazia o estado da foto
-        setFoto(null);
+       
+        salvarFotoNoBanco(null);
+
         AlertaCustomizado.fire({
           icon: "success",
           title: "Removida!",
           text: "Sua foto de perfil foi removida com sucesso.",
           timer: 2000,
-          showConfirmButton: false
+          showConfirmButton: false,
         });
       }
     });
@@ -342,7 +369,7 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
       className="config-box-vertical animacao-tela-nova"
       style={{ position: "relative" }}
     >
-      {/* CABEÇALHO COM BOTÃO VOLTAR E TRÊS PONTINHOS (À PROVA DE BALAS) */}
+      {/* CABEÇALHO COM BOTÃO VOLTAR E TRÊS PONTINHOS  */}
       <div
         style={{
           width: "100%",
@@ -351,7 +378,7 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
           position: "relative",
         }}
       >
-        {/* Cravado na esquerda */}
+        
         <button
           className="btn-voltar"
           onClick={aoVoltar}
@@ -360,7 +387,7 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
           <ArrowLeft size={18} /> Voltar para Configurações
         </button>
 
-        {/* Cravado na direita */}
+        
         <div
           className="dropdown-container"
           ref={menuRef}
@@ -430,10 +457,8 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
           style={{ display: "none" }}
           accept="image/*"
           onChange={lidarComMudancaDeFoto}
-          key={imagemParaCortar || 'input-foto'}
+          key={imagemParaCortar || "input-foto"}
         />
-
-        
       </div>
 
       {/* FORMULÁRIO DE DADOS */}
@@ -459,7 +484,7 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
       </div>
 
       {/* 1. ÁREA DOS BOTÕES (ALTERAR E SALVAR) */}
-      {/* O gap: '16px' cria o espaço perfeito entre os dois botões, e o marginTop afasta eles dos inputs */}
+     
       <div
         style={{
           display: "flex",
@@ -481,11 +506,11 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
         </button>
       </div>
 
-      {/* 2. DIVISOR COM RESPIRO NAS LATERAIS E EM CIMA/EMBAIXO */}
+      
 
       <hr className="divisor" style={{ margin: "32px 0" }} />
 
-      {/* 3. SEÇÃO DE ASSINATURA (MEMBRO) */}
+      {/* 3. SEÇÃO  (MEMBRO) */}
       <div
         className="plano-info-box"
         style={{ width: "100%", marginBottom: "24px" }}
@@ -528,7 +553,7 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
                     mostrarSenhaAtual ? "Ocultar senha" : "Mostrar senha"
                   }
                 >
-                  {/* Olho Aberto quando TRUE, Olho Fechado quando FALSE */}
+                  
                   {mostrarSenhaAtual ? (
                     <svg
                       width="20"
@@ -708,29 +733,28 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
       {modalCorteAberto && imagemParaCortar && (
         <div className="modal-overlay corte-overlay">
           <div className="modal-conteudo corte-conteudo">
-            
             {/* Título do Modal */}
             <div className="corte-header">
               <Crop size={22} color="#007eb5" />
               <h3>Ajustar Foto</h3>
             </div>
-            
-            {/* 🖼️ ÁREA DE RECORTE */}
+
+            {/*  ÁREA DE RECORTE */}
             <div className="corte-container-cropper">
               <Cropper
                 image={imagemParaCortar}
                 crop={crop}
                 zoom={zoom}
-                aspect={1} // Força o corte a ser um quadrado perfeito
+                aspect={1} 
                 onCropChange={setCrop}
                 onZoomChange={setZoom}
                 onCropComplete={onCropComplete}
-                cropShape="round" // Deixa a máscara redonda igual Instagram
+                cropShape="round" 
                 showGrid={false}
               />
             </div>
 
-            {/* 🎛️ CONTROLES DE ZOOM */}
+            {/*  CONTROLES DE ZOOM */}
             <div className="corte-controles-zoom">
               <ZoomOut size={16} color="#64748b" />
               <input
@@ -745,7 +769,7 @@ export default function Usuario({ aoVoltar }: UsuarioProps) {
               <ZoomIn size={16} color="#64748b" />
             </div>
 
-            {/* 🔘 BOTÕES DE AÇÃO */}
+            {/*  BOTÕES DE AÇÃO */}
             <div className="modal-botoes corte-botoes">
               <button
                 type="button"
