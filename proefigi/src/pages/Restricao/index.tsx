@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Trash2, Pencil, Check, X, Plus } from 'lucide-react'; 
 import "./restricao.css";
+import { buscarSitesBloqueados, criarSiteBloqueado, excluirSiteBloqueado } from "../../services/siteBlocker";
 
 // 🚀 Adicionado: Interface para o componente aceitar a propriedade 'compacto'
 interface RestricaoProps {
@@ -23,16 +24,9 @@ const Restricao: React.FC<RestricaoProps> = ({ compacto = false }) => {
   const sugestoes = ['youtube.com', 'tiktok.com', 'twitter.com', 'netflix.com'];
 
   useEffect(() => {
-    const salvos = localStorage.getItem('@proefigi:sites');
-    if (salvos) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setSitesBloqueados(JSON.parse(salvos));
-    } else {
-      setSitesBloqueados([
-        { id: 1, nome: 'facebook.com', ativo: true },
-        { id: 2, nome: 'instagram.com', ativo: true }
-      ]);
-    }
+  buscarSitesBloqueados()
+    .then(setSitesBloqueados)
+    .catch(() => setSitesBloqueados([]));
   }, []);
 
   useEffect(() => {
@@ -41,13 +35,14 @@ const Restricao: React.FC<RestricaoProps> = ({ compacto = false }) => {
     }
   }, [sitesBloqueados]);
 
-  const adicionarSite = () => {
-    if (site.trim() !== '') {
-      const novoSite: Site = { id: Date.now(), nome: site.toLowerCase(), ativo: true };
-      setSitesBloqueados([...sitesBloqueados, novoSite]);
-      setSite('');
-    }
-  };
+  const adicionarSite = async () => {
+  if (site.trim() !== '') {
+    await criarSiteBloqueado(site.toLowerCase());
+    const atualizados = await buscarSitesBloqueados();
+    setSitesBloqueados(atualizados);
+    setSite('');
+  }
+};
 
   const alternarStatus = (id: number) => {
     setSitesBloqueados(sitesBloqueados.map(s => 
@@ -55,11 +50,11 @@ const Restricao: React.FC<RestricaoProps> = ({ compacto = false }) => {
     ));
   };
 
-  const excluirSite = (id: number) => {
-    const novaLista = sitesBloqueados.filter(s => s.id !== id);
-    setSitesBloqueados(novaLista);
-    if (novaLista.length === 0) localStorage.removeItem('@proefigi:sites');
-  };
+  const excluirSite = async (id: number) => {
+  console.log("excluindo id:", id);
+  await excluirSiteBloqueado(id);
+  setSitesBloqueados(prev => prev.filter(s => s.id !== id));
+};
 
   const iniciarEdicao = (id: number, nomeAtual: string) => {
     setIdEditando(id);
