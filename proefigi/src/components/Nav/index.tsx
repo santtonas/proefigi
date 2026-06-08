@@ -52,9 +52,9 @@ export default function Nav({ menuAberto, setMenuAberto }: NavProps) {
         {/* ÁREA DO PERFIL TRANSFORMA-DA EM LINK CLICÁVEL */}
         <Link
           to="/configuracoes"
-          state={{ abrirConta: true }} // <-- Envia o comando para a tela de configurações
+          state={{ abrirConta: true }} // <-- A MÁGICA ACONTECE AQUI! O useEffect de Configurações vai ler isso.
           className="nav-perfil"
-          onClick={() => setMenuAberto(false)} // Fecha a nav ao clicar
+          onClick={() => setMenuAberto(false)} // Apenas fecha a nav ao clicar
         >
           <div className="nav-avatar">
             {foto ? (

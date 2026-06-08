@@ -232,6 +232,25 @@
   box-shadow: 0 8px 20px rgba(30, 41, 59, 0.12) !important;
 }
 
+.botao-reiniciar{
+  margin-top: 30px;
+  background: #ffffff;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s;
+}
+
+.botao-reiniciar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(30, 41, 59, 0.12) !important;
+}
+
 .botao-encerrar{
   position: absolute;
   top: calc(100% + 15px);

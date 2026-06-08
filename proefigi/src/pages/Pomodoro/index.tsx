@@ -1,33 +1,87 @@
 import { useState, useEffect, useRef } from "react";
-import { Play, Pause, Settings } from "lucide-react";
+import { Play, Pause, Settings, RotateCcw } from "lucide-react";
 import "./style.css";
 import { useTarefas } from "../../context/TarefaContext";
 import Restricao from "../Restricao";
 
 export default function Pomodoro() {
+  const tarefaIdAutomatizadaRef = useRef<string | null>(null);
   const [tempoFocoConfig, setTempoFocoConfig] = useState(25);
   const [tempoDescansoConfig, setTempoDescansoConfig] = useState(5);
 
-  // Inicializa o tempo padrão baseado na configuração de foco
   const [tempo, setTempo] = useState(tempoFocoConfig * 60);
   const [ativo, setAtivo] = useState(false);
   const [fase, setFase] = useState<"Foco" | "Descanso">("Foco");
   const [cicloAtual, setCicloAtual] = useState(1);
 
+  // Guarda o exato milissegundo (Unix Timestamp) em que a sessão atual vai acabar
+  const [horarioTermino, setHorarioTermino] = useState<number | null>(null);
+
   const [menuAberto, setMenuAberto] = useState(false);
   const [abaAtiva, setAbaAtiva] = useState<"ajustes" | "restricoes">("ajustes");
 
   const iniciadoPorTarefaRef = useRef(false);
+  const { tarefas } = useTarefas();
+
+  // ==============================================================
+  // 🌐 SINCRONIZAÇÃO INICIAL COM O C# (ANTI-TRAPAÇA)
+  // ==============================================================
+  useEffect(() => {
+    const puxarStatusDoServidor = async () => {
+      try {
+        /* 🔌 CONEXÃO C# (GET) - ANTI-F5 / RECARREGAMENTO DE PÁGINA
+          -------------------------------------------------------------------
+          AMIGO DO C#: Você precisa criar uma rota GET (ex: /api/pomodoro/status) para este usuário.
+          Quando o usuário der F5 ou reabrir o app, o React vai perguntar se ele já tinha um Pomodoro ativo.
+          
+          📌 SUA BUSCA NO MYSQL: 
+          Buscar o registro do usuário na tabela de estados do Pomodoro.
+
+          📌 RETORNO ESPERADO (JSON):
+          - Se houver sessão ativa rodando no banco:
+            { "ativo": true, "horarioTermino": 1786123456000, "fase": "Foco", "cicloAtual": 1 }
+            Nota: 'horarioTermino' deve vir como Unix Timestamp em milissegundos (BigInt/Double no banco).
+          - Se NÃO houver sessão ativa:
+            { "ativo": false, "horarioTermino": null, "fase": "Foco", "cicloAtual": 1 }
+        */
+
+        // const resposta = await fetch("http://suaapi.com/api/pomodoro/status");
+        // const dados = await resposta.json();
+
+        // Simulação de resposta do banco MySQL se o app fechar e reabrir:
+        const dados = {
+          ativo: false,
+          horarioTermino: null,
+          fase: "Foco",
+          cicloAtual: 1,
+        };
+
+        if (dados.ativo && dados.horarioTermino) {
+          const agora = Date.now();
+          const restante = Math.max(
+            0,
+            Math.ceil((dados.horarioTermino - agora) / 1000),
+          );
+
+          setFase(dados.fase as "Foco" | "Descanso");
+          setCicloAtual(dados.cicloAtual);
+          setHorarioTermino(dados.horarioTermino);
+          setTempo(restante);
+          setAtivo(true);
+        }
+      } catch (erro) {
+        console.error("Erro ao sincronizar com o servidor C#:", erro);
+      }
+    };
+
+    puxarStatusDoServidor();
+  }, []);
 
   // ==========================================
   // LÓGICA DE IDENTIFICAÇÃO DA TAREFA
   // ==========================================
-  const { tarefas } = useTarefas();
-
   const tarefaAtual = tarefas.find((t) => {
     const agora = new Date();
-
-    // 1. AJUSTE: Garante que a tarefa pertence ao dia de HOJE (Formato YYYY-MM-DD)
     const ano = agora.getFullYear();
     const mes = String(agora.getMonth() + 1).padStart(2, "0");
     const dia = String(agora.getDate()).padStart(2, "0");
@@ -51,108 +105,217 @@ export default function Pomodoro() {
     );
   });
 
+  // ==============================================================
+  // FUNÇÃO DE DISPARO DE AÇÃO PARA O BACKEND C#
+  // ==============================================================
+  const avisarServidorMudancaEstado = async (
+    estaAtivo: boolean,
+    faseAtual: string,
+    ciclo: number,
+    fimTimestamp: number | null,
+  ) => {
+    try {
+      /* 🔌 CONEXÃO C# (POST) - GERENCIADOR DE ESTADO, BLOQUEIO E NOTIFICAÇÕES
+        -------------------------------------------------------------------
+        AMIGO DO C#: Você deve criar uma rota POST (ex: /api/pomodoro/atualizar).
+        Você receberá no Body da requisição: estaAtivo (bool), faseAtual (string), ciclo (int) e fimTimestamp (long/null).
 
-  // Função para quando o usuário está no modo personalizado e quer encerrar
+        🎯 REGRAS DE NEGÓCIO DO SEU BACKEND BASEADO NO 'estaAtivo':
+
+        1️⃣ SE 'estaAtivo' FOR TRUE (Usuário deu Play, iniciou tarefa ou virou de fase automaticamente):
+           - Salve ou atualize o registro no MySQL: ativo = true, fase = faseAtual, ciclo = ciclo, horario_termino = fimTimestamp.
+           - AGENDAR WEB PUSH NOTIFICATION: Programe um gatilho em segundo plano (usando Hangfire, Quartz.NET ou BackgroundService) 
+             para disparar um Push para o navegador exatamente no milissegundo enviado em 'fimTimestamp' avisando que a fase acabou.
+           - Bloquear o aplicativo/sites conforme regras estritas.
+
+        2️⃣ SE 'estaAtivo' FOR FALSE (Usuário Pausou, Reiniciou, Encerrou Sessão ou alterou tempos de configuração):
+           - Atualize no MySQL: ativo = false, horario_termino = NULL.
+           - CANCELAR AGENDAMENTO ANTIGO: Como o cronômetro foi interrompido, remova a tarefa agendada do Hangfire/Quartz 
+             referente à notificação antiga desse usuário para ela não disparar errada.
+           - Desativar temporariamente as restrições estritas.
+      */
+
+      console.log("Enviando para o C#:", {
+        estaAtivo,
+        faseAtual,
+        ciclo,
+        fimTimestamp,
+      });
+
+      /*
+      await fetch("http://suaapi.com/api/pomodoro/atualizar", {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify({ estaAtivo, faseAtual, ciclo, fimTimestamp })
+      });
+      */
+    } catch (erro) {
+      console.error("Erro ao atualizar dados no servidor:", erro);
+    }
+  };
+
   const encerrarSessao = () => {
-    
     setTempoFocoConfig(25);
     setTempoDescansoConfig(5);
-    
-    
     setAtivo(false);
     setFase("Foco");
     setCicloAtual(1);
     setTempo(25 * 60);
+    setHorarioTermino(null);
+    avisarServidorMudancaEstado(false, "Foco", 1, null);
   };
 
-  // ==============================================================
-  // Efeito que controla o cronômetro e a mudança de fases
-  // ==============================================================
-
-  // Função provisória apenas para o código não quebrar
   const tocarAlerta = () => {
     console.log("Sinal de transição de fase disparado!");
   };
 
-
+  // ==============================================================
+  // CRONÔMETRO RESISTENTE A FECHAMENTOS DE ABA
+  // ==============================================================
   useEffect(() => {
     let intervalo: ReturnType<typeof setInterval> | null = null;
-    if (ativo && tempo > 0) {
+
+    if (ativo && horarioTermino) {
       intervalo = setInterval(() => {
-        setTempo((t) => t - 1);
-      }, 1000);
-    } else if (tempo === 0) {
-      tocarAlerta();
+        const agora = Date.now();
+        const restante = Math.max(
+          0,
+          Math.ceil((horarioTermino - agora) / 1000),
+        );
 
-      // Envolvendo a mudança de estados no setTimeout para tirar o aviso vermelho
-      setTimeout(() => {
-        if (fase === "Foco") {
-          setFase("Descanso");
+        setTempo(restante);
 
-          if (cicloAtual === 4) {
-            setTempo((tempoDescansoConfig * 3) * 60);
-          } else {
-            setTempo(tempoDescansoConfig * 60);
-          }
+        if (restante === 0) {
+          if (intervalo) clearInterval(intervalo);
+          tocarAlerta();
 
-        } else {
-          setFase("Foco");
-          setTempo(tempoFocoConfig * 60);
+          // Transição de Fase Automatizada
+          setTimeout(() => {
+            const proximaFase: "Foco" | "Descanso" =
+              fase === "Foco" ? "Descanso" : "Foco";
+            let proximoCiclo = cicloAtual;
+            let novoTempoSegundos = 0;
 
-          if (cicloAtual === 4) {
-            setCicloAtual(1);
-          } else {
-            setCicloAtual((c) => c + 1);
-          }
+            if (fase === "Foco") {
+              novoTempoSegundos =
+                cicloAtual === 4
+                  ? tempoDescansoConfig * 3 * 60
+                  : tempoDescansoConfig * 60;
+            } else {
+              novoTempoSegundos = tempoFocoConfig * 60;
+              proximoCiclo = cicloAtual === 4 ? 1 : cicloAtual + 1;
+            }
+
+            const novoFim = Date.now() + novoTempoSegundos * 1000;
+
+            setFase(proximaFase);
+            setCicloAtual(proximoCiclo);
+            setTempo(novoTempoSegundos);
+            setHorarioTermino(novoFim);
+
+            // Avisa o C# para criar o próximo agendamento de Push Notification da nova fase
+            avisarServidorMudancaEstado(
+              true,
+              proximaFase,
+              proximoCiclo,
+              novoFim,
+            );
+          }, 0);
         }
-      }, 0);
+      }, 1000);
     }
 
     return () => {
       if (intervalo) clearInterval(intervalo);
     };
-  }, [ativo, tempo, fase, cicloAtual, tempoFocoConfig, tempoDescansoConfig]);
+  }, [
+    ativo,
+    horarioTermino,
+    fase,
+    cicloAtual,
+    tempoFocoConfig,
+    tempoDescansoConfig,
+  ]);
 
- // Gatilho de INÍCIO — dispara quando bate o horário da tarefa
+  const alternarCronometro = () => {
+    const novoEstadoAtivo = !ativo;
+
+    if (novoEstadoAtivo) {
+      const novoFim = Date.now() + tempo * 1000;
+      setHorarioTermino(novoFim);
+      setAtivo(true);
+      avisarServidorMudancaEstado(true, fase, cicloAtual, novoFim);
+    } else {
+      setHorarioTermino(null);
+      setAtivo(false);
+      avisarServidorMudancaEstado(false, fase, cicloAtual, null);
+    }
+  };
+
+  const reiniciarCronometro = () => {
+    setAtivo(false);
+    setHorarioTermino(null);
+
+    let tempoOriginal = tempoFocoConfig * 60;
+
+    if (fase === "Descanso") {
+      tempoOriginal =
+        cicloAtual === 4
+          ? tempoDescansoConfig * 3 * 60
+          : tempoDescansoConfig * 60;
+    }
+
+    setTempo(tempoOriginal);
+    avisarServidorMudancaEstado(false, fase, cicloAtual, null);
+  };
+
+  // Gatilho Automático por Tarefa
   useEffect(() => {
-    if (tarefaAtual && !ativo) {
+    if (
+      tarefaAtual &&
+      !ativo &&
+      tarefaIdAutomatizadaRef.current !== tarefaAtual.id
+    ) {
       iniciadoPorTarefaRef.current = true;
-      
-      // Colocamos o setTempo e o setAtivo juntos dentro do setTimeout
+      tarefaIdAutomatizadaRef.current = tarefaAtual.id;
+
       setTimeout(() => {
-        setTempo(tempoFocoConfig * 60);
+        const tempoSegundos = tempoFocoConfig * 60;
+        const novoFim = Date.now() + tempoSegundos * 1000;
+        setTempo(tempoSegundos);
+        setHorarioTermino(novoFim);
         setAtivo(true);
+        avisarServidorMudancaEstado(true, "Foco", cicloAtual, novoFim);
       }, 0);
     }
-  }, [tarefaAtual, tempoFocoConfig, ativo]);
 
-  
-  
+    if (!tarefaAtual) {
+      tarefaIdAutomatizadaRef.current = null;
+    }
+  }, [tarefaAtual, tempoFocoConfig, ativo, cicloAtual]);
+
   useEffect(() => {
     if (!tarefaAtual && ativo && iniciadoPorTarefaRef.current) {
       iniciadoPorTarefaRef.current = false;
       setTimeout(() => {
-        encerrarSessao(); 
+        encerrarSessao();
       }, 0);
     }
   }, [tarefaAtual, ativo]);
 
-  // Função para aplicar os tempos manualmente quando o usuário salvar as configurações
-
   const aplicarNovosTempos = () => {
-    
     const foco = tempoFocoConfig || 25;
     const descanso = tempoDescansoConfig || 5;
 
-    // Atualiza os states caso estivessem vazios
     setTempoFocoConfig(foco);
     setTempoDescansoConfig(descanso);
-
     setTempo(fase === "Foco" ? foco * 60 : descanso * 60);
+    setAtivo(false);
+    setHorarioTermino(null);
     setMenuAberto(false);
-  };
 
-  
+    avisarServidorMudancaEstado(false, fase, cicloAtual, null);
+  };
 
   // ==========================================
   // FORMATAÇÃO E CÁLCULOS DO CÍRCULO
@@ -161,12 +324,11 @@ export default function Pomodoro() {
   const segundos = tempo % 60;
   const tempoFormatado = `${String(minutos).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`;
 
-  // 2. AJUSTE: Cálculo da barra circular respeitando os minutos configurados
   const tempoTotalFase =
     fase === "Foco"
       ? tempoFocoConfig * 60
-      : cicloAtual % 4 === 0
-        ?(tempoDescansoConfig * 3) * 60
+      : cicloAtual === 4
+        ? tempoDescansoConfig * 3 * 60
         : tempoDescansoConfig * 60;
 
   const porcentagem = (tempo / tempoTotalFase) * 100;
@@ -185,7 +347,6 @@ export default function Pomodoro() {
 
       {menuAberto && (
         <div className="painel-detalhes">
-          {/* Navegação das Abas */}
           <div className={`abas-navegacao ${abaAtiva}`}>
             <div className="aba-fundo-deslizante"></div>
             <button
@@ -202,14 +363,9 @@ export default function Pomodoro() {
             </button>
           </div>
 
-          <hr
-            style={{ border: "0.5px solid #e2e8f0", margin: "5px 0 15px 0" }}
-          />
+          <hr style={{ border: "0.5px solid #e2e8f0", margin: "5px 0 15px 0" }} />
 
-          {/* ABA 1: Ajustes */}
-          <div
-            className={`aba-transicao ${abaAtiva === "ajustes" ? "ativa" : ""}`}
-          >
+          <div className={`aba-transicao ${abaAtiva === "ajustes" ? "ativa" : ""}`}>
             <h3 style={{ marginBottom: "15px", color: "#0F172A" }}>
               Ajustes de Tempo
             </h3>
@@ -231,7 +387,6 @@ export default function Pomodoro() {
               />
             </div>
 
-            {/* Ajustado para chamar a função de aplicar os novos tempos */}
             <button
               className="botao-salvar-config"
               onClick={aplicarNovosTempos}
@@ -241,16 +396,12 @@ export default function Pomodoro() {
             </button>
           </div>
 
-          {/* ABA 2: Restrições */}
-          <div
-            className={`aba-transicao ${abaAtiva === "restricoes" ? "ativa" : ""}`}
-          >
+          <div className={`aba-transicao ${abaAtiva === "restricoes" ? "ativa" : ""}`}>
             <Restricao compacto={true} />
           </div>
         </div>
       )}
 
-      {/* Banner Minimalista no Topo */}
       {tarefaAtual ? (
         <div className="status-tarefa-topo">
           <span className="status-label">Focando em</span>
@@ -259,27 +410,16 @@ export default function Pomodoro() {
       ) : (
         <div className="status-tarefa-topo" style={{ opacity: 0.6 }}>
           <span className="status-label">Modo Livre</span>
-          <span
-            className="status-nome-tarefa"
-            style={{ fontSize: "13px", fontWeight: "normal" }}
-          >
+          <span className="status-nome-tarefa" style={{ fontSize: "13px", fontWeight: "normal" }}>
             Nenhuma tarefa agendada para agora
           </span>
         </div>
       )}
 
-      {/* Centro do Pomodoro */}
       <div className="pomodoro-centro">
         <div className="pomodoro-circulo-wrapper">
           <svg width="400" height="400" style={{ transform: "rotate(-90deg)" }}>
-            <circle
-              cx="200"
-              cy="200"
-              r={raioCirculo}
-              stroke="#e2e8f0"
-              strokeWidth="8"
-              fill="none"
-            />
+            <circle cx="200" cy="200" r={raioCirculo} stroke="#e2e8f0" strokeWidth="8" fill="none" />
             <circle
               cx="200"
               cy="200"
@@ -289,9 +429,7 @@ export default function Pomodoro() {
               fill="none"
               strokeDasharray={circunferencia}
               strokeDashoffset={offsetCirculo}
-              style={{
-                transition: "stroke-dashoffset 1s linear, stroke 0.5s ease",
-              }}
+              style={{ transition: "stroke-dashoffset 1s linear, stroke 0.5s ease" }}
             />
           </svg>
 
@@ -300,26 +438,25 @@ export default function Pomodoro() {
               {fase === "Foco" ? `Ciclo ${cicloAtual}` : "Hora de Relaxar"}
             </span>
             <span className="pomodoro-tempo">{tempoFormatado}</span>
-            <span className="pomodoro-fase">
-              {ativo ? "Em andamento..." : "Pausado"}
-            </span>
+            <span className="pomodoro-fase">{ativo ? "Em andamento..." : "Pausado"}</span>
           </div>
         </div>
 
-        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-          
-          <button className="botao-iniciar" onClick={() => setAtivo(!ativo)}>
+        <div style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center", gap: "15px", marginTop: "20px" }}>
+          <button className="botao-iniciar" onClick={alternarCronometro}>
             {ativo ? <Pause size={24} /> : <Play size={24} />}
             {ativo ? "Pausar" : "Iniciar"}
           </button>
 
-          
+          <button className="botao-reiniciar" onClick={reiniciarCronometro} title="Reiniciar ciclo atual">
+            <RotateCcw size={22} /> Reiniciar
+          </button>
+
           {(tempoFocoConfig !== 25 || tempoDescansoConfig !== 5) && (
             <button className="botao-encerrar" onClick={encerrarSessao}>
-              Encerrar Sessão - Voltar ao Pomodoro
+              Encerrar Sessão - Voltar ao pomodoro
             </button>
           )}
-
         </div>
       </div>
     </div>

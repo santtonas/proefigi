@@ -26,14 +26,20 @@ export default function Configuracoes() {
     return null;
   });
 
-  // 2. A LIMPEZA:
-  // Remove a flag "abrirConta" do histórico do navegador. 
-  // Isso evita que o usuário dê F5 e o React reabra a tela de usuário sozinho.
+  // 2. A LIMPEZA E O ROTEAMENTO ATIVO:
+  // Se o usuário já estiver dentro da página de configurações e clicar no perfil
+  // no menu lateral, este useEffect captura a mudança da rota e força a tela de usuário.
   useEffect(() => {
     if (location.state && (location.state as any).abrirConta) {
+      
+      // 🌟 O SEGREDO AQUI: Força a abertura da tela de usuário
+      setSubPaginaAtiva('usuario'); 
+
+      // Remove a flag "abrirConta" do histórico do navegador. 
+      // Isso evita que o usuário dê F5 e o React reabra a tela de usuário sozinho.
       window.history.replaceState({}, document.title);
     }
-  }, [location]);
+  }, [location]); // Fica escutando as mudanças do React Router
 
   // Função simples para facilitar a passagem de props para os botões de "Voltar"
   const voltarParaMenu = () => setSubPaginaAtiva(null);
@@ -48,7 +54,10 @@ export default function Configuracoes() {
       )}
 
       {subPaginaAtiva === 'pais' && (
-        <Pais aoVoltar={voltarParaMenu} />
+        <Pais 
+          aoVoltar={voltarParaMenu} 
+          aoIrParaPremium={() => setSubPaginaAtiva('premium')}
+        />
       )}
 
       {subPaginaAtiva === 'premium' && (
