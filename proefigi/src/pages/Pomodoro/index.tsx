@@ -23,6 +23,17 @@ export default function Pomodoro() {
   const iniciadoPorTarefaRef = useRef(false);
   const { tarefas } = useTarefas();
 
+  // ==========================================
+  //  PERMISSÃO PARA NOTIFICAÇÕES (ELECTRON/WEB)
+  // ==========================================
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, []);
+
+
+
   // ==============================================================
   // 🌐 SINCRONIZAÇÃO INICIAL COM O C# (ANTI-TRAPAÇA)
   // ==============================================================
@@ -167,6 +178,29 @@ export default function Pomodoro() {
 
   const tocarAlerta = () => {
     console.log("Sinal de transição de fase disparado!");
+
+    
+    if (document.hasFocus()) {
+      console.log("O usuário já está olhando para o app. Notificação nativa ignorada.");
+      
+      return; 
+    }
+
+    
+    if ("Notification" in window) {
+      if (Notification.permission === "granted" || Notification.permission === "default") {
+        
+        const titulo = fase === "Foco" ? "Tempo para descansar!" : "De volta ao foco!";
+        const mensagem = fase === "Foco" 
+          ? "Você concluiu seu ciclo de foco. Hora de descansar um pouco!" 
+          : "Seu tempo de descanso acabou.";
+
+        new Notification(titulo, {
+          body: mensagem,
+          silent: false 
+        });
+      }
+    }
   };
 
   // ==============================================================
