@@ -15,6 +15,7 @@ import Ajuda from './pages/Ajuda';
 import { Calendario } from "./pages/Calendario";
 import { MonitorDeHorarios } from './components/MonitorDeHorarios';
 {/*import { TarefaProvider } from './context/TarefaContext';*/}
+import RecuperarSenha from './pages/RecuperarSenha';
 
 function RoutesApp() {
   return (
@@ -23,10 +24,13 @@ function RoutesApp() {
         <MonitorDeHorarios />
         <Routes>
           
+          {/* 🔓 ROTAS PÚBLICAS (Sem a Navbar do Layout) */}
           <Route path="/" element={<Login/>}/>
           <Route path="/cadastro" element={<Cadastro/>}/>
+          {/* 🚀 Movido para cá! Agora a Navbar não aparece nesta tela por segurança */}
+          <Route path="/recuperar-senha" element={<RecuperarSenha />} />
 
-        
+          {/* 🔒 ROTAS PRIVADAS (Com a Navbar do Layout) */}
           <Route element={<Layout />}>
             <Route path="/home" element={<Home/>}/>
             <Route path="/calendario" element={<Calendario />} />
@@ -38,6 +42,7 @@ function RoutesApp() {
             <Route path="/configuracoes" element={<Configuracoes/>}/>
             <Route path="/ajuda" element={<Ajuda />} />
           </Route>
+
         </Routes>
       {/*</TarefaProvider>*/}
     </BrowserRouter>

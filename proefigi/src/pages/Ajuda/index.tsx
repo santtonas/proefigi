@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Search, HelpCircle, BookOpen, Key, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
-import "./ajuda.css";
+import { Search, HelpCircle, BookOpen, Key, ChevronDown, ChevronUp } from 'lucide-react';
+import "./ajuda.css"
 
 interface FAQItem {
   id: number;
@@ -50,7 +50,7 @@ const Ajuda: React.FC = () => {
     setAbertoId(abertoId === id ? null : id);
   };
 
-  // Filtrar perguntas de acordo com o que o usuário digita
+  
   const faqsFiltradas = faqs.filter(faq =>
     faq.pergunta.toLowerCase().includes(busca.toLowerCase()) ||
     faq.resposta.toLowerCase().includes(busca.toLowerCase())
@@ -60,7 +60,7 @@ const Ajuda: React.FC = () => {
     <div className="container-ajuda">
       <div className="ajuda-wrapper">
         
-        {/* CABEÇALHO COM BUSCA */}
+        
         <header className="ajuda-header">
           <h1>Central de Ajuda</h1>
           
@@ -121,23 +121,9 @@ const Ajuda: React.FC = () => {
           </div>
         </section>
 
-        {/* SUPORTE ADICIONAL */}
-        <footer className="ajuda-footer">
-          <div className="suporte-card">
-            <MessageSquare size={20} />
-            <div>
-              <h4>Ainda precisa de ajuda?</h4>
-              <p>Nosso time de suporte responde em até 24h úteis.</p>
-            </div>
-            <button className="btn-suporte" onClick={() => alert('Abrindo chat de suporte...')}>
-              Falar com Suporte
-            </button>
-          </div>
-        </footer>
-
       </div>
     </div>
   );
-};
+}
 
 export default Ajuda;

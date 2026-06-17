@@ -233,8 +233,8 @@
     width: 100%;
   }
 }
-/* Força o corpo da página a rolar se o Layout estiver travando */
+
 html, body {
   overflow-y: auto !important;
-  height: auto !important;
+ 
 }

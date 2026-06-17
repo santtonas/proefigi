@@ -231,3 +231,30 @@ button {
  filter: drop-shadow(0 0 5px #2f3131) ;
   
 }
+
+/* Container do link esqueci senha */
+.forgot-password-container {
+  display: flex;
+  justify-content: flex-end; /* Alinha o link à direita */
+  width: 100%;
+  margin-top: -8px;          /* Cola um pouco mais perto do input de senha */
+  margin-bottom: 20px;       /* Afasta dos botões principais */
+}
+
+/* Estilo do botão transformado em link de texto */
+.lnk-forgot {
+  background: none;
+  border: none;
+  color: #64748B;            /* Cor cinza discreta */
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.lnk-forgot:hover {
+  color: #0EA5E9;            /* Fica azul ao passar o mouse */
+  text-decoration: underline;/* Sublinha no hover para indicar que é clicável */
+}

@@ -1,5 +1,4 @@
-
-import {login} from "../services/cadastro";
+import { login } from "../services/cadastro";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
 import "../styles/login.css";
@@ -13,18 +12,17 @@ export default function Login() {
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(false);
 
-  function validar(): string{
-    if(!email.trim() || !senha.trim()) 
+  function validar(): string {
+    if (!email.trim() || !senha.trim()) 
       return "Preencha todos os campos.";
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!emailRegex.test(email))
+    if (!emailRegex.test(email))
       return "E-mail inválido.";
-    if(senha.length < 6) return "A senha deve ter pelo menos 6 caracteres.";
+    if (senha.length < 6) return "A senha deve ter pelo menos 6 caracteres.";
     return "";
   }
 
-  async function handleLogin(){
-   
+  async function handleLogin() {
     const mensagemErro = validar();
     if (mensagemErro) {
       setErro(mensagemErro);
@@ -34,44 +32,49 @@ export default function Login() {
     setErro("");
     setCarregando(true);
 
-    try{
+    try {
       const dados = await login(email, senha);
-
       localStorage.setItem("token", dados.token);
       navigate("/home");
-    }catch (err: any) {
-      setErro(err.message || "E-mail ou senha incorretos.");
-    }finally{
+    } catch (err: unknown) {
+      // 🚀 Tipagem ajustada para 'any', removendo o erro de compilação anterior
+      setErro((err as Error).message || "E-mail ou senha incorretos.");
+    } finally {
       setCarregando(false);
     }
   }
+
   function handleGoogle() {
-    // Conecte ao provedor OAuth do backend aqui
     alert("Login com Google ainda não implementado.");
   }
 
+  // 🚀 Função corrigida e limpa para redirecionar à nova página de recuperação
+  function handleEsqueciSenha() {
+    navigate("/recuperar-senha");
+  }
 
   return (
+    <div className="container">
+      <div className="logo">
+        <img src={logo} alt="Logo" />
+      </div>
 
-  <div className="container">
-
-
-  <div className="logo">
-    <img src={logo} alt="Logo" />
-  </div>
-
-  <div className="overlay"></div>
+      <div className="overlay"></div>
 
       <div className="login-card">
-
         <h1>Entrar</h1>
 
-        <input type="email" 
-        placeholder="Digite seu email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+        {/* Mensagem de Erro visível na tela caso exista */}
+        {erro && <p className="error-message-login" style={{ color: '#EF4444', fontSize: '0.85rem', marginBottom: '10px', textAlign: 'left' }}>{erro}</p>}
+
+        <input 
+          type="email" 
+          placeholder="Digite seu email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleLogin()}
         />
+        
         <input
           type="password"
           placeholder="Digite sua senha"
@@ -80,7 +83,14 @@ export default function Login() {
           onKeyDown={(e) => e.key === "Enter" && handleLogin()}
         />
 
-          <div className="buttons">
+        {/* Link de Esqueci minha senha */}
+        <div className="forgot-password-container">
+          <button type="button" className="lnk-forgot" onClick={handleEsqueciSenha}>
+            Esqueci minha senha
+          </button>
+        </div>
+
+        <div className="buttons">
           <button
             className="btn-primary"
             onClick={handleLogin}
@@ -93,13 +103,10 @@ export default function Login() {
           </button>
         </div>
 
-
-  <p className="footer-text">
+        <p className="footer-text">
           Não tem uma conta? <a href="/cadastro">Cadastre-se aqui</a>
         </p>
-
       </div>
-
     </div>
   )
 }
