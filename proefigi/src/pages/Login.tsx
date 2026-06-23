@@ -37,7 +37,6 @@ export default function Login() {
       localStorage.setItem("token", dados.token);
       navigate("/home");
     } catch (err: unknown) {
-      // 🚀 Tipagem ajustada para 'any', removendo o erro de compilação anterior
       setErro((err as Error).message || "E-mail ou senha incorretos.");
     } finally {
       setCarregando(false);
@@ -48,24 +47,28 @@ export default function Login() {
     alert("Login com Google ainda não implementado.");
   }
 
-  // 🚀 Função corrigida e limpa para redirecionar à nova página de recuperação
   function handleEsqueciSenha() {
     navigate("/recuperar-senha");
   }
 
   return (
     <div className="container">
-      <div className="logo">
-        <img src={logo} alt="Logo" />
-      </div>
-
-      <div className="overlay"></div>
-
+      
       <div className="login-card">
+        
+        
+        <div className="logo">
+          <img src={logo} alt="Logo" />
+        </div>
+
         <h1>Entrar</h1>
 
         {/* Mensagem de Erro visível na tela caso exista */}
-        {erro && <p className="error-message-login" style={{ color: '#EF4444', fontSize: '0.85rem', marginBottom: '10px', textAlign: 'left' }}>{erro}</p>}
+        {erro && (
+          <p className="error-message-login" style={{ color: '#EF4444', fontSize: '0.85rem', marginBottom: '10px', textAlign: 'left' }}>
+            {erro}
+          </p>
+        )}
 
         <input 
           type="email" 
@@ -98,15 +101,23 @@ export default function Login() {
           >
             {carregando ? "Acessando..." : "Acessar"}
           </button>
+          
+          {/* 🚀 BOTÃO DO GOOGLE COM ÍCONE OFICIAL INSERIDO */}
           <button className="btn-google" onClick={handleGoogle}>
-            Entrar com Google
-          </button>
+  <img 
+    src="https://raw.githubusercontent.com/devicons/devicon/master/icons/google/google-original.svg" 
+    alt="Google logo" 
+    style={{ width: '18px', height: '18px' }} 
+  />
+  Entrar com Google
+</button>
         </div>
 
         <p className="footer-text">
           Não tem uma conta? <a href="/cadastro">Cadastre-se aqui</a>
         </p>
       </div>
+
     </div>
   )
 }

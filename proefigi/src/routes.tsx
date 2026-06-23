@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { Home } from "./pages/home";
 
 import Layout from './components/Layout';
@@ -14,23 +14,48 @@ import Ajuda from './pages/Ajuda';
 
 import { Calendario } from "./pages/Calendario";
 import { MonitorDeHorarios } from './components/MonitorDeHorarios';
-{/*import { TarefaProvider } from './context/TarefaContext';*/}
 import RecuperarSenha from './pages/RecuperarSenha';
+
+import { useNavigate } from 'react-router-dom';
+
+function AuthLayout() {
+  const navigate = useNavigate();
+  return (
+    <div className="page-auth-wrapper">
+      <nav className="nav-autenticacao">
+        <div className="nav-auth-container">
+       
+          <div className="nav-auth-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+            <span>Proefigi</span>
+          </div>
+          <div className="nav-auth-links">
+            <button className="nav-auth-btn-primario" onClick={() => navigate('/')}>
+              Entrar
+            </button>
+          </div>
+        </div>
+      </nav>
+      <Outlet />
+    </div>
+  );
+}
 
 function RoutesApp() {
   return (
     <BrowserRouter>
-      {/*<TarefaProvider>*/}
+    
         <MonitorDeHorarios />
         <Routes>
           
-          
           <Route path="/" element={<Login/>}/>
-          <Route path="/cadastro" element={<Cadastro/>}/>
-          
-          <Route path="/recuperar-senha" element={<RecuperarSenha />} />
 
-          
+          {/* ROTAS COM A NAVBAR DE AUTENTICAÇÃO COMPARTILHADA */}
+          <Route element={<AuthLayout />}>
+            <Route path="/cadastro" element={<Cadastro/>}/>
+            <Route path="/recuperar-senha" element={<RecuperarSenha />} />
+          </Route>
+
+          {/* ROTAS PRIVADAS (Com a Navbar interna do sistema) */}
           <Route element={<Layout />}>
             <Route path="/home" element={<Home/>}/>
             <Route path="/calendario" element={<Calendario />} />
@@ -44,7 +69,7 @@ function RoutesApp() {
           </Route>
 
         </Routes>
-      {/*</TarefaProvider>*/}
+     
     </BrowserRouter>
   );
 }
