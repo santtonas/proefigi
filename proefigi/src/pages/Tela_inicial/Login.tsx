@@ -1,8 +1,8 @@
-import { login } from "../services/cadastro";
+import { login } from "../../services/cadastro";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
-import "../styles/login.css";
-import logo from "../img/icoproefigi.png";
+import "../../styles/login.css";
+import logo from "../../img/icoproefigi.png";
 
 export default function Login() {
   const navigate = useNavigate();
