@@ -452,7 +452,7 @@ export default function Pomodoro() {
 
       <div className="pomodoro-centro">
         <div className="pomodoro-circulo-wrapper">
-          <svg width="400" height="400" style={{ transform: "rotate(-90deg)" }}>
+          <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet" style={{ width: "100%", height: "100%", transform: "rotate(-90deg)"  }}>
             <circle cx="200" cy="200" r={raioCirculo} stroke="#e2e8f0" strokeWidth="8" fill="none" />
             <circle
               cx="200"

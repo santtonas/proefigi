@@ -1,15 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 .container-rotina {
-  width: 100vw;
-  height: 100vh;
+  position: absolute; /* Ignora as divs intermediárias do React Router */
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
   display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+  justify-content: center; /* Centraliza o card na horizontal */
+  align-items: center;     /* Centraliza o card na vertical */
   background-color: #F1F5F9;
-  margin: 0;
-  padding: 0;
+  box-sizing: border-box;
 }
 
 .rotina-card {
@@ -23,6 +25,7 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); /* Sombra bem leve */
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 
 .rotina-card h1 {
@@ -46,7 +49,7 @@
   font-weight: 600;
 }
 
-.rotina-card input, 
+.rotina-card input,
 .rotina-card select {
   padding: 12px;
   border-radius: 8px;
@@ -55,6 +58,8 @@
   outline: none;
   font-family: 'Poppins', sans-serif;
   transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .rotina-card input:focus {
@@ -69,6 +74,7 @@
 
 .row .form-group {
   flex: 1;
+  min-width: 0; /* permite encolher sem estourar o card */
 }
 
 /* Seletor de dias */
@@ -76,11 +82,13 @@
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
+  gap: 6px;
 }
 
 .day-btn {
   width: 40px;
   height: 40px;
+  flex-shrink: 0;
   border-radius: 8px; /* Quadrado arredondado fica mais moderno que círculo aqui */
   border: 1px solid #eee;
   background: #f8f9fa;
@@ -131,4 +139,120 @@
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+}
+
+/* ============================================================
+   DESKTOP MÉDIO (769px – 1024px)
+   ============================================================ */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .rotina-card {
+    max-width: 460px;
+    padding: 36px;
+  }
+}
+
+/* ============================================================
+   TABLET (481px – 768px)
+   ============================================================ */
+@media (max-width: 768px) and (min-width: 481px) {
+  .container-rotina {
+    position: static;
+    min-height: calc(100vh - 70px);
+    height: auto;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rotina-card {
+    max-width: 440px;
+    padding: 32px 28px;
+  }
+
+  .rotina-card h1 {
+    font-size: 1.6rem;
+    margin-bottom: 24px;
+  }
+
+  .day-btn {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* ============================================================
+   MOBILE (até 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .container-rotina {
+    position: static; /* sai do absolute que ignorava o header azul */
+    min-height: calc(100vh - 70px); /* respeita a altura do header */
+    height: auto;
+    padding: 16px;
+    align-items: center; /* volta a centralizar verticalmente */
+    justify-content: center;
+  }
+
+  .rotina-card {
+    padding: 24px 20px;
+    border-radius: 16px;
+    max-width: 100%;
+  }
+
+  .rotina-card h1 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .rotina-card input,
+  .rotina-card select {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  /* Horário e Repetir continuam lado a lado, com gap menor */
+  .row {
+    gap: 10px;
+  }
+
+  /* Dias da semana: mantém 7 em linha, botões compactos */
+  .days-buttons {
+    gap: 4px;
+  }
+
+  .day-btn {
+    width: 100%;
+    max-width: 38px;
+    height: 38px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+
+  .buttons-rotina {
+    margin-top: 22px;
+    gap: 10px;
+  }
+
+  .btn-save,
+  .btn-view {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+/* Telas muito estreitas (ex: 360px) — encolhe ainda mais os dias */
+@media (max-width: 360px) {
+  .day-btn {
+    max-width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
 }

@@ -2,7 +2,7 @@ import './style.css';
 import { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { ChevronLeft, ChevronRight, CheckCircle, Hourglass, AlertCircle, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle, Hourglass, AlertCircle, Clock, Plus } from 'lucide-react';
 import { useTarefas } from '../../context/TarefaContext'; 
 
 type ValuePiece = Date | null;
@@ -175,7 +175,7 @@ export function Calendario() {
         </div>
       </main>
 
-      <button className="botao-adicionar-tarefa" title="Adicionar Tarefa" onClick={verificarEabrirModal}>+</button>
+      <button className="botao-adicionar-tarefa" title="Adicionar Tarefa" onClick={verificarEabrirModal}><Plus size={20} /></button>
 
       {/* 1. MODAL ADICIONAR / EDITAR */}
       {modalAberto && (
@@ -218,12 +218,13 @@ export function Calendario() {
             <div className="grupo-input"><label>Descrição</label><textarea value={descricao} onChange={(e) => setDescricao(e.target.value)} rows={3}></textarea></div>
             
             <div className="botoes-modal">
-              <button className="botao-salvar" onClick={salvarTarefa}>Salvar</button>
+              
               <button className="botao-cancelar" onClick={() => { 
                 setModalAberto(false); 
                 setTarefaEmEdicao(null);
                 setTitulo(''); setInicio(''); setTermino(''); setImportancia('normal'); setDescricao('');
               }}>Cancelar</button>
+               <button className="botao-salvar" onClick={salvarTarefa}>Salvar</button>
             </div>
           </div>
         </div>

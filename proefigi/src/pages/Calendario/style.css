@@ -683,3 +683,93 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(22px);
 }
+
+@media (max-width: 850px) {
+  
+  /* 1. Ajuste do fundo e espaçamento geral */
+  .conteudo-principal {
+    padding-top: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .container-calendario {
+    padding: 20px 15px; /* Diminui as bordas brancas enormes */
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* 2. O Calendário deixa de ser 600px e passa a respeitar a tela */
+  .react-calendar {
+    width: 100% !important; 
+    height: auto !important; /* Libera a altura para não esmagar os dias */
+    padding: 15px 10px;
+  }
+
+  /* Ajusta o tamanho dos quadradinhos dos dias */
+  .react-calendar__tile {
+    height: 50px; /* Um pouco menor para caber na tela */
+    padding: 0.5em 0.2em !important; 
+    font-size: 14px;
+  }
+
+  /* Diminui os botões de avançar/voltar o mês para sobrar espaço pro título */
+  .react-calendar__navigation button,
+  .react-calendar__navigation__prev-button, 
+  .react-calendar__navigation__next-button {
+    min-width: 35px !important;
+    height: 35px !important;
+    margin: 0 5px;
+  }
+
+  /* 3. A Lista de Tarefas acompanha a largura da tela */
+  .lista-tarefas {
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+  }
+
+  .cards-tarefas {
+    max-height: 300px; /* Deixa a rolagem menor no celular */
+  }
+
+  /* 4. Janela de Adicionar Nova Tarefa (Modal) */
+  .modal-caixa {
+    width: 95% !important; /* Quase a tela toda */
+    height: auto !important; /* Desfaz aquele height: 550px fixo */
+    max-height: 90vh; /* Impede que corte a tela em cima e embaixo */
+    overflow-y: auto; /* Permite rolar se tiver muitas opções */
+    padding: 20px !important;
+  }
+
+  /* Coloca os campos de Hora Início e Hora Término um embaixo do outro */
+  .linha-horarios {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .linha-horarios .grupo-input {
+    width: 100%;
+  }
+
+  /* Ajusta os botões do final da janela */
+  .botoes-modal {
+    flex-direction: column-reverse; /* Botão de cancelar vai pra baixo */
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .botoes-modal button {
+    width: 100%;
+    margin: 0;
+  }
+
+  /* 5. Ajuste fino no botão flutuante para não atrapalhar cliques */
+  .botao-adicionar-tarefa {
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+}

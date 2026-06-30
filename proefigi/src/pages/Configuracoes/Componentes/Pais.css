@@ -12,9 +12,9 @@
   gap: 8px;
   background: transparent;
   border: none;
-  color: #0284c7;
+  color: #64748b;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   padding: 8px 12px;
   border-radius: 8px;
@@ -22,7 +22,7 @@
 }
 
 .btn-voltar-pais:hover {
-  color: #0369a1;
+  color: #1e293b;
   
 }
 

@@ -1,10 +1,15 @@
 .home-pagina {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  width: 100%;
+  height: 100%; /* MUDANÇA AQUI: Ocupa 100% do espaço que SOBROU abaixo da barra azul */
   padding: 30px 20px;
-  background-color: #F1F5F9; 
+  background-color: #F1F5F9;
   align-items: center;
+  box-sizing: border-box; 
+  overflow: hidden;
+  
+  
 }
 
 /* --- CABEÇALHOS E CONTAINERS (Ajustados para 1200px) --- */
@@ -107,6 +112,7 @@
   overflow-y: auto; /* Aqui nasce a barra de rolagem interna */
   padding-right: 8px; 
   margin-bottom: 15px; 
+  display: flex;
 }
 
 .cards-tarefas::-webkit-scrollbar {
@@ -429,15 +435,149 @@
   color: #1e293b;
 }
 
-/* --- RESPONSIVIDADE (Telas menores) --- */
 @media (max-width: 850px) {
-  .home-dashboard-container {
-    grid-template-columns: 1fr; 
+  
+  /* 🌟 1. A Página é quem manda na fila agora */
+  .home-pagina {
+    height: calc(100vh - 70px) !important; 
+    overflow-y: auto !important; 
+    padding: 20px 15px !important;
+    display: flex !important;
+    flex-direction: column !important; /* Força a página a ser uma coluna empilhada */
+    gap: 20px;
   }
   
+  /* 2. Derretemos os containers invisíveis */
+  .home-dashboard-container,
+  .coluna-lateral {
+    display: contents !important; 
+  }
+
+  /* 🌟 3. A NOVA FILA OFICIAL DA PÁGINA: */
+  
+  /* 1º LUGAR: A barra de dias seguidos fura a fila e vai pro topo */
+  .barra-dias-seguidos {
+    padding: 10px 15px !important; /* Diminui o espaço interno (em cima/baixo e lados) */
+    min-height: auto !important; /
+  }
+/* Diminui o tamanho do texto dentro da barra */
+  .barra-dias-seguidos p, 
+  .barra-dias-seguidos span {
+    font-size: 14px !important; 
+    margin: 0 !important;
+  }
+
+  /* Se o ícone do foguete for um SVG ou imagem, diminui ele também */
+  .barra-dias-seguidos svg,
+  .barra-dias-seguidos img {
+    width: 20px !important; 
+    height: 20px !important;
+  }
+  /* 2º LUGAR: Os botões de filtro vêm logo abaixo da barra */
+  .filtros-lista-container {
+    order: 2 !important; 
+    flex-wrap: wrap; 
+    justify-content: flex-start;
+    margin-bottom: 0 !important;
+  }
+
+  /* 3º LUGAR: O card de Tarefas principal */
   .home-card-destaque, .coluna-tarefas {
-    height: auto; 
-    max-height: none; /* Remove a trava de altura no celular */
-    min-height: 300px;
+    order: 3 !important; 
+    height: auto !important; 
+    max-height: none !important; 
+    min-height: 400px;
+  }
+
+  /* 4º LUGAR: Os cards de Progresso e Metas */
+  .home-card-resumo {
+    order: 4 !important; 
+  }
+
+  /* --------------------------------------------------- */
+  /* Daqui para baixo é igualzinho ao que você já tem:  */
+
+  .botao-filtro-tempo {
+    flex: 1 1 auto; 
+    text-align: center;
+    padding: 8px 12px; 
+  }
+
+  /* 3. Header de Destaque: Lado a lado no celular */
+  .destaque-header-linha {
+    flex-direction: row !important; 
+    align-items: center !important; 
+    justify-content: space-between !important; 
+    gap: 10px;
+  }
+
+  .destaque-header-linha h3 {
+    font-size: 16px; 
+    margin: 0;
+    white-space: nowrap; 
+  }
+
+  .input-data-cabecalho {
+    width: auto !important; 
+    flex-shrink: 0; 
+    padding: 6px 10px; 
+  }
+
+  /* 4. Barra de Progresso Circular */
+  .progresso-layout {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .divisor-vertical {
+    width: 100%;
+    height: 1px;
+    margin: 0;
+  }
+
+  /* 5. Modais: Ajusta para não vazar da tela do celular */
+  .modal-caixa {
+    width: 95% !important; 
+    padding: 20px !important;
+    max-height: 90vh; 
+    overflow-y: auto;
+  }
+
+  .linha-horarios {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .switch-container {
+    display: flex !important;
+    flex-direction: row !important; 
+    justify-content: space-between !important; 
+    align-items: center !important; 
+    width: 100%;
+  }
+
+  .botoes-modal {
+    flex-direction: column-reverse !important; 
+    gap: 10px;
+  }
+
+  .botoes-modal > div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .botoes-modal button {
+    width: 100% !important; 
+    margin: 0 !important;
+  }
+
+  .cards-tarefas {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important; 
+    align-items: center !important;     
+    min-height: 250px !important;       
   }
 }

@@ -2,17 +2,49 @@
 /* CONTAINER PRINCIPAL                                 */
 /* =================================================== */
 .premium-container {
+  width: 100%;
+  min-height: 100%; /* Garante que a tela acompanhe o conteúdo se for maior que o monitor */
+  max-height: calc(100vh - 70px); /* desconta a altura do header azul */
+  overflow-y: auto; /* cria scroll próprio, independente de overflow:hidden no elemento pai */
+  -webkit-overflow-scrolling: touch; /* scroll suave em iOS */
+  scrollbar-width: thin; /* Firefox: barra fina */
+  scrollbar-color: #cbd5e1 transparent; /* Firefox: cor do polegar e da trilha */
+  box-sizing: border-box; /* Impede que o padding crie barras de rolagem invisíveis */
   max-width: 1000px;
   margin: 0 auto;
-  padding: 20px 20px; 
+
+  /* O Pulo do Gato: Topo(40px), Laterais(20px) e Fundo(80px de respiro!) */
+  padding: 40px 20px 80px 20px;
+
   font-family: system-ui, -apple-system, sans-serif;
   position: relative; /* 🌟 ESSENCIAL: Mantém o botão de voltar ancorado aqui dentro */
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollbar customizada (Chrome, Edge, Safari) */
+.premium-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.premium-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.premium-container::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
+
+.premium-container::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
 }
 
 /* =================================================== */
 /* BOTÃO DE VOLTAR                                     */
 /* =================================================== */
-.btn-voltar { /* 🌟 Corrigido de bnt para btn */
+.btn-voltar {
   position: absolute;
   top: 24px;
   left: 20px;
@@ -32,7 +64,7 @@
 
 .btn-voltar:hover {
   color: #1e293b;
-  background: #f1f5f9; 
+  background: #f1f5f9;
 }
 
 /* =================================================== */
@@ -40,7 +72,7 @@
 /* =================================================== */
 .premium-header {
   text-align: center;
-  margin-bottom: 30px; /* Mantido o micro-ajuste */
+  margin-bottom: 30px;
 }
 
 .badge-novidade {
@@ -91,6 +123,7 @@
   position: relative;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
 }
 
 .plan-card:hover {
@@ -168,15 +201,15 @@
   margin-left: 4px;
 }
 
-/* LISTA DE BENEFÍCIOS (Unificado com o micro-ajuste) */
+/* LISTA DE BENEFÍCIOS */
 .plan-features {
   list-style: none;
   padding: 0;
-  margin: 0 0 24px 0; 
+  margin: 0 0 24px 0;
   display: flex;
   flex-direction: column;
-  gap: 12px; 
-  flex: 1; 
+  gap: 12px;
+  flex-grow: 1;
 }
 
 .plan-features li {
@@ -202,6 +235,7 @@
   font-weight: 600;
   cursor: pointer;
   border: none;
+  margin-top: auto;
   transition: background 0.2s ease;
 }
 
@@ -223,10 +257,10 @@
   background: #006694;
 }
 
-/* NOTÍCIA DO RODAPÉ (Unificado com o micro-ajuste) */
+/* NOTÍCIA DO RODAPÉ */
 .premium-footer-notice {
   text-align: center;
-  margin-top: 24px; 
+  margin-top: 24px;
   padding: 16px;
   background: #f8fafc;
   border: 1px dashed #cbd5e1;
@@ -243,13 +277,42 @@
 }
 
 /* =================================================== */
-/* RESPONSIVIDADE (ADAPTAÇÃO PARA TODAS AS TELAS)      */
+/* RESPONSIVIDADE (PADRÃO 3 BREAKPOINTS)               */
 /* =================================================== */
 
-/* 📱 Para Tablets e Telas Médias (Abaixo de 850px) */
-@media (max-width: 850px) {
+/* ============================================================
+   DESKTOP MÉDIO (769px – 1024px)
+   ============================================================ */
+@media (max-width: 1024px) and (min-width: 769px) {
   .premium-container {
-    padding: 30px 16px 80px 16px;
+    padding: 36px 18px 70px 18px;
+  }
+
+  .premium-header {
+    margin-top: 44px; /* espaço para o botão Voltar não sobrepor o título */
+  }
+
+  .premium-header h2 {
+    font-size: 28px;
+  }
+
+  .premium-cards-grid {
+    gap: 24px;
+  }
+
+  .plan-card {
+    max-width: 360px;
+    padding: 30px 26px;
+  }
+}
+
+/* ============================================================
+   TABLET (481px – 768px)
+   — Cards empilham em coluna única
+   ============================================================ */
+@media (max-width: 768px) and (min-width: 481px) {
+  .premium-container {
+    padding: 30px 16px 70px 16px;
   }
 
   .premium-header {
@@ -257,24 +320,35 @@
   }
 
   .premium-header h2 {
-    font-size: 26px; 
+    font-size: 26px;
   }
 
   .premium-cards-grid {
-    gap: 24px; 
-    flex-direction: column; 
+    gap: 24px;
+    flex-direction: column;
     align-items: center;
   }
 
   .plan-card {
-    max-width: 100%; 
+    max-width: 100%;
     width: 100%;
+  }
+
+  .btn-voltar {
+    font-size: 13px;
   }
 }
 
-/* 📱 Para Celulares e Telas Pequenas (Abaixo de 480px) */
+/* ============================================================
+   MOBILE (até 480px)
+   ============================================================ */
 @media (max-width: 480px) {
+  .premium-container {
+    padding: 24px 14px 60px 14px;
+  }
+
   .premium-header {
+    margin-top: 46px;
     margin-bottom: 32px;
   }
 
@@ -286,8 +360,16 @@
     font-size: 14px;
   }
 
+  .premium-cards-grid {
+    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .plan-card {
-    padding: 25px 20px; 
+    max-width: 100%;
+    width: 100%;
+    padding: 25px 20px;
   }
 
   .plan-price .amount {
@@ -295,11 +377,18 @@
   }
 
   .plan-features li {
-    font-size: 13px; 
+    font-size: 13px;
+  }
+
+  .btn-voltar {
+    font-size: 12px;
+    top: 16px;
+    left: 14px;
+    padding: 6px 10px;
   }
 
   .premium-footer-notice p {
     font-size: 12px;
-    text-align: left; 
+    text-align: left;
   }
 }

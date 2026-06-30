@@ -198,7 +198,7 @@ export default function Metas() {
                   onChange={e => setNovoItem(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && adicionarItem()}
                 />
-                <button onClick={adicionarItem}><Plus size={18} /></button>
+                <button className="botao-mais" onClick={adicionarItem}><Plus size={18} /></button>
               </div>
 
               <div className="itens-preview">
@@ -213,10 +213,11 @@ export default function Metas() {
             </div>
 
             <div className="botoes-modal">
+            
+              <button className="botao-cancelar" onClick={fecharModal}>Cancelar</button>
               <button className="botao-salvar" onClick={salvarMeta}>
                 {metaEmEdicao ? 'Salvar Alterações' : 'Salvar Meta'}
               </button>
-              <button className="botao-cancelar" onClick={fecharModal}>Cancelar</button>
             </div>
           </div>
         </div>

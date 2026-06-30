@@ -140,7 +140,7 @@ export default function Progresso() {
         <div className="progresso-grafico">
           <h3>Horas estudadas na semana</h3>
           <div className="grafico-container-flex">
-            <ResponsiveContainer width="100%" height={500}>
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart data={dadosGrafico} barSize={55} margin={{ top: 20, right: 0, left: 0, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="5 5" vertical={false} stroke="#e2e8f0" />
                 <XAxis 

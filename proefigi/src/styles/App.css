@@ -1,10 +1,21 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
+/* Zera tudo que o navegador coloca escondido */
+* {
+  margin: 0;
   padding: 0;
-  text-align: center;
+  box-sizing: border-box;
 }
 
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden; /* Mata qualquer chance de rolagem para os lados */
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -40,6 +51,29 @@
 .read-the-docs {
   color: #888888;
 }
+
+/* ==========================================================================
+   FIX DA BARRA DE ROLAGEM: Ajuste do Layout Global
+   ========================================================================== */
+
+.layout-global {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Trava o layout no tamanho exato da janela do monitor */
+  overflow: hidden; /* Proíbe o layout principal de criar barras de rolagem estranhas */
+}
+
+.cabecalho-principal {
+  flex-shrink: 0; /* Impede a barra azul do topo de ser esmagada */
+}
+
+.conteudo-da-pagina {
+  flex: 1;
+  position: relative; /* O PULO DO GATO: Diz que essa área é o limite máximo para as páginas internas */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 
 
 

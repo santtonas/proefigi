@@ -1,17 +1,18 @@
 import React from 'react';
-import {ArrowLeft , Shield, Check, Zap } from 'lucide-react';
+import { ArrowLeft, Shield, Check, Zap, Users } from 'lucide-react';
 import './Premium.css';
 
 interface UsuarioProps {
   aoVoltar: () => void;
 }
-export default function SejaMembro({ aoVoltar }: UsuarioProps) {
 
+export default function SejaMembro({ aoVoltar }: UsuarioProps) {
   return (
     <div className="premium-container">
       <button className="btn-voltar" onClick={aoVoltar}>
         <ArrowLeft size={18} /> Voltar para Configurações
       </button>
+      
       {/* 1. CABEÇALHO */}
       <div className="premium-header">
         <span className="badge-novidade">Modo Premium</span>
@@ -25,11 +26,9 @@ export default function SejaMembro({ aoVoltar }: UsuarioProps) {
         {/* CARD ESTUDANTE */}
         <div className="plan-card">
           <div className="plan-icon-wrapper estudante-icon">
-            {/* Ícone de Raio adicionado */}
             <Zap size={28} color="#007eb5" /> 
           </div>
           <h3>Plano Estudante</h3>
-          {/* Subtítulo de impacto atualizado */}
           <p className="plan-subtitle">Planeje uma vez. Execute sempre.</p>
           
           <div className="plan-price">
@@ -56,14 +55,14 @@ export default function SejaMembro({ aoVoltar }: UsuarioProps) {
           </button>
         </div>
 
-        {/* CARD CONTROLE DOS PAIS */}
+        {/* CARD PLANO FAMÍLIA (Antigo Controle dos Pais) */}
         <div className="plan-card plan-card-featured">
           <div className="featured-badge">Mais Completo</div>
           
           <div className="plan-icon-wrapper pais-icon">
             <Shield size={28} color="#f59e0b" />
           </div>
-          <h3>Controle dos Pais</h3>
+          <h3>Plano para Pais</h3>
           <p className="plan-subtitle">Gestão, foco e segurança para a casa</p>
           
           <div className="plan-price">
@@ -73,6 +72,16 @@ export default function SejaMembro({ aoVoltar }: UsuarioProps) {
           </div>
 
           <ul className="plan-features">
+            {/* NOVA REGRA DE LIMITES E VALOR EXTRA */}
+            <li>
+              <Users size={18} color="#10b981" />
+              <span style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <span><strong>Contas Inclusas:</strong> Inclui 1 conta de Administrador (Pais) e até 3 contas para filhos.</span>
+                <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>
+                  + R$ 4,90/mês por perfil adicional.
+                </span>
+              </span>
+            </li>
             <li>
               <Check size={18} color="#10b981" />
               <span>
@@ -90,16 +99,13 @@ export default function SejaMembro({ aoVoltar }: UsuarioProps) {
           </ul>
 
           <button className="btn-plan btn-pais">
-            Desbloquear Plano Família
+            Assinar Plano para Pais
           </button>
         </div>
 
       </div>
 
-      {/* 3. AVISO DE PIONEIRO */}
-      <div className="premium-footer-notice">
-        <p>💡 <strong>Aviso de Lançamento:</strong> Assinando hoje, você garante o preço promocional de pioneiro e ganha acesso a todas as futuras atualizações do seu plano sem nenhum custo extra.</p>
-      </div>
+      
     </div>
   );
 }

@@ -569,9 +569,7 @@ export function Home() {
             </div>
 
             <div className="botoes-modal">
-              <button className="botao-salvar" onClick={salvarNovaTarefa}>
-                Salvar
-              </button>
+              
               <button
                 className="botao-cancelar"
                 onClick={() => {
@@ -581,6 +579,9 @@ export function Home() {
                 }}
               >
                 Cancelar
+              </button>
+              <button className="botao-salvar" onClick={salvarNovaTarefa}>
+                Salvar
               </button>
             </div>
           </div>

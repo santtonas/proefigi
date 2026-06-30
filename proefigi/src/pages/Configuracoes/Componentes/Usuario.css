@@ -215,20 +215,25 @@
   z-index: 1000;
   backdrop-filter: blur(3px);
   animation: fadeIn 0.2s ease-out;
+  box-sizing: border-box;
+  padding: 16px;
 }
 
 /* A caixinha branca principal */
 .modal-conteudo {
   background-color: #ffffff;
   padding: 32px;
-  border-radius: 16px; 
+  border-radius: 16px;
   width: 100%;
   max-width: 420px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
   gap: 16px;
   animation: slideUp 0.3s ease-out;
+  box-sizing: border-box;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 /* Textos do cabeçalho */
@@ -270,21 +275,22 @@
 .input-wrapper input {
   width: 100%;
   padding: 10px 14px;
-  padding-right: 44px; 
+  padding-right: 44px;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   font-size: 14px;
   color: #1e293b;
-  background-color: #f8fafc; 
-  outline: none; 
+  background-color: #f8fafc;
+  outline: none;
   transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+  box-sizing: border-box;
 }
 
 /* Efeito quando o usuário clica no input para digitar */
 .input-wrapper input:focus {
   background-color: #ffffff;
-  border-color: #0284c7; 
-  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); 
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
 }
 
 /* Botão do olho */
@@ -296,17 +302,16 @@
   color: #64748b;
   cursor: pointer;
   padding: 4px;
-  display: flex;       
-  align-items: center; 
+  display: flex;
+  align-items: center;
   justify-content: center;
   outline: none;
   transition: color 0.2s;
 }
 
 .btn-mostrar-senha:hover {
-  color: #0284c7; 
+  color: #0284c7;
 }
-
 
 /* --- ANIMAÇÕES (KEYFRAMES) --- */
 @keyframes fadeIn {
@@ -315,13 +320,13 @@
 }
 
 @keyframes slideUp {
-  from { 
-    opacity: 0; 
-    transform: translateY(20px) scale(0.95); 
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
   }
-  to { 
-    opacity: 1; 
-    transform: translateY(0) scale(1); 
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -341,24 +346,24 @@
 /* Container que segura os dois botões */
 .modal-botoes {
   display: flex;
-  gap: 16px;            /* Espaço entre um botão e outro */
-  width: 100%;          /* Ocupa a largura total disponível no modal */
-  margin-top: 24px;     /* Distância da linha de cima */
+  gap: 16px; /* Espaço entre um botão e outro */
+  width: 100%; /* Ocupa a largura total disponível no modal */
+  margin-top: 24px; /* Distância da linha de cima */
 }
 
 /* ==========================================
    ESTILO DO BOTÃO CANCELAR
    ========================================== */
 .btn-modal-cancelar {
-  flex: 1;              /* Força a ter 50% da largura */
+  flex: 1; /* Força a ter 50% da largura */
   padding: 12px 0;
   font-size: 16px;
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
-  
+
   /* Cores customizadas do Cancelar */
-  background-color: #f1f5f9; 
+  background-color: #f1f5f9;
   color: #334155;
   border: 1px solid #cbd5e1;
   transition: all 0.2s ease;
@@ -372,15 +377,15 @@
    ESTILO DO BOTÃO CONFIRMAR
    ========================================== */
 .btn-modal-confirmar {
-  flex: 1;              /* Força a ter os mesmos 50% da largura */
+  flex: 1; /* Força a ter os mesmos 50% da largura */
   padding: 12px 0;
   font-size: 16px;
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
-  
+
   /* Cores customizadas do Confirmar (Azul) */
-  background-color: #007eb5; 
+  background-color: #007eb5;
   color: #ffffff;
   border: none;
   transition: all 0.2s ease;
@@ -447,4 +452,149 @@
   padding: 16px 20px;
   background: #f8fafc;
   border-top: 1px solid #e2e8f0;
+}
+
+/* ============================================================
+   DESKTOP MÉDIO (769px – 1024px)
+   ============================================================ */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .corte-conteudo {
+    width: 460px !important;
+  }
+
+  .corte-container-cropper {
+    height: 360px;
+  }
+}
+
+/* ============================================================
+   TABLET (481px – 768px)
+   ============================================================ */
+@media (max-width: 768px) and (min-width: 481px) {
+  .avatar-container-relativo {
+    width: 96px;
+    height: 96px;
+  }
+
+  .avatar-placeholder {
+    font-size: 36px;
+  }
+
+  .modal-conteudo {
+    padding: 26px;
+    max-width: 400px;
+  }
+
+  .corte-conteudo {
+    width: 420px !important;
+  }
+
+  .corte-container-cropper {
+    height: 320px;
+  }
+}
+
+/* ============================================================
+   MOBILE (até 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .avatar-container-relativo {
+    width: 88px;
+    height: 88px;
+  }
+
+  .avatar-placeholder {
+    font-size: 32px;
+  }
+
+  .camera-badge {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Cabeçalho Voltar + 3 pontinhos: mantém lado a lado, menores */
+  .btn-voltar {
+    font-size: 12px;
+  }
+
+  .btn-tres-pontinhos {
+    padding: 6px;
+  }
+
+  .dropdown-menu-suspenso {
+    width: 150px;
+  }
+
+  .dropdown-item {
+    font-size: 12px;
+    padding: 9px 10px;
+  }
+
+  .botao-alterar {
+    width: 100%;
+  }
+
+  .plano-info-box {
+    gap: 12px;
+  }
+
+  /* Modal de senha: compacto e centralizado, mas não fullscreen */
+  .modal-conteudo {
+    padding: 22px 18px;
+    border-radius: 14px;
+    gap: 14px;
+    max-width: 100%;
+  }
+
+  .modal-conteudo h3 {
+    font-size: 18px;
+  }
+
+  .modal-conteudo p {
+    font-size: 13px;
+  }
+
+  .input-wrapper input {
+    padding: 9px 12px;
+    padding-right: 40px;
+    font-size: 13px;
+  }
+
+  .modal-botoes {
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .btn-modal-cancelar,
+  .btn-modal-confirmar {
+    padding: 11px 0;
+    font-size: 14px;
+  }
+
+  /* Modal de recorte: compacto, mas ainda centralizado (não fullscreen) */
+  .corte-conteudo {
+    width: 100% !important;
+    max-width: 360px;
+  }
+
+  .corte-header {
+    padding: 14px 16px;
+  }
+
+  .corte-header h3 {
+    font-size: 16px;
+  }
+
+  .corte-container-cropper {
+    height: 280px;
+  }
+
+  .corte-controles-zoom {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .corte-botoes {
+    padding: 14px 16px;
+  }
 }
