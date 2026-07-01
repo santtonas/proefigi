@@ -9,6 +9,7 @@ import Rotina from "./pages/Rotina";
 import Restricao from "./pages/Restricao"; 
 import Configuracoes from "./pages/Configuracoes";
 import Ajuda from './pages/Ajuda';
+import NotFound from "./NotFound";
 
 
 import Login from './pages/Tela_inicial/Login';
@@ -29,8 +30,9 @@ function AuthLayout() {
       <nav className="nav-autenticacao">
         <div className="nav-auth-container">
           <div className="nav-auth-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-            <span>Proefigi</span>
-          </div>
+  <span className="brand-pro">Pro</span>
+  <span className="brand-efigi">efigi</span>
+</div>
           <div className="nav-auth-links">
             <button className="nav-auth-btn-primario" onClick={() => navigate('/')}>
               Entrar
@@ -71,6 +73,7 @@ function RoutesApp() {
             <Route path="/restricao" element={<Restricao/>}/> 
             <Route path="/configuracoes" element={<Configuracoes/>}/>
             <Route path="/ajuda" element={<Ajuda />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
 
         </Routes>

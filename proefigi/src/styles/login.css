@@ -1,70 +1,134 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
-body {
-  margin: 0;
-  height: 100vh;
-  overflow: hidden;
-  background-color: #0a82aa; 
-}
-
-/* 🚀 CONTAINER CENTRALIZA O CARD NA TELA INTEIRA */
-.container {
+/* Container principal que junta as duas colunas */
+.login-container-master {
+  display: flex;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
+  background-color: #0a82aa; /* Fundo azul padrão do sistema */
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ==========================================================================
+   LADO ESQUERDO: COLUNA DA IMAGEM
+   ========================================================================== */
+.login-col-imagem {
+  flex: 1.2; /* Dá um pouco mais de destaque para o lado da foto */
+  position: relative;
+  display: block;
+  height: 100%;
+}
+
+.login-col-imagem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Preenche todo o espaço sem distorcer a imagem */
+}
+
+/* Texto descritivo flutuando por cima da imagem */
+.overlay-imagem {
+  position: absolute;
+  bottom: 12%;
+  left: 8%;
+  right: 8%;
+  color: #ffffff;
+  z-index: 2;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra para garantir leitura */
+}
+
+.overlay-imagem h2 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.overlay-imagem p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  opacity: 0.95;
+  max-width: 520px;
+}
+
+/* Camada escura sutil por cima da foto para dar mais contraste ao texto */
+.login-col-imagem::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.1) 60%);
+  z-index: 1;
+}
+
+/* ==========================================================================
+   LADO DIREITO: COLUNA DO FORMULÁRIO (CARD)
+   ========================================================================== */
+.login-col-formulario {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  background-color: #2EA8E8; 
+  padding: 30px;
+  box-sizing: border-box;
 }
 
-/* 🚀 CARD DE LOGIN REORGANIZADO */
+/* Card com efeito Frosted Glass */
 .login-card {
-  position: relative;
-  z-index: 5; 
-
-  background: rgba(255, 255, 255, 0.25); 
+  background: rgba(255, 255, 255, 0.2); 
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-
-  padding: 30px 50px 40px 50px; /* Reduzido o padding do topo para acomodar a logo */
-  width: 450px;
+  padding: 40px;
+  width: 100%;
+  max-width: 420px;
   border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-  
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
 }
 
-/* 🚀 LOGO AGORA FICA CENTRALIZADA NO TOPO DO CARD */
+/* Centralização da Logo */
 .logo {
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-bottom: 20px; /* Espaço entre a logo e o título "Entrar" */
-  width: 100%;
+  margin-bottom: 15px;
 }
 
 .logo img {
-  height: 200px; /* Define uma altura boa para o ícone no topo */
+  height: 190px;
   width: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
 }
 
-/* Centraliza o título "Entrar" */
+/* Texto de Boas-vindas */
+.welcome-text {
+  font-size: 1rem;
+  color: #e2e8f0;
+  text-align: center;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Cores da Marca */
+.brand-pro {
+  color: #105aca; /* Azul vivo */
+}
+
+.brand-efigi {
+  color: #ffffff; /* Branco */
+}
+
 .login-card h1 {
-  font-family: 'Poppins', sans-serif;
   font-weight: 700;
   font-size: 1.8rem;
-  margin-top: 0;
+  color: #ffffff;
+  text-align: center;
   margin-bottom: 25px;
-  color: #ffffff; 
-  text-align: center; /* Centraliza o texto */
 }
 
+/* Estilização dos Inputs */
 .login-card input {
   width: 100%;
   padding: 14px 20px;
@@ -75,37 +139,57 @@ body {
   font-size: 14px;
   outline: none;
   box-sizing: border-box;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .login-card input::placeholder {
-  color: #999;
+  color: #999999;
 }
 
+/* Container do Esqueci Minha Senha */
+.forgot-password-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.lnk-forgot {
+  background: none;
+  border: none;
+  color: #e2e8f0;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  text-decoration: none;
+}
+
+.lnk-forgot:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* Área de botões */
 .buttons {
   display: flex;
+  flex-direction: column;
   gap: 12px;
-  margin-top: 10px;
+  margin-bottom: 25px;
 }
 
-button {
-  flex: 1;
+/* Botão Entrar Primário */
+.btn-primary {
+  width: 100%;
   padding: 12px;
   border: none;
-  border-radius: 50px; 
+  border-radius: 50px;
+  background-color: #00bdf2;
+  color: #ffffff;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
   transition: all 0.2s ease;
-}
-
-.btn-primary {
-  background-color: #00bdf2; 
-  color: white;
 }
 
 .btn-primary:hover {
@@ -113,70 +197,81 @@ button {
   transform: translateY(-1px);
 }
 
+.btn-primary:disabled {
+  background-color: #7dd3fc;
+  cursor: not-allowed;
+}
+
+/* Botão do Google */
 .btn-google {
-  background-color: #ffffff; 
-  color: #333333;
-  border: 1px solid rgba(255,255,255,0.5);
-}
-
-.btn-google:hover {
-  background-color: #f1f5f9;
-  transform: translateY(-1px);
-}
-
-.forgot-password-container {
-  display: flex;
-  justify-content: flex-end; 
   width: 100%;
-  margin-top: -8px;          
-  margin-bottom: 20px;       
-}
-
-.lnk-forgot {
-  background: none;
+  padding: 12px;
   border: none;
-  color: #e2e8f0;            
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 0;
-  transition: color 0.2s ease;
-}
-
-.lnk-forgot:hover {
-  color: #00bdf2;            
-  text-decoration: underline;
-}
-
-.login-card .footer-text {
-  margin-top: 20px;
-  font-size: 12px;
-  text-align: right;
-  color: #e2e8f0; 
-}
-
-.login-card .footer-text a {
-  font-weight: bold;
-  text-decoration: none;
-  color: #ffffff; 
-}
-
-.login-card .footer-text a:hover {
-  text-decoration: underline;
-}
-
-.btn-google {
-  background-color: #ffffff; 
+  border-radius: 50px;
+  background-color: #ffffff;
   color: #333333;
-  border: 1px solid rgba(0, 0, 0, 0.1); /* Sombra de borda leve para destacar o botão branco */
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px; /* Espaço perfeito entre a logo do Google e o texto */
+  gap: 10px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
 }
 
 .btn-google:hover {
   background-color: #f8fafc;
   transform: translateY(-1px);
+}
+
+/* Texto do Rodapé (Cadastro) */
+.footer-text {
+  font-size: 0.85rem;
+  color: #e2e8f0;
+  text-align: center;
+  margin: 0;
+}
+
+.footer-text a {
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.footer-text a:hover {
+  text-decoration: underline;
+}
+
+
+@media (max-width: 900px) {
+  .login-col-imagem {
+    flex: 1; /* Divide o espaço meio a meio em tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .login-col-imagem {
+    display: none; /* Oculta a imagem no celular para focar no formulário */
+  }
+  
+  .login-col-formulario {
+    flex: 1;
+    background-color: #009cd1; /* Garante que o fundo cubra a tela toda */
+  }
+
+  .login-card {
+    background: rgba(255, 255, 255, 0.15); /* Ajusta levemente a opacidade */
+    padding: 30px 20px;
+  }
+}
+
+.login-container-master {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #00bdf2 0%, #00bdf3 100%); /* 🚀 Azul escuro profundo em degradê suave */
+  font-family: 'Poppins', sans-serif;
 }

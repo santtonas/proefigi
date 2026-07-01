@@ -1,8 +1,10 @@
 import { login } from "../../services/cadastro";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import "../../styles/login.css";
 import logo from "../../img/icoproefigi.png";
+// 🚀 Imagem local importada corretamente com o caminho relativo ajustado
+import imagemLogin from "../../img/login-foto.png";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -52,72 +54,89 @@ export default function Login() {
   }
 
   return (
-    <div className="container">
+    <div className="login-container-master">
       
-      <div className="login-card">
-        
-        
-        <div className="logo">
-          <img src={logo} alt="Logo" />
+      {/* 🚀 LADO ESQUERDO: Coluna da Imagem */}
+      <div className="login-col-imagem">
+        <img 
+          src={imagemLogin} 
+          alt="Proefigi Produtividade" 
+        />
+        <div className="overlay-imagem">
+          <h2>Sua rotina, sob controle.</h2>
+          <p>Gerencie seu tempo, alcance suas metas e domine o método Pomodoro em um só lugar.</p>
         </div>
+      </div>
 
-        <h1>Entrar</h1>
+      {/* 🚀 LADO DIREITO: Coluna do Formulário */}
+      <div className="login-col-formulario">
+        <div className="login-card">
+          <div className="logo">
+            <img src={logo} alt="Logo" />
+          </div>
 
-        {/* Mensagem de Erro visível na tela caso exista */}
-        {erro && (
-          <p className="error-message-login" style={{ color: '#EF4444', fontSize: '0.85rem', marginBottom: '10px', textAlign: 'left' }}>
-            {erro}
+          {/* 🚀 Texto de boas-vindas com a marca colorida em duas partes */}
+          <p className="welcome-text">
+            Bem-vindo ao <span className="brand-pro" style={{ fontWeight: 700 }}>Pro</span><span className="brand-efigi" style={{ fontWeight: 700 }}>efigi</span>
           </p>
-        )}
+          <h1 style={{ marginTop: '5px' }}>Entrar</h1>
 
-        <input 
-          type="email" 
-          placeholder="Digite seu email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-        />
-        
-        <input
-          type="password"
-          placeholder="Digite sua senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-        />
+          {/* Mensagem de Erro visível na tela caso exista */}
+          {erro && (
+            <p className="error-message-login" style={{ color: '#EF4444', fontSize: '0.85rem', marginBottom: '10px', textAlign: 'left' }}>
+              {erro}
+            </p>
+          )}
 
-        {/* Link de Esqueci minha senha */}
-        <div className="forgot-password-container">
-          <button type="button" className="lnk-forgot" onClick={handleEsqueciSenha}>
-            Esqueci minha senha
-          </button>
-        </div>
-
-        <div className="buttons">
-          <button
-            className="btn-primary"
-            onClick={handleLogin}
-            disabled={carregando}
-          >
-            {carregando ? "Acessando..." : "Acessar"}
-          </button>
+          <input 
+            type="email" 
+            placeholder="Digite seu email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+          />
           
-          {/* 🚀 BOTÃO DO GOOGLE COM ÍCONE OFICIAL INSERIDO */}
-          <button className="btn-google" onClick={handleGoogle}>
-  <img 
-    src="https://raw.githubusercontent.com/devicons/devicon/master/icons/google/google-original.svg" 
-    alt="Google logo" 
-    style={{ width: '18px', height: '18px' }} 
-  />
-  Entrar com Google
-</button>
-        </div>
+          <input
+            type="password"
+            placeholder="Digite sua senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+          />
 
-        <p className="footer-text">
-          Não tem uma conta? <a href="/cadastro">Cadastre-se aqui</a>
-        </p>
+          {/* Link de Esqueci minha senha */}
+          <div className="forgot-password-container">
+            <button type="button" className="lnk-forgot" onClick={handleEsqueciSenha}>
+              Esqueci minha senha
+            </button>
+          </div>
+
+          <div className="buttons">
+            <button
+              className="btn-primary"
+              onClick={handleLogin}
+              disabled={carregando}
+            >
+              {carregando ? "Acessando..." : "Acessar"}
+            </button>
+            
+            {/* BOTÃO DO GOOGLE */}
+            <button className="btn-google" onClick={handleGoogle}>
+              <img 
+                src="https://raw.githubusercontent.com/devicons/devicon/master/icons/google/google-original.svg" 
+                alt="Google logo" 
+                style={{ width: '18px', height: '18px' }} 
+              />
+              Entrar com Google
+            </button>
+          </div>
+
+          <p className="footer-text">
+            Não tem uma conta? <a href="/cadastro">Cadastre-se aqui</a>
+          </p>
+        </div>
       </div>
 
     </div>
-  )
+  );
 }

@@ -4,7 +4,7 @@ body {
   margin: 0;
   height: 100vh;
   overflow: hidden;
-  background-color: #2EA8E8; /* 🚀 Fundo liso em todo o body como garantia */
+  background-color: #2EA8E8; 
 }
 
 /* CONTAINER CENTRALIZADO */
@@ -17,20 +17,20 @@ body {
   position: relative;
   overflow: hidden;
   font-family: 'Poppins', sans-serif;
-  background-color: #2EA8E8; /* 🚀 Fundo liso idêntico ao login */
+  background-color: #2EA8E8; 
 }
 
-/* CARD DE CADASTRO COM EFEITO FROSTED GLASS */
+
 .register-card {
   position: relative;
   z-index: 5; 
 
-  background: rgba(255, 255, 255, 0.25); /* Vidro translúcido */
+  background: rgba(255, 255, 255, 0.25); 
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 
   padding: 35px 50px 40px 50px; 
-  width: 450px; /* Mantendo a mesma largura do login para consistência */
+  width: 450px; 
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.35);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
@@ -40,7 +40,6 @@ body {
   box-sizing: border-box;
 }
 
-/* LOGO NO TOPO DO CARD (Se você decidir colocar a logo no cadastro também) */
 .register-card .logo {
   display: flex;
   justify-content: center;
@@ -56,22 +55,22 @@ body {
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
 }
 
-/* TITULO CENTRALIZADO EM BRANCO */
+
 .register-card h1 {
   font-weight: 700;
   font-size: 1.8rem;
   margin-top: 0;
   margin-bottom: 25px;
-  color: #ffffff; /* 🚀 Mudado para branco para destacar no fundo azul */
-  text-align: center; /* Centralizado igual ao login */
+  color: #ffffff; 
+  text-align: center; 
   letter-spacing: -0.5px;
 }
 
-/* INPUTS MINIMALISTAS */
+
 .register-card input {
   width: 100%;
   padding: 14px 20px;
-  margin-bottom: 12px; /* Mantido um pouco menor para acomodar os múltiplos campos */
+  margin-bottom: 12px;
   border: none;
   border-radius: 8px;
   background-color: #ffffff;
@@ -86,7 +85,7 @@ body {
   color: #999;
 }
 
-/* BOTÃO CADASTRAR - AZUL TURQUESA COM RELEVOTRANSLATION */
+
 .btn-register {
   width: 100%;
   padding: 12px;
@@ -110,18 +109,18 @@ body {
   transform: translateY(-1px);
 }
 
-/* FOOTER COM TEXTOS CLAROS E AJUSTADOS */
+
 .register-footer {
   margin-top: 25px;
   font-size: 13px;
-  text-align: right; /* Alinhado à direita para seguir o padrão do rodapé do login */
-  color: #e2e8f0; /* 🚀 Cinza claro para contraste */
+  text-align: right; 
+  color: #e2e8f0; 
 }
 
 .register-footer a {
   font-weight: bold;
   text-decoration: none;
-  color: #ffffff; /* 🚀 Link em branco puro */
+  color: #ffffff; 
   transition: color 0.2s ease;
 }
 

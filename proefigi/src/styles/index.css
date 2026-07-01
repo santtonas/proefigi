@@ -11,4 +11,16 @@ html, body, #root{
   
 }
 
+.nav-auth-logo {
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+
+.brand-pro {
+  color: #00bdf2; /* Cor azul claro viva para o 'Pro' */
+}
+
+.brand-efigi {
+  color: #ffffff; /* Branco para o 'efigi' */
+}
 

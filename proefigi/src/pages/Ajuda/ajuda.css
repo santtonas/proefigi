@@ -1,137 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* 🚀 Fundo geral claro e limpo */
+/* 🚀 Ativando e garantindo a rolagem vertical padrão da página */
 .container-ajuda {
   width: 100%;
-  min-height: 100%;
-  background-color: #F8FAFC;
-  font-family: 'Poppins', sans-serif;
-  padding: 40px 20px;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 60px 20px;
   box-sizing: border-box;
-  overflow-y: auto;
+  font-family: 'Poppins', sans-serif;
+  color: #334155;
+  
+  /* Garante que se o conteúdo passar do tamanho da tela, a barra apareça */
+  overflow-y: auto; 
+  overflow-x: hidden; /* Evita que a página dance para os lados */
 }
 
 .ajuda-wrapper {
-  width: 100%;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
+/* ==========================================================================
+   HEADER E BUSCA (Fundo claro, elementos em azul)
+   ========================================================================== */
 .ajuda-header {
   text-align: center;
-  
-  padding: 70px 50px;      
-  margin-bottom: 40px;      /* Espaço entre o retângulo azul e os cards de baixo */
-  
-  border-radius: 20px;      /* Deixa as pontas do retângulo arredondadas e modernas */
-  box-shadow: 0 4px 20px rgba(10, 91, 212, 0.15); /* Sombra leve azulada */
+  margin-bottom: 50px;
+  background: transparent;
+  padding: 0;
 }
 
-/* 🌟 Ajuste das cores dos textos para destacar no fundo azul */
 .ajuda-header h1 {
-  color: #ffffff !important; /* Texto branco */
-  font-size: 2.4rem;
+  font-size: 2.6rem;
   font-weight: 700;
-  margin-bottom: 12px;
+  color: #00bdf2; /* Seu azul de destaque */
+  margin-bottom: 10px;
 }
 
-.ajuda-header p {
-  color: #e0f2fe !important; /* Texto azul bem clarinho para dar contraste */
-  font-size: 1.05rem;
+.ajuda-subtitle {
+  color: #64748b; /* Cinza suave para o subtítulo */
+  font-size: 1.1rem;
+  opacity: 0.9;
   margin-bottom: 30px;
 }
 
 .busca-box {
   position: relative;
-  max-width: 550px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
 .busca-icon {
   position: absolute;
-  left: 18px;
+  left: 20px;
   top: 50%;
   transform: translateY(-50%);
-  color: #94A3B8;
+  color: #00bdf2; /* Ícone com o seu azul */
 }
 
 .busca-box input {
   width: 100%;
-  padding: 16px 16px 16px 52px;
-  border: 2px solid #E2E8F0;
-  border-radius: 16px;
-  font-family: 'Poppins', sans-serif;
+  padding: 16px 20px 16px 55px;
+  border: 1px solid #e2e8f0; /* Borda leve no fundo claro */
+  border-radius: 14px;
   font-size: 1rem;
   outline: none;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  background: #ffffff; /* Input branco puro */
+  color: #0f172a; /* Texto digitado escuro */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
   transition: all 0.2s ease;
 }
 
 .busca-box input:focus {
-  border-color: #0EA5E9;
-  box-shadow: 0 10px 15px -3px rgba(14, 165, 233, 0.05);
+  border-color: #00bdf2; /* Foco com o seu azul */
+  box-shadow: 0 0 15px rgba(0, 189, 242, 0.15);
 }
 
-/* CARDS DE CATEGORIAS */
+.busca-box input::placeholder {
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   GRID DE CATEGORIAS
+   ========================================================================== */
 .categorias-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
   margin-bottom: 50px;
 }
 
 .categoria-card {
-  background: white;
-  padding: 24px;
+  background: #ffffff; /* Card branco */
+  padding: 20px;
   border-radius: 16px;
-  border: 1px solid #E2E8F0;
-  transition: all 0.2s;
+  border: 1px solid #e2e8f0;
   cursor: pointer;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
 }
 
 .categoria-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
-  border-color: #0EA5E9;
+  transform: translateY(-3px);
+  border-color: #00bdf2;
+  box-shadow: 0 8px 20px rgba(0, 189, 242, 0.08);
+}
+
+.categoria-card.active {
+  border-color: #00bdf2;
+  background: rgba(0, 189, 242, 0.08); /* Fundo com tom sutil do seu azul */
 }
 
 .cat-icon {
-  color: #0EA5E9;
-  margin-bottom: 12px;
+  color: #00bdf2; /* Ícone no seu azul */
+  margin-bottom: 10px;
 }
 
 .categoria-card h3 {
-  margin: 0 0 6px 0;
   font-size: 1rem;
-  color: #0F172A;
-  font-weight: 600;
-}
-
-.categoria-card p {
   margin: 0;
-  font-size: 0.8rem;
-  color: #64748B;
-  line-height: 1.5;
+  font-weight: 600;
+  color: #00bdf2; /* Título no seu azul */
 }
 
-/* FAQ ACCORDION */
+/* ==========================================================================
+   ACCORDION DE FAQS
+   ========================================================================== */
 .faq-section h2 {
-  color: #0F172A;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   margin-bottom: 20px;
-  font-weight: 700;
+  border-left: 4px solid #00bdf2; /* Detalhe lateral em azul */
+  padding-left: 12px;
+  color: #00bdf2; /* Título da seção em azul */
 }
 
 .faq-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 40px;
+  gap: 14px;
 }
 
 .faq-item {
-  background: white;
+  background: #ffffff; /* Item fechado fica branco */
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
-  border: 1px solid #E2E8F0;
   overflow: hidden;
-  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.01);
+  transition: all 0.2s ease;
 }
 
 .faq-trigger {
@@ -139,98 +156,122 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 24px;
+  padding: 20px;
   background: none;
   border: none;
-  text-align: left;
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #1E293B;
+  color: #1e293b; /* Pergunta em tom escuro legível */
+  font-size: 1.05rem;
+  font-weight: 600;
   cursor: pointer;
+  font-family: 'Poppins', sans-serif;
 }
 
 .faq-trigger:hover {
-  color: #0EA5E9;
+  color: #00bdf2; /* Hover da pergunta ativa o seu azul */
+}
+
+.faq-trigger span {
+  text-align: left;
+}
+
+/* Estilização do ícone interno do lucide (Chevron) */
+.faq-trigger svg {
+  color: #00bdf2; /* Força o chevron a ser azul */
+  flex-shrink: 0;
 }
 
 .faq-content {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.25s ease-out, padding 0.25s ease-out;
-  background: #F8FAFC;
-  padding: 0 24px;
-  color: #475569;
-  font-size: 0.9rem;
-  line-height: 1.6;
+  transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+  background: #f8fafc; /* Fundo interno da resposta ligeiramente diferente */
 }
 
-/* Estado de Aberto do Accordion */
+.faq-content p {
+  padding: 20px;
+  margin: 0;
+  color: #475569; /* Resposta em cinza escuro confortável */
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
 .faq-item.open {
-  border-color: #CBD5E1;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  border-color: #00bdf2; /* Destaca a borda em azul ao abrir */
+  box-shadow: 0 5px 15px rgba(0, 189, 242, 0.05);
 }
 
 .faq-item.open .faq-content {
-  max-height: 200px; /* Suficiente para o texto da resposta */
-  padding: 16px 24px 24px 24px;
-  border-top: 1px solid #E2E8F0;
+  max-height: 500px;
+  transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
 }
 
 .no-results {
   text-align: center;
-  color: #64748B;
-  padding: 40px 0;
+  color: #64748b;
+  padding: 20px;
 }
 
-/* FOOTER / SUPORTE */
-.suporte-card {
-  background: #0F172A;
-  color: white;
-  padding: 24px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
+/* Força as respostas abertas a ficarem brancas por dentro para facilitar a leitura */
+.faq-item.open .faq-content {
+  background: #ffffff;
 }
 
-.suporte-card h4 {
-  margin: 0 0 4px 0;
-  font-size: 1rem;
+/* ==========================================================================
+   📱 RESPONSIVIDADE COMPLETA (MOBILE & TABLETS)
+   ========================================================================== */
+
+/* Para Tablets e telas médias */
+@media (max-width: 900px) {
+  .ajuda-header h1 {
+    font-size: 2.2rem;
+  }
+  .categorias-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
 }
 
-.suporte-card p {
-  margin: 0;
-  font-size: 0.85rem;
-  color: #94A3B8;
-}
-
-.btn-suporte {
-  margin-left: auto;
-  background: white;
-  color: #0F172A;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-suporte:hover {
-  background: #E2E8F0;
-}
-
-/* Responsividade Básica */
+/* Para Celulares comuns (Esconde tudo e deixa só as perguntas) */
 @media (max-width: 600px) {
-  .suporte-card {
-    flex-direction: column;
-    text-align: center;
+  .container-ajuda {
+    padding: 20px 12px; /* Reduz o espaçamento do topo já que não tem o header */
   }
-  .btn-suporte {
-    margin-left: 0;
-    width: 100%;
+
+  /* 🚀 Esconde as seções superiores no mobile */
+  .ajuda-header,
+  .categorias-grid {
+    display: none !important;
+  }
+
+  /* Ajusta o título das perguntas para o topo do celular */
+  .faq-section h2 {
+    font-size: 1.4rem;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+
+  .faq-list {
+    gap: 10px; /* Deixa a lista mais compacta */
+  }
+
+  .faq-trigger {
+    padding: 16px 12px; 
+    font-size: 0.95rem;
+  }
+
+  .faq-content p {
+    padding: 0 12px 16px 12px;
+    font-size: 0.9rem;
   }
 }
 
+/* Para celulares muito pequenos */
+@media (max-width: 360px) {
+  .faq-section h2 {
+    font-size: 1.2rem;
+  }
+  
+  .faq-trigger {
+    font-size: 0.88rem;
+  }
+}

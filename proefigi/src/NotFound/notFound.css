@@ -1,0 +1,94 @@
+.not-found-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at center, #102a43 0%, #0c1b2a 100%);
+  font-family: 'Poppins', sans-serif;
+  color: #ffffff;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.not-found-content {
+  text-align: center;
+  max-width: 500px;
+}
+
+.not-found-code {
+  font-size: 8rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+  color: #00bdf2; 
+  text-shadow: 0 0 30px rgba(0, 189, 242, 0.3);
+}
+
+.not-found-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.not-found-text {
+  font-size: 1rem;
+  color: #e2e8f0;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.not-found-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.btn-not-found-home {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 50px;
+  background-color: #00bdf2;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-not-found-home:hover {
+  background-color: #009cd1;
+  transform: translateY(-1px);
+}
+
+.btn-not-found-back {
+  padding: 12px 25px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  background: transparent;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-not-found-back:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+}
+
+/* Ajuste simples para celular */
+@media (max-width: 480px) {
+  .not-found-code {
+    font-size: 5rem;
+  }
+  .not-found-title {
+    font-size: 1.6rem;
+  }
+  .not-found-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
